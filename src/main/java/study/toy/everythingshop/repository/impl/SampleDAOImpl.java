@@ -17,4 +17,9 @@ public class SampleDAOImpl implements SampleDAO {
     public List<SampleEntity> findAll() {
         return sqlSession.selectList("study.toy.everythingshop.repository.SampleDAO.findAll");
     }
+
+    @Override
+    public int saveSample(SampleEntity sampleEntity) {
+        return sqlSession.insert("study.toy.everythingshop.repository.SampleDAO.saveSample", sampleEntity);
+    }
 }

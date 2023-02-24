@@ -7,4 +7,9 @@
              , T01.NAME
           FROM SAMPLE_TABLE T01
     </select>
+
+    <insert id="saveSample">
+        INSERT INTO SAMPLE_TABLE
+        (NAME)VALUES (#{name})
+    </insert>
 </mapper>
