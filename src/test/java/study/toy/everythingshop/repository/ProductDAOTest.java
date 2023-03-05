@@ -11,6 +11,7 @@ import study.toy.everythingshop.entity.ProductMEntity;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -40,7 +41,7 @@ public class ProductDAOTest {
     }
 
     @Test
-    @DisplayName("데이터가 한 건도 없을경우")
+    @DisplayName("데이터가 한 건도 없을경우 목록조회")
     void noSearchParamAndNoData() {
         // given
         ProductSearchDTO productSearchDTO = ProductSearchDTO.builder()
@@ -54,7 +55,7 @@ public class ProductDAOTest {
     }
 
     @Test
-    @DisplayName("데이터가 한 건만 있을경우")
+    @DisplayName("데이터가 한 건만 있을경우 목록조회")
     void noSearchParamAndOneData() {
         // given
         //검색조건은 없음
@@ -72,7 +73,7 @@ public class ProductDAOTest {
     }
 
     @Test
-    @DisplayName("데이터가 여러건 있을경우")
+    @DisplayName("데이터가 여러건 있을경우 목록조회")
     void noSearchParamAndMultipleData() {
         // given
         //검색조건은 없음
@@ -95,4 +96,167 @@ public class ProductDAOTest {
         assertThat(findAll).hasSize(4);
     }
 
+    @Test
+    @DisplayName("상품명 검색결과 없음")
+    void searchNameAndNoData() {
+        // given
+        //검색조건
+        ProductSearchDTO productSearchDTO = ProductSearchDTO.builder()
+                .productName("최재현")
+                .fromPrice(null)
+                .toPrice(null).build();
+
+        //상품입력
+        ProductMEntity productMEntity1 = ProductMEntity.builder().productName("만물상자").productStts("02").price(30000L).quantity(30L).userNum(1L).build();
+        ProductMEntity productMEntity2 = ProductMEntity.builder().productName("과자").productStts("01").price(10000L).quantity(21L).userNum(1L).build();
+        ProductMEntity productMEntity3 = ProductMEntity.builder().productName("선물").productStts("02").price(23000L).quantity(5L).userNum(1L).build();
+        ProductMEntity productMEntity4 = ProductMEntity.builder().productName("책").productStts("01").price(5000L).quantity(10L).userNum(1L).build();
+        productDAO.save(productMEntity1);
+        productDAO.save(productMEntity2);
+        productDAO.save(productMEntity3);
+        productDAO.save(productMEntity4);
+        // when
+        List<ProductMEntity> findAll = productDAO.findAll(productSearchDTO);
+
+        // then
+        assertThat(findAll).hasSize(0);
+    }
+    @Test
+    @DisplayName("상품명 한건 검색")
+    void searchNameAndOneData() {
+        // given
+        //검색조건
+        ProductSearchDTO productSearchDTO = ProductSearchDTO.builder()
+                .productName("만물상자")
+                .fromPrice(null)
+                .toPrice(null).build();
+
+        //상품입력
+        ProductMEntity productMEntity1 = ProductMEntity.builder().productName("만물상자").productStts("02").price(30000L).quantity(30L).userNum(1L).build();
+        ProductMEntity productMEntity2 = ProductMEntity.builder().productName("과자").productStts("01").price(10000L).quantity(21L).userNum(1L).build();
+        ProductMEntity productMEntity3 = ProductMEntity.builder().productName("선물").productStts("02").price(23000L).quantity(5L).userNum(1L).build();
+        ProductMEntity productMEntity4 = ProductMEntity.builder().productName("책").productStts("01").price(5000L).quantity(10L).userNum(1L).build();
+        productDAO.save(productMEntity1);
+        productDAO.save(productMEntity2);
+        productDAO.save(productMEntity3);
+        productDAO.save(productMEntity4);
+        // when
+        List<ProductMEntity> findAll = productDAO.findAll(productSearchDTO);
+
+        // then
+        assertThat(findAll).hasSize(1);
+        assertThat(findAll.contains(productMEntity1)).isTrue();
+    }
+
+    @Test
+    @DisplayName("상품명 여러건 검색")
+    void searchNameAndMuiltyData() {
+        // given
+        //검색조건
+        ProductSearchDTO productSearchDTO = ProductSearchDTO.builder()
+                .productName("물상")
+                .fromPrice(null)
+                .toPrice(null).build();
+
+        //상품입력
+        ProductMEntity productMEntity1 = ProductMEntity.builder().productName("만물상자").productStts("02").price(30000L).quantity(30L).userNum(1L).build();
+        ProductMEntity productMEntity2 = ProductMEntity.builder().productName("과자").productStts("01").price(10000L).quantity(21L).userNum(1L).build();
+        ProductMEntity productMEntity3 = ProductMEntity.builder().productName("선물상자").productStts("02").price(23000L).quantity(5L).userNum(1L).build();
+        ProductMEntity productMEntity4 = ProductMEntity.builder().productName("책").productStts("01").price(5000L).quantity(10L).userNum(1L).build();
+        productDAO.save(productMEntity1);
+        productDAO.save(productMEntity2);
+        productDAO.save(productMEntity3);
+        productDAO.save(productMEntity4);
+        // when
+        List<ProductMEntity> findAll = productDAO.findAll(productSearchDTO);
+
+        // then
+        assertThat(findAll).hasSize(2);
+        assertThat(findAll.contains(productMEntity1)).isTrue();
+        assertThat(findAll.contains(productMEntity3)).isTrue();
+    }
+
+    @Test
+    @DisplayName("시작금액 0원 검색")
+    void searchZeroFromPrice() {
+        // given
+        //검색조건
+        ProductSearchDTO productSearchDTO = ProductSearchDTO.builder()
+                .productName(null)
+                .fromPrice(0L)
+                .toPrice(null).build();
+
+        //상품입력
+        ProductMEntity productMEntity1 = ProductMEntity.builder().productName("만물상자").productStts("02").price(30000L).quantity(30L).userNum(1L).build();
+        ProductMEntity productMEntity2 = ProductMEntity.builder().productName("과자").productStts("01").price(10000L).quantity(21L).userNum(1L).build();
+        ProductMEntity productMEntity3 = ProductMEntity.builder().productName("선물상자").productStts("02").price(23000L).quantity(5L).userNum(1L).build();
+        ProductMEntity productMEntity4 = ProductMEntity.builder().productName("책").productStts("01").price(5000L).quantity(10L).userNum(1L).build();
+        productDAO.save(productMEntity1);
+        productDAO.save(productMEntity2);
+        productDAO.save(productMEntity3);
+        productDAO.save(productMEntity4);
+        // when
+        List<ProductMEntity> findAll = productDAO.findAll(productSearchDTO);
+
+        // then
+        assertThat(findAll).hasSize(4);
+        assertThat(findAll.contains(productMEntity1)).isTrue();
+        assertThat(findAll.contains(productMEntity2)).isTrue();
+        assertThat(findAll.contains(productMEntity3)).isTrue();
+        assertThat(findAll.contains(productMEntity4)).isTrue();
+    }
+
+    @Test
+    @DisplayName("종료금액 0원 검색")
+    void searchZeroToPrice() {
+        // given
+        //검색조건
+        ProductSearchDTO productSearchDTO = ProductSearchDTO.builder()
+                .productName(null)
+                .fromPrice(null)
+                .toPrice(0L).build();
+        log.info("productSearchDTO : {}",productSearchDTO);
+
+        //상품입력
+        ProductMEntity productMEntity1 = ProductMEntity.builder().productName("만물상자").productStts("02").price(30000L).quantity(30L).userNum(1L).build();
+        ProductMEntity productMEntity2 = ProductMEntity.builder().productName("과자").productStts("01").price(10000L).quantity(21L).userNum(1L).build();
+        ProductMEntity productMEntity3 = ProductMEntity.builder().productName("선물상자").productStts("02").price(23000L).quantity(5L).userNum(1L).build();
+        ProductMEntity productMEntity4 = ProductMEntity.builder().productName("책").productStts("01").price(5000L).quantity(10L).userNum(1L).build();
+        productDAO.save(productMEntity1);
+        productDAO.save(productMEntity2);
+        productDAO.save(productMEntity3);
+        productDAO.save(productMEntity4);
+        // when
+        List<ProductMEntity> findAll = productDAO.findAll(productSearchDTO);
+
+        // then
+        assertThat(findAll).hasSize(0);
+    }
+
+    @Test
+    @DisplayName("시작,종료금액 0원 검색")
+    void searchZeroPrice() {
+        // given
+        //검색조건
+        ProductSearchDTO productSearchDTO = ProductSearchDTO.builder()
+                .productName(null)
+                .fromPrice(0L)
+                .toPrice(0L).build();
+        log.info("productSearchDTO : {}",productSearchDTO);
+
+        //상품입력
+        ProductMEntity productMEntity1 = ProductMEntity.builder().productName("만물상자").productStts("02").price(30000L).quantity(30L).userNum(1L).build();
+        ProductMEntity productMEntity2 = ProductMEntity.builder().productName("과자").productStts("01").price(10000L).quantity(21L).userNum(1L).build();
+        ProductMEntity productMEntity3 = ProductMEntity.builder().productName("선물상자").productStts("02").price(23000L).quantity(5L).userNum(1L).build();
+        ProductMEntity productMEntity4 = ProductMEntity.builder().productName("책").productStts("01").price(5000L).quantity(10L).userNum(1L).build();
+        productDAO.save(productMEntity1);
+        productDAO.save(productMEntity2);
+        productDAO.save(productMEntity3);
+        productDAO.save(productMEntity4);
+        // when
+        List<ProductMEntity> findAll = productDAO.findAll(productSearchDTO);
+
+        // then
+        assertThat(findAll).hasSize(0);
+    }
 }

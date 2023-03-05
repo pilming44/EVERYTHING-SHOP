@@ -2,35 +2,34 @@ package study.toy.everythingshop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.ProductMEntity;
 import study.toy.everythingshop.repository.ProductDAO;
 
 import java.util.List;
 
-@Controller
+/**
+ * fileName : RestHomeController
+ * author   : pilming
+ * date     : 2023-03-05
+ */
+@RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 @Slf4j
-public class HomeController {
-
+public class RestHomeController {
     private final ProductDAO productDAO;
 
-    @RequestMapping("/")
-    public String index() {
-        return "redirect:/home";
-    }
-
-    @RequestMapping("/home")
-    public String home(@Validated  @ModelAttribute ProductSearchDTO productSearchDTO, BindingResult bindingResult, Model model) {
+    @GetMapping("/home")
+    public List<ProductMEntity> home(@Validated @ModelAttribute ProductSearchDTO productSearchDTO, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
-            //검색값중 잘못된 값이 있다면 검색값 초기화
-            productSearchDTO = new ProductSearchDTO();
+            throw new InvalidRequestException("Invalid Request");
         }
 
         if(productSearchDTO.getFromPrice() != null && productSearchDTO.getToPrice() != null
@@ -42,8 +41,18 @@ public class HomeController {
         }
 
         List<ProductMEntity> products = productDAO.findAll(productSearchDTO);
-        model.addAttribute("products", products);
 
-        return "home";
+        return products;
+    }
+
+    @ExceptionHandler(value = { InvalidRequestException.class })
+    public ResponseEntity<Object> handleInvalidRequestException(InvalidRequestException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    static class InvalidRequestException extends RuntimeException {
+        public InvalidRequestException(String message) {
+            super(message);
+        }
     }
 }
