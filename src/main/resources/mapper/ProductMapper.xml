@@ -14,13 +14,13 @@
               <if test="productName != null and productName != ''">
                   and T01.PRODUCT_NAME LIKE CONCAT('%',#{productName},'%')
               </if>
-              <if test="fromPrice != null and fromPrice != '' and (toPrice == null or toPrice =='')">
+              <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice == null">
                   and T01.PRICE &gt;= #{fromPrice}  /* 시작가격만 있고 끝 가격은 없을경우*/
               </if>
-              <if test="toPrice != null and toPrice != '' and (fromPrice == null or fromPrice =='')">
-                  and T01.PRICE &lt;= #{fromPrice}  /* 끝 가격만 있고 시작가격은 없을경우*/
+              <if test="toPrice != null and toPrice &gt;= 0 and fromPrice == null">
+                  and T01.PRICE &lt;= #{toPrice}  /* 끝 가격만 있고 시작가격은 없을경우*/
               </if>
-              <if test="fromPrice != null and fromPrice != '' and toPrice != null and toPrice !=''">
+              <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice != null and toPrice &gt;= 0">
                   and T01.PRICE BETWEEN #{fromPrice} AND #{toPrice}
               </if>
           </where>
