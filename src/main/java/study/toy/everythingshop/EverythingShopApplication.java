@@ -10,7 +10,6 @@ public class EverythingShopApplication {
 	private static final Logger logger = LoggerFactory.getLogger(EverythingShopApplication.class);
 	public static void main(String[] args) {
 		SpringApplication.run(EverythingShopApplication.class, args);
-		logger.info("Hello, World!");
 	}
 
 }
