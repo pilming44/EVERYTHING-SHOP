@@ -21,7 +21,7 @@ public class HomeController {
 
     private final ProductDAO productDAO;
 
-//    @RequestMapping("/")
+    @RequestMapping("/")
     public String index() {
         return "redirect:/home";
     }
