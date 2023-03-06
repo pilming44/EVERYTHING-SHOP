@@ -8,7 +8,6 @@ import study.toy.everythingshop.entity.ProductMEntity;
 import study.toy.everythingshop.repository.ProductDAO;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * fileName : ProductDAOImpl
@@ -35,7 +34,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public ProductMEntity findById(Long id) {
-        return sqlSession.selectOne("study.toy.everythingshop.repository.ProductDAO.findById", id);
+    public ProductMEntity findByProductNum(Long productNum) {
+        return sqlSession.selectOne("study.toy.everythingshop.repository.ProductDAO.findByProductNum", productNum);
     }
 }
