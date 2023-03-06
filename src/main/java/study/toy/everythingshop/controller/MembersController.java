@@ -14,4 +14,9 @@ public class MembersController {
     public String join(){
         return "/members/join";
     }
+
+    @GetMapping("/signIn")
+    public String signIn() {
+        return "signIn";
+    }
 }

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{page.title.signIn}">로그인</title>
+    <!-- 부트스트랩 CSS 파일 불러오기 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container justify-content-center">
+    <!-- 페이지 타이틀 -->
+    <div class="row mt-3">
+        <div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.signIn}">로그인</h2></div>
+    </div>
+    <!-- 입력정보 -->
+    <div class="row mt-3">
+        <div class="col-md-5 mx-auto">
+            <label for="userId" class="font-weight-bold" th:text="#{label.member.id}">ID</label>
+            <input type="text" id="userId" class="form-control" placeholder="아이디">
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-5 mx-auto">
+            <label for="userPw" class="font-weight-bold" th:text="#{label.member.password}">PASSWORD</label>
+            <input type="password" id="userPw" class="form-control" placeholder="비밀번호">
+        </div>
+    </div>
+    <!-- 버튼 -->
+    <div class="row mt-3">
+        <div class="col-md-5 mx-auto">
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-primary btn-lg btn-block"
+                            onclick="location.href='/'"
+                            type="button" th:text="#{button.singIn}">로그인</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-secondary btn-lg btn-block"
+                            onclick="location.href='home.html'"
+                            th:onclick="|location.href='@{/home}'|"
+                            type="button" th:text="#{button.home}">목록으로</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
