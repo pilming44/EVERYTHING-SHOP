@@ -43,6 +43,7 @@ public class HomeController {
 
         List<ProductMEntity> products = productDAO.findAll(productSearchDTO);
         model.addAttribute("products", products);
+        model.addAttribute("productSearchDTO", productSearchDTO);
 
         return "home";
     }
