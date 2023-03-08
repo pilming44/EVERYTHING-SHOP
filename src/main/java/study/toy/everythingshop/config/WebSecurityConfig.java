@@ -1,5 +1,6 @@
 package study.toy.everythingshop.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,8 +15,10 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 @EnableWebSecurity //Spring Security 구성을 사용하도록 Spring Boot에 지시
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
+    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
@@ -27,7 +30,10 @@ public class WebSecurityConfig {
                 .formLogin()
                 .loginPage("/members/signIn")
                 .loginProcessingUrl("/loginProc")
+                .failureHandler(customAuthenticationFailureHandler)
                 .defaultSuccessUrl("/")
+                .usernameParameter("userId")
+                .passwordParameter("userPw")
                 .and().build();
     }
     @Bean
