@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="study.toy.everythingshop.repository.MemberDAO">
+    <insert id="join" parameterType="UserMEntity">
+        INSERT INTO USER_M
+        (
+          USER_NUM
+        , USER_ID
+        , USER_PW
+        , REGISTER_DT
+        , CHANGE_DT
+        , USER_NM
+        )
+        VALUES
+            (
+              #{userNum}
+            , #{userId}
+            , #{userPw}
+            , SYSDATE
+            , SYSDATE
+            , #{userNm}
+            )
+    </insert>
+
+    <select id="findById" parameterType="String" resultType="UserMEntity">
+        SELECT * FROM USER_M
+        WHERE USER_ID = #{userId}
+    </select>
+
+
+</mapper>

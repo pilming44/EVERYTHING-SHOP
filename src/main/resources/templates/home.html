@@ -23,7 +23,7 @@
 		    <div class="text-right">
 		      <!-- 로그인/회원가입 버튼 -->
 		      <button class="login-btn btn btn-primary" th:text="#{button.singIn}">로그인</button>
-		      <button class="register-btn btn btn-primary" th:text="#{button.join}">회원가입</button>
+		      <button class="register-btn btn btn-primary" th:onclick="|location.href='@{/members/join}'|" th:text="#{button.join}">회원ff가입</button>
 		    </div>
 		  </div>
 		</div>
