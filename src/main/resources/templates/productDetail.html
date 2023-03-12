@@ -8,44 +8,58 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container justify-content-center">
 
-  <div class="py-5 text-center">
-    <h2 th:text="#{page.title.product.detail}">상품 상세</h2>
+  <div class="row mt-3">
+    <div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.product.detail}">상품 상세</h2></div>
   </div>
-  <div>
-    <label for="productNum" th:text="#{label.product.detail.productNum}">상품 번호</label>
-    <input type="text" id="productNum" th:field="*{product.productNum}" class="form-control" value="1" readonly>
-  </div>
-  <div>
-    <label for="productName" th:text="#{label.product.productName}">상품명</label>
-    <input type="text" id="productName" th:field="*{product.productName}" class="form-control" value="상품A" readonly>
-  </div>
-  <div>
-    <label for="price" th:text="#{label.product.price}">가격</label>
-    <input type="text" id="price" th:field="*{product.price}" class="form-control" value="10000" readonly>
-  </div>
-  <div>
-    <label for="quantity" th:text="#{label.product.quantity}">수량</label>
-    <input type="text" id="quantity" th:field="*{product.quantity}" class="form-control" value="10" readonly>
-  </div>
-
-  <hr class="my-4">
-
-  <div class="row">
-    <div class="col">
-      <button class="w-100 btn btn-primary btn-lg"
-              onclick="location.href='/'"
-              type="button" th:text="#{button.product.order}">상품 주문</button>
-    </div>
-    <div class="col">
-      <button class="w-100 btn btn-primary btn-lg"
-              onclick="location.href='/'"
-              type="button" th:text="#{button.product.edit}">상품 수정</button>
+  <div class="row mt-3">
+    <div class="col-md-5 mx-auto">
+      <label for="productNum" th:text="#{label.product.detail.productNum}">상품 번호</label>
+      <input type="text" id="productNum" th:field="*{product.productNum}" class="form-control" value="1" readonly>
     </div>
   </div>
-  <div class="row mt-4">
-    <div class="col">
+  <div class="row mt-3">
+    <div class="col-md-5 mx-auto">
+      <label for="productName" th:text="#{label.product.productName}">상품명</label>
+      <input type="text" id="productName" th:field="*{product.productName}" class="form-control" value="상품A" readonly>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-5 mx-auto">
+      <label for="price" th:text="#{label.product.price}">가격</label>
+      <input type="text" id="price" th:field="*{product.price}" class="form-control" value="10000" readonly>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-5 mx-auto">
+      <label for="quantity" th:text="#{label.product.quantity}">수량</label>
+      <input type="text" id="quantity" th:field="*{product.quantity}" class="form-control" value="10" readonly>
+    </div>
+  </div>
+
+  <div  class="row mt-3">
+    <div class="col-md-5 mx-auto">
+      <hr class="my-4">
+    </div>
+  </div>
+  <div  class="row mt-3">
+    <div class="col-md-5 mx-auto">
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-primary btn-lg btn-block" onclick="location.href='/'"
+                  type="button" th:text="#{button.product.order}">상품 주문</button>
+        </div>
+        <div class="col">
+          <button class="btn btn-primary btn-lg btn-block"
+                  onclick="location.href='/'"
+                  type="button" th:text="#{button.product.edit}">상품 수정</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-5 mx-auto">
       <button class="w-100 btn btn-secondary btn-lg"
               onclick="location.href='home.html'"
               th:onclick="|location.href='@{/home}'|"

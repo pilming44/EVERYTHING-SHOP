@@ -23,7 +23,6 @@ public class UserDetailsImpl implements UserDetails {
 
     public UserDetailsImpl(UserMEntity userMEntity) {
         this.userMEntity = userMEntity;
-        log.info("생성된 userMEntity 객체 : {}", this.userMEntity);
     }
 
     @Override

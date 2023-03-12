@@ -1,6 +1,9 @@
 package study.toy.everythingshop.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,10 +15,12 @@ import study.toy.everythingshop.entity.UserMEntity;
 import study.toy.everythingshop.repository.UserDAO;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/members")
 @RequiredArgsConstructor
+@Slf4j
 public class MembersController {
     private final UserDAO userDAO;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -25,7 +30,14 @@ public class MembersController {
     }
 
     @GetMapping("/signIn")
-    public String signIn() {
+    public String signIn(Model model, HttpSession session) {
+        String errorMessage = (String) session.getAttribute("errorMessage");
+        //log.info(errorMessage);
+        if (errorMessage != null) {
+            model.addAttribute("errorMessage", errorMessage);
+            //세션정보 담은 후 세션은 삭제
+            session.removeAttribute("errorMessage");
+        }
         return "signIn";
     }
 

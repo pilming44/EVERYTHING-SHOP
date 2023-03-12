@@ -11,9 +11,11 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -26,24 +28,27 @@ import java.io.IOException;
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
     /*예외에따른 문구,화면에 표시방법 생각할것*/
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
-            throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+        String errorMessage = getErrorMessage(exception);
 
-        String errorMessage = "Invalid username or password";
+        HttpSession session = request.getSession();
+        session.setAttribute("errorMessage", errorMessage);
+
+        redirectStrategy.sendRedirect(request, response, "/members/signIn");
+    }
+
+    private String getErrorMessage(AuthenticationException exception) {
+        String errorMessage = "ID 또는 PASSWORD가 일치하지 않습니다.";
         if (exception instanceof LockedException) {
-            errorMessage = "User account is locked";
+            errorMessage = "해당 계정은 잠금 상태입니다.";
         } else if (exception instanceof DisabledException) {
-            errorMessage = "User account is disabled";
+            errorMessage = "해당 계정은 비활성 상태입니다.";
         } else if (exception instanceof AccountExpiredException) {
-            errorMessage = "User account has expired";
+            errorMessage = "해당 계정은 휴면상태입니다. 관리자에게 문의하세요.";
         } else if (exception instanceof CredentialsExpiredException) {
-            errorMessage = "User credentials have expired";
+            errorMessage = "사용자의 인증 정보가 만료되었습니다.";
         }
-
-        request.setAttribute("errorMessage", errorMessage);
-
-        redirectStrategy.sendRedirect(request, response, "/members/signIn?error=true");
+        return errorMessage;
     }
 }
