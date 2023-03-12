@@ -24,11 +24,23 @@ import javax.servlet.http.HttpSession;
 public class MembersController {
     private final UserDAO userDAO;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @GetMapping("/join")
-    public String join(){
-        return "/members/join";
+    public String joinForm(UserMEntity userMEntity){
+        return "/join";
+    }
+    
+    @PostMapping("/join")
+    public String join(@Validated @ModelAttribute UserMEntity userMEntity, BindingResult bindingResult, Model model){
+
+        return "/join";
     }
 
+    @GetMapping("/join/checkDupId")
+    public String join(@Validated @ModelAttribute("userId") String userId, BindingResult bindingResult, Model model){
+        membersService.checkDupId(userId);
+        return "/join";
+    }
     @GetMapping("/signIn")
     public String signIn(Model model, HttpSession session) {
         String errorMessage = (String) session.getAttribute("errorMessage");
