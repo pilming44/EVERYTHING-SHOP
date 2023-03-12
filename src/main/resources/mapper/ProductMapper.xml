@@ -45,7 +45,7 @@
         )
     </insert>
 
-    <select id="findById" parameterType="Long" resultType="ProductMEntity">
+    <select id="findByProductNum" parameterType="Long" resultType="ProductMEntity">
         SELECT T01.PRODUCT_NUM      /* 상품번호*/
              , T01.USER_NUM         /* 등록사용자번호*/
              , T01.PRODUCT_NAME     /* 상품명*/
@@ -53,6 +53,6 @@
              , T01.PRICE            /* 가격*/
              , T01.PRODUCT_STTS     /* 판매상태*/
           FROM PRODUCT_M T01
-         WHERE T01.PRODUCT_NUM = #{id}
+         WHERE T01.PRODUCT_NUM = #{productNum}
     </select>
 </mapper>

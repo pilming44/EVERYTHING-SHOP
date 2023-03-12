@@ -4,7 +4,6 @@ import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.ProductMEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * fileName : ProductDAOImpl
@@ -16,6 +15,6 @@ public interface ProductDAO {
 
     int save(ProductMEntity productMEntity);
 
-    ProductMEntity findById(Long id);
+    ProductMEntity findByProductNum(Long productNum);
 
 }

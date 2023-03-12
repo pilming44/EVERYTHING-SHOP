@@ -24,7 +24,7 @@ public class ProductController {
 
     @RequestMapping("/{productNum}")
     public String productDetail(@PathVariable long productNum, Model model) {
-        ProductMEntity productMEntity = productDAO.findById(productNum);
+        ProductMEntity productMEntity = productDAO.findByProductNum(productNum);
 
         log.info("productMEntity 객체 : {}", productMEntity);
         model.addAttribute("product", productMEntity);

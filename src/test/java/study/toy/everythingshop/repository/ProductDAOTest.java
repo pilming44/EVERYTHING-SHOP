@@ -35,7 +35,7 @@ public class ProductDAOTest {
         ProductMEntity productMEntity = ProductMEntity.builder().productName("만물상자").productStts("02").price(30000L).quantity(30L).userNum(1L).build();
         // when
         productDAO.save(productMEntity);
-        ProductMEntity productMEntity1 = productDAO.findById(productMEntity.getProductNum());
+        ProductMEntity productMEntity1 = productDAO.findByProductNum(productMEntity.getProductNum());
         // then
         assertThat(productMEntity).isEqualTo(productMEntity1);
     }
