@@ -215,7 +215,6 @@ public class ProductDAOTest {
                 .productName(null)
                 .fromPrice(null)
                 .toPrice(0L).build();
-        log.info("productSearchDTO : {}",productSearchDTO);
 
         //상품입력
         ProductMEntity productMEntity1 = ProductMEntity.builder().productName("만물상자").productStts("02").price(30000L).quantity(30L).userNum(1L).build();
@@ -242,7 +241,6 @@ public class ProductDAOTest {
                 .productName(null)
                 .fromPrice(0L)
                 .toPrice(0L).build();
-        log.info("productSearchDTO : {}",productSearchDTO);
 
         //상품입력
         ProductMEntity productMEntity1 = ProductMEntity.builder().productName("만물상자").productStts("02").price(30000L).quantity(30L).userNum(1L).build();
