@@ -15,7 +15,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh './gradlew clean build'
+                sh 'sudo ./gradlew clean build'
             }
         }
 
@@ -30,9 +30,9 @@ pipeline {
         stage('Docker Deploy') {
             steps {
                 script {
-                    sh "docker stop ${CONTAINER_NAME} || true"
-                    sh "docker rm ${CONTAINER_NAME} || true"
-                    sh "docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${IMAGE_NAME}:latest"
+                    sh "sudo docker stop ${CONTAINER_NAME} || true"
+                    sh "sudo docker rm ${CONTAINER_NAME} || true"
+                    sh "sudo docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${IMAGE_NAME}:latest"
                 }
             }
         }
