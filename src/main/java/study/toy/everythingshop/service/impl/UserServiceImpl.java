@@ -1,27 +1,29 @@
 package study.toy.everythingshop.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import study.toy.everythingshop.entity.UserMEntity;
-import study.toy.everythingshop.repository.MemberDAO;
-import study.toy.everythingshop.service.MembersService;
+import study.toy.everythingshop.repository.UserDAO;
+import study.toy.everythingshop.service.UserService;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MembersServiceImpl implements MembersService {
+public class UserServiceImpl implements UserService {
     /**
      * 새로운 멤버 save
      * @param userMEntity
      * @return
      */
-    private final MemberDAO memberDAO;
+    private final UserDAO userDAO;
 
     @Override
     public int insertMember(UserMEntity userMEntity) {
         checkDupId(userMEntity.getUserId()); //중복 회원 검증
-        return memberDAO.join(userMEntity);
+        return userDAO.join(userMEntity);
     }
     @Override
     public List<UserMEntity> findAll() {
@@ -30,9 +32,9 @@ public class MembersServiceImpl implements MembersService {
 
     @Override
     public void checkDupId(String userId){
-        memberDAO.findById(userId)
+        userDAO.findById(userId)
                 .ifPresent(m -> {
-                    throw new IllegalStateException("이미 존재하는 회원입니다.");
+                    throw new ResponseStatusException(HttpStatus.CONFLICT, "member.alreadyExists");
                 });
     }
 

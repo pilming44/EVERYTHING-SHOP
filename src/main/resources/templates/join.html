@@ -4,7 +4,32 @@
     <title>회원가입</title>
     <!-- 부트스트랩 CSS 파일 불러오기 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.3.slim.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        //ID 중복처리버튼
+        function checkDup(){
+            $.ajax({
+                type: "GET",
+                url: "/users/join/checkDupId", // 요청 URL
+                data: { userId: $("#userId").val() },
+                dataType : "text",
+                success: function(response) {
+                    console.log("response ",response);
+                    if (typeof response === "string") {
+                        // 중복 아이디가 없는 경우
+                        $("#dupCheckMsg").text(response);
+                    } else {
+                        // 중복 아이디가 있는 경우
+                        $("#dupCheckMsg").text(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(error)
+                    console.error(error);
+                }
+            });
+        }
+    </script>
 </head>
 <body>
 <div class="container justify-content-center">
@@ -13,33 +38,39 @@
         <div class="col text-center"><h2 class="font-weight-bold">회원가입</h2></div>
     </div>
     <!-- 가입정보 -->
-    <form action="/members/join" th:action th:object="${userMEntity}" method="post">
+    <form id="signInForm" action="/members/join" th:action th:object="${signInDTO}" method="post">
         <div class="row mt-3">
             <div class="col-md-5" style="margin-left:29%;">
                 <div>*ID : </div>
-                <input type="text" th:field="*{userId}" class="form-control" placeholder="아이디">
+                <input type="text" id="userId" th:field="*{userId}" class="form-control" placeholder="아이디" >
             </div>
             <div class="mt-auto">
                 <!-- 아이디 중복확인 버튼 -->
-                <button class="btn btn-primary" th:onclick="|location.href='@{/members/join/checkDupId}'|" th:text="#{button.dupCheck}">중복검사</button>
+                <button class="btn btn-primary" th:onclick="checkDup()" th:text="#{button.dupCheck}">중복검사</button>
             </div>
+        </div>
+        <div class="row mt-3">
+            <div th:if="${#fields.hasErrors('userId')}">
+                <span th:errors="*{userId}"></span>
+            </div>
+            <span th:id="dupCheckMsg"></span>
         </div>
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
                 <div>*PW : </div>
-                <input type="text" name="password" class="form-control" placeholder="비밀번호">
+                <input type="text" name="password" class="form-control" placeholder="비밀번호" >
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
                 <div>*PW 확인 : </div>
-                <input type="text" class="form-control" th:field="*{userPw}" placeholder="비밀번호">
+                <input type="text" class="form-control" th:field="*{userPw}" placeholder="비밀번호 확인" >
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
                 <div>*이름 : </div>
-                <input type="text" th:field="*{userNm}" class="form-control" placeholder="이름">
+                <input type="text" th:field="*{userNm}" class="form-control" placeholder="이름" >
             </div>
         </div>
         <!-- 버튼 -->

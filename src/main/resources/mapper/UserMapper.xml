@@ -25,4 +25,30 @@
           FROM USER_M T01
          WHERE T01.USER_ID = #{userId}
     </select>
+
+    <insert id="join" parameterType="UserMEntity">
+        INSERT INTO USER_M
+        (
+            USER_NUM
+        , USER_ID
+        , USER_PW
+        , REGISTER_DT
+        , CHANGE_DT
+        , USER_NM
+        )
+        VALUES
+            (
+                #{userNum}
+            , #{userId}
+            , #{userPw}
+            , SYSDATE
+            , SYSDATE
+            , #{userNm}
+            )
+    </insert>
+
+    <select id="findById" parameterType="String" resultType="signInDTO">
+        SELECT * FROM USER_M
+        WHERE USER_ID = #{userId}
+    </select>
 </mapper>
