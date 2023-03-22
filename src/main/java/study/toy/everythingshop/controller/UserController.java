@@ -2,45 +2,61 @@ package study.toy.everythingshop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import study.toy.everythingshop.dto.ErrorResponse;
+import study.toy.everythingshop.dto.SignInDTO;
 import study.toy.everythingshop.entity.UserMEntity;
 import study.toy.everythingshop.repository.UserDAO;
-import study.toy.everythingshop.service.MembersService;
+import study.toy.everythingshop.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.util.Locale;
+
 @Controller
-@RequestMapping("/members")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 @Slf4j
-public class MembersController {
+public class UserController {
     private final UserDAO userDAO;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final MembersService membersService;
+    private final UserService userService;
+    private final MessageSource messageSource;
 
     @GetMapping("/join")
-    public String joinForm(UserMEntity userMEntity){
+    public String joinForm(SignInDTO signInDTO){
         return "/join";
     }
     
     @PostMapping("/join")
-    public String join(@Validated @ModelAttribute UserMEntity userMEntity, BindingResult bindingResult, Model model){
+    public String join(@Validated @ModelAttribute SignInDTO signInDTO, BindingResult bindingResult, Model model){
 
         return "/join";
     }
 
     @GetMapping("/join/checkDupId")
-    public String join(@Validated @ModelAttribute("userId") String userId, BindingResult bindingResult, Model model){
-        membersService.checkDupId(userId);
-        return "/join";
+    @ResponseBody
+    public Object checkDupId(@RequestParam("userId") String userId) {
+        System.out.println("userId = " + userId);
+        try {
+            userService.checkDupId(userId);
+            String message = messageSource.getMessage("id.available", null, Locale.getDefault());
+            System.out.println("message = " + message);
+            return message;
+        } catch (ResponseStatusException ex) {
+            String message = ex.getReason();
+            HttpStatus status = ex.getStatus();
+            ErrorResponse errorResponse = new ErrorResponse(status.value(), message);
+            return errorResponse;
+        }
     }
     @GetMapping("/signIn")
     public String signIn(Model model, HttpSession session) {
