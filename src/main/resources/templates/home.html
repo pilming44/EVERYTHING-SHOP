@@ -29,7 +29,7 @@
 			  <div class="col-md-2">
 				  <button class="login-btn btn btn-primary btn-block"
 						  onclick="location.href='signIn.html'"
-						  th:onclick="|location.href='@{/members/signIn}'|" sec:authorize="isAnonymous()" th:text="#{button.singIn}">로그인</button>
+						  th:onclick="|location.href='@{/users/signIn}'|" sec:authorize="isAnonymous()" th:text="#{button.singIn}">로그인</button>
 				  <button class="register-btn btn btn-secondary btn-block"
 						  onclick="location.href='/logout'"
 						  th:onclick="|location.href='@{/logout}'|"

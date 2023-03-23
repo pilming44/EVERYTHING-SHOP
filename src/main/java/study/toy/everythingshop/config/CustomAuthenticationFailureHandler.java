@@ -11,7 +11,6 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +34,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         HttpSession session = request.getSession();
         session.setAttribute("errorMessage", errorMessage);
 
-        redirectStrategy.sendRedirect(request, response, "/members/signIn");
+        redirectStrategy.sendRedirect(request, response, "/users/signIn");
     }
 
     private String getErrorMessage(AuthenticationException exception) {
