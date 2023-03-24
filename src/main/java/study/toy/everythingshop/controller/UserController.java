@@ -45,15 +45,13 @@ public class UserController {
     @GetMapping("/join/checkDupId")
     @ResponseBody
     public Object checkDupId(@RequestParam("userId") String userId) {
-        System.out.println("userId = " + userId);
         try {
             userService.checkDupId(userId);
             String message = messageSource.getMessage("id.available", null, Locale.getDefault());
-            System.out.println("message = " + message);
             return message;
         } catch (ResponseStatusException ex) {
-            String message = ex.getReason();
             HttpStatus status = ex.getStatus();
+            String message = messageSource.getMessage("member.alreadyExists", null, Locale.getDefault());
             ErrorResponse errorResponse = new ErrorResponse(status.value(), message);
             return errorResponse;
         }

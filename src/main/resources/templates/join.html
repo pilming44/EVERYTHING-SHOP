@@ -6,28 +6,105 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        $(document).ready(function() {
+            init();
+            bind();
+        });
+
+        let isDupchecked = false;
+        let validatedPw = false;
+        function init(){
+            $('#joinBtn').prop('disabled', true);
+            $('#pwMessage').hide();
+            $('#idMessage').hide();
+        }
+        function bind(){
+            changeId();
+            validatePassword();
+            checkNm();
+        }
         //ID 중복처리버튼
         function checkDup(){
-            $.ajax({
-                type: "GET",
-                url: "/users/join/checkDupId", // 요청 URL
-                data: { userId: $("#userId").val() },
-                dataType : "text",
-                success: function(response) {
-                    console.log("response ",response);
-                    if (typeof response === "string") {
-                        // 중복 아이디가 없는 경우
-                        $("#dupCheckMsg").text(response);
-                    } else {
-                        // 중복 아이디가 있는 경우
-                        $("#dupCheckMsg").text(response.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.log(error)
-                    console.error(error);
+            event.preventDefault();
+            if(!isDupchecked){
+                var userId = $('#userId').val();
+                if($('#userId').val().trim() != ""){
+                    $.ajax({
+                        type: 'GET',
+                        url: "/users/join/checkDupId",
+                        data: { userId:userId },
+                        success: function(response) {
+                            let dupCheckMsg;
+                            if (typeof response === "string") {
+                                // 중복 아이디가 없는 경우
+                                dupCheckMsg = response
+                                isDupchecked = true;
+                            } else {
+                                // 중복 아이디가 있는 경우
+                                dupCheckMsg = response.message;
+                                isDupchecked = false;
+                            }
+                            $("#dupCheckMsg").text(dupCheckMsg);
+                            $('#idMessage').show();
+                            $('#dupCheckMsg').toggleClass('text-success', isDupchecked);
+                            $('#dupCheckMsg').toggleClass('text-danger', !isDupchecked);
+                            validateAll();
+                        },
+                        error: function(xhr) {
+                            alert("error 발생 , 잠시후 다시 시도해주세요.")
+                        }
+                    });
+                }else{
+                    alert("ID를 입력해주세요");
                 }
-            });
+            }else{
+                $('#dupCheckMsg').text("이미 체크한 ID 입니다.");
+            }
+        }
+        function changeId(){
+            $("#userId").change(function(){
+                isDupchecked = false;
+                $('#joinBtn').prop('disabled', true);
+                $('#idMessage').hide();
+            })
+            validateAll();
+        }
+        function validatePassword() {
+            $('#userPw, #userPwConfirm').on('change', function() {
+                if($("#userPw").val().trim() != ""){
+                    const userPw = $('#userPw').val();
+                    const userPwConfirm = $('#userPwConfirm').val();
+
+                    if (userPw !== userPwConfirm) {
+                        $('#userPwConfirmMsg').text("비밀번호가 일치하지 않습니다.");
+                        $('#pwMessage').show();
+                        validatedPw = false;
+                    }else{
+                        validatedPw = true;
+                        $('#userPwConfirmMsg').text("비밀번호가 일치합니다");
+                        $('#pwMessage').show();
+                    }
+                    $('#userPwConfirmMsg').toggleClass('text-success', validatedPw);
+                    $('#userPwConfirmMsg').toggleClass('text-danger', !validatedPw);
+                    validateAll();
+                }else{
+                    validatedPw = false;
+                    $('#pwMessage').hide();
+                }
+            })
+        }
+
+        function checkNm(){
+            $("#userNm").change(function(){
+                validateAll();
+            })
+        }
+        function validateAll(){
+            if($("#userNm").val().trim() !== "" && validatedPw && isDupchecked){
+                $('#joinBtn').prop('disabled', false);
+            }else{
+                $('#joinBtn').prop('disabled', true);
+            }
         }
     </script>
 </head>
@@ -49,36 +126,43 @@
                 <button class="btn btn-primary" th:onclick="checkDup()" th:text="#{button.dupCheck}">중복검사</button>
             </div>
         </div>
-        <div class="row mt-3">
-            <div th:if="${#fields.hasErrors('userId')}">
-                <span th:errors="*{userId}"></span>
+        <div class="row mt-0" style="display: none" id="idMessage">
+            <div class="col-md-5 mx-auto">
+                <div th:if="${#fields.hasErrors('userId')}">
+                    <span th:errors="*{userId}"></span>
+                </div>
+                <span th:id="dupCheckMsg" ></span>
             </div>
-            <span th:id="dupCheckMsg"></span>
         </div>
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
                 <div>*PW : </div>
-                <input type="text" name="password" class="form-control" placeholder="비밀번호" >
+                <input type="text" name="password" th:field="*{userPw}" id="userPw" class="form-control" placeholder="비밀번호" >
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
                 <div>*PW 확인 : </div>
-                <input type="text" class="form-control" th:field="*{userPw}" placeholder="비밀번호 확인" >
+                <input type="text" class="form-control" th:field="*{userPwConfirm}" id="userPwConfirm" placeholder="비밀번호 확인" >
+            </div>
+        </div>
+        <div class="row mt-0" style="display: none" id="pwMessage">
+            <div class="col-md-5 mx-auto">
+                <span th:id="userPwConfirmMsg"></span>
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
                 <div>*이름 : </div>
-                <input type="text" th:field="*{userNm}" class="form-control" placeholder="이름" >
+                <input type="text" th:field="*{userNm}" id="userNm" class="form-control" placeholder="이름" >
             </div>
         </div>
         <!-- 버튼 -->
         <div class="row mt-3">
             <div class="col">
                 <div class="text-center">
-                    <button class="btn btn-primary" th:text="#{button.singIn}">로그인</button>
-                    <button class="btn btn-primary" type="submit" th:text="#{button.join}">회원가입</button>
+                    <button id="signInBtn" class="btn btn-primary" th:text="#{button.singIn}">로그인</button>
+                    <button id="joinBtn" class="btn btn-primary" type="submit" th:text="#{button.join}">회원가입</button>
                 </div>
             </div>
         </div>
