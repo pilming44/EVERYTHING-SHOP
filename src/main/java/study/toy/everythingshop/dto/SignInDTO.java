@@ -13,6 +13,7 @@ public class SignInDTO {
     private Long userNum;
     private String userId;
     private String userPw;
+    private String userPwConfirm;
     private String userNm;
     private Long userRoleCd;
     private String registerDt;
