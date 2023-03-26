@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.toy.everythingshop.dto.ErrorResponse;
 import study.toy.everythingshop.dto.SignInDTO;
 import study.toy.everythingshop.entity.UserMEntity;
@@ -37,9 +38,21 @@ public class UserController {
     }
     
     @PostMapping("/join")
-    public String join(@Validated @ModelAttribute SignInDTO signInDTO, BindingResult bindingResult, Model model){
+    public String join(@Validated @ModelAttribute SignInDTO signInDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+        if (bindingResult.hasErrors()) {
+            return "redirect:/users/signup";
+        }
+        int result = userService.insertMember(signInDTO);
+        if(result > 0){
+            String message = messageSource.getMessage("id.joinSuccess", null, Locale.getDefault());
+            redirectAttributes.addFlashAttribute("successMessage", message);
+            return "redirect:/users/signIn";
+        }else{
+            String message = messageSource.getMessage("id.joinFail", null, Locale.getDefault());
+            redirectAttributes.addFlashAttribute("failMessage", message);
+            return "redirect:/users/signup";
+        }
 
-        return "/join";
     }
 
     @GetMapping("/join/checkDupId")

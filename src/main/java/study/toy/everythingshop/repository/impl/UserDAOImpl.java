@@ -27,15 +27,13 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public Optional<SignInDTO> findById(String userId){
-        System.out.println("Dao userId = " + userId);
         List<SignInDTO> result = sqlSession.selectList("study.toy.everythingshop.repository.UserDAO.findById", userId);
-        System.out.println("Dao result = " + result);
         return result.stream().findAny();
     }
 
     @Override
-    public int join(UserMEntity userMEntity) {
-        return sqlSession.insert("study.toy.everythingshop.repository.UserDAO.join", userMEntity);
+    public int join(SignInDTO signInDTO) {
+        return sqlSession.insert("study.toy.everythingshop.repository.UserDAO.join", signInDTO);
     }
 
     @Override

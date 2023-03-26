@@ -1,7 +1,6 @@
 package study.toy.everythingshop.repository;
 
 import study.toy.everythingshop.dto.SignInDTO;
-import study.toy.everythingshop.entity.ProductMEntity;
 import study.toy.everythingshop.entity.UserMEntity;
 
 import java.util.Optional;
@@ -18,5 +17,5 @@ public interface UserDAO {
 
     public Optional<SignInDTO> findById(String userId);
 
-    public int join(UserMEntity userMEntity);
+    public int join(SignInDTO userMEntity);
 }
