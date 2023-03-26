@@ -115,6 +115,11 @@
         <div class="col text-center"><h2 class="font-weight-bold">회원가입</h2></div>
     </div>
     <!-- 가입정보 -->
+    <div class="row mt-3"th:if="${failMessage}">
+        <div class="col-md-5 mx-auto">
+            <div class="alert alert-danger" role="alert" th:text="${failMessage}"></div>
+        </div>
+    </div>
     <form id="signInForm" action="/users/join" th:action th:object="${signInDTO}" method="post">
         <div class="row mt-3">
             <div class="col-md-5" style="margin-left:29%;">
@@ -161,7 +166,7 @@
         <div class="row mt-3">
             <div class="col">
                 <div class="text-center">
-                    <button id="signInBtn" class="btn btn-primary" th:text="#{button.singIn}">로그인</button>
+                    <button type="button" id="signInBtn" class="btn btn-primary" th:href="@{/users/signIn}" onclick="location.href = this.getAttribute('href');"  th:text="#{button.singIn}">로그인</button>
                     <button id="joinBtn" class="btn btn-primary" type="submit" th:text="#{button.join}">회원가입</button>
                 </div>
             </div>
