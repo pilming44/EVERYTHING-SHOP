@@ -6,7 +6,7 @@ import study.toy.everythingshop.entity.UserMEntity;
 import java.util.List;
 public interface UserService {
 
-    int insertMember(SignInDTO userMEntity);
+    int insertMember(SignInDTO signInDTO);
     List<UserMEntity> findAll();
 
 

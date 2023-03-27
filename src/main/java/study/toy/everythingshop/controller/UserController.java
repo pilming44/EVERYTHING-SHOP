@@ -50,7 +50,7 @@ public class UserController {
         }else{
             String message = messageSource.getMessage("id.joinFail", null, Locale.getDefault());
             redirectAttributes.addFlashAttribute("failMessage", message);
-            return "redirect:users/signup";
+            return "redirect:users/join";
         }
 
     }
