@@ -34,23 +34,23 @@ public class UserController {
 
     @GetMapping("/join")
     public String joinForm(SignInDTO signInDTO){
-        return "/join";
+        return "join";
     }
     
     @PostMapping("/join")
     public String join(@Validated @ModelAttribute SignInDTO signInDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if (bindingResult.hasErrors()) {
-            return "redirect:/users/signup";
+            return "redirect:users/signup";
         }
         int result = userService.insertMember(signInDTO);
         if(result > 0){
             String message = messageSource.getMessage("id.joinSuccess", null, Locale.getDefault());
             redirectAttributes.addFlashAttribute("successMessage", message);
-            return "redirect:/users/signIn";
+            return "redirect:users/signIn";
         }else{
             String message = messageSource.getMessage("id.joinFail", null, Locale.getDefault());
             redirectAttributes.addFlashAttribute("failMessage", message);
-            return "redirect:/users/signup";
+            return "redirect:users/signup";
         }
 
     }
