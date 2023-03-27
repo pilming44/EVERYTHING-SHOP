@@ -120,7 +120,7 @@
             <div class="alert alert-danger" role="alert" th:text="${failMessage}"></div>
         </div>
     </div>
-    <form id="signInForm" th:action="@{/users/join}" th:action th:object="${signInDTO}" method="post">
+    <form id="signInForm" th:action="@{/users/join}" th:object="${signInDTO}" method="post">
         <div class="row mt-3">
             <div class="col-md-5" style="margin-left:29%;">
                 <div>*ID : </div>
