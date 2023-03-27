@@ -40,7 +40,7 @@ public class UserController {
     @PostMapping("/join")
     public String join(@Validated @ModelAttribute SignInDTO signInDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if (bindingResult.hasErrors()) {
-            return "redirect:users/signup";
+            return "redirect:users/join";
         }
         int result = userService.insertMember(signInDTO);
         if(result > 0){
