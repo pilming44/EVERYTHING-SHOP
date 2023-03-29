@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<meta charset="utf-8">
 	<title>상품 목록</title>
@@ -24,7 +24,7 @@
 				<button class="register-btn btn btn-primary btn-block" th:onclick="|location.href='@{/users/join}'|" sec:authorize="isAnonymous()" th:text="#{button.join}">회원가입</button>
 				<button class="btn btn-primary btn-block"
 						onclick="location.href='/'"
-						th:onclick="|location.href='@{/}'|" sec:authorize="isAuthenticated()" th:text="#{button.myPage}">마이페이지</button>
+						th:onclick="|location.href='@{/myPage}'|" sec:authorize="isAuthenticated()" th:text="#{button.myPage}">마이페이지</button>
 			</div>
 			  <div class="col-md-2">
 				  <button class="login-btn btn btn-primary btn-block"
@@ -36,7 +36,7 @@
 						  sec:authorize="isAuthenticated()" th:text="#{button.logOut}">로그아웃</button>
 			  </div>
 		</div>
-		<form action="home" th:action th:object="${productSearchDTO}" method="get">
+		<form action="/home" th:action th:object="${productSearchDTO}" method="get">
 			<!-- 검색창 -->
 			<div class="row mt-3">
 				<div class="col-md-5">
@@ -115,7 +115,7 @@
 					<tbody>
 						<tr th:each="product : ${products}">
 							<td class="text-center" th:text="${product.productNum}">상품번호</td>
-							<td><a href="item.html" th:href="@{|/product/${product.productNum}|}" th:text="${product.productName}">상품명</a></td>
+							<td><a href="/" th:href="@{|/product/${product.productNum}|}" th:text="${product.productName}">상품명</a></td>
 							<td class="text-center" th:text="${product.price}">상품가격</td>
 							<td class="text-center" th:text="${product.quantity}">수량</td>
 						</tr>

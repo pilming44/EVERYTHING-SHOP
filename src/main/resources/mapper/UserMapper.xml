@@ -18,10 +18,13 @@
     </insert>
 
     <select id="findByUserId" parameterType="String" resultType="UserMEntity">
-        SELECT T01.USER_ID
+        SELECT T01.USER_NUM
+             , T01.USER_ID
              , T01.USER_PW
              , T01.USER_ROLE_CD
              , T01.USER_NM
+             , T01.CHANGE_DT
+             , T01.REGISTER_DT
           FROM USER_M T01
          WHERE T01.USER_ID = #{userId}
     </select>
@@ -49,4 +52,11 @@
         SELECT * FROM USER_M
         WHERE USER_ID = #{userId}
     </select>
+    
+    <update id="updateUserInfo" parameterType="UserMEntity">
+        UPDATE USER_M
+           SET USER_NM = #{userNm}
+             , CHANGE_DT = sysdate
+         WHERE USER_ID = #{userId}
+    </update>
 </mapper>

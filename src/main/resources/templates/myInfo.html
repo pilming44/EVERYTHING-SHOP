@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>내정보</title>
+  <!-- 부트스트랩 CSS 파일 불러오기 -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container justify-content-center">
+  <div class="row mt-3">
+    <div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.myInfo}">마이페이지</h2></div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-5 mx-auto">
+      <label for="userId" th:text="#{label.member.id}">ID</label>
+      <input type="text" id="userId" th:field="*{userInfo.userId}" class="form-control" value="아이디" readonly>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-5 mx-auto">
+      <label for="userName" th:text="#{label.member.name}">이름</label>
+      <input type="text" id="userName" th:field="*{userInfo.userNm}" class="form-control" value="이름" readonly>
+    </div>
+  </div>
+  <div  class="row mt-3">
+    <div class="col-md-5 mx-auto">
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-primary btn-lg btn-block"
+                  onclick="location.href='/'"
+                  th:onclick="|location.href='@{/myPage/editMyInfo}'|"
+                  type="button" th:text="#{button.edit}">수정</button>
+        </div>
+        <div class="col">
+          <button class="btn btn-secondary btn-lg btn-block"
+                  onclick="location.href='/'"
+                  th:onclick="|location.href='@{/myPage}'|"
+                  type="button" th:text="#{button.previous}">이전</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> <!-- /container -->
+</body>
+</html>

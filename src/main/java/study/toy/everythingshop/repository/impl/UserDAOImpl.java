@@ -40,4 +40,9 @@ public class UserDAOImpl implements UserDAO {
     public int save(UserMEntity userMEntity) {
         return sqlSession.insert("study.toy.everythingshop.repository.UserDAO.save", userMEntity);
     }
+
+    @Override
+    public int updateUserInfo(UserMEntity userMEntity) {
+        return sqlSession.update("study.toy.everythingshop.repository.UserDAO.updateUserInfo", userMEntity);
+    }
 }

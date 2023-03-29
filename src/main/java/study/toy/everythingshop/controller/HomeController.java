@@ -28,9 +28,11 @@ public class HomeController {
 
     @RequestMapping("/home")
     public String home(@Validated  @ModelAttribute ProductSearchDTO productSearchDTO, BindingResult bindingResult, Model model) {
+        log.info("시작시 productSearchDTO : {}", productSearchDTO);
         if(bindingResult.hasErrors()) {
             //검색값중 잘못된 값이 있다면 검색값 초기화
             productSearchDTO = new ProductSearchDTO();
+            log.info("바인딩오류발생");
         }
 
         if(productSearchDTO.getFromPrice() != null && productSearchDTO.getToPrice() != null
@@ -43,6 +45,11 @@ public class HomeController {
 
         List<ProductMEntity> products = productDAO.findAll(productSearchDTO);
         model.addAttribute("products", products);
+        if(!bindingResult.hasErrors()) {
+            model.addAttribute("productSearchDTO", productSearchDTO);
+        }
+        log.info("종료시 productSearchDTO : {}", productSearchDTO);
+        log.info("종료시 bindingResult : {}", bindingResult);
         return "home";
     }
 }

@@ -18,4 +18,6 @@ public interface UserDAO {
     public Optional<SignInDTO> findById(String userId);
 
     public int join(SignInDTO userMEntity);
+
+    int updateUserInfo(UserMEntity userMEntity);
 }
