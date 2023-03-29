@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>마이페이지</title>
+  <!-- 부트스트랩 CSS 파일 불러오기 -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container justify-content-center">
+
+  <div class="row mt-3">
+    <div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.myPage}">마이페이지</h2></div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-5 mx-auto">
+      <button class="w-100 btn btn-primary btn-lg"
+              onclick="location.href='home.html'"
+              th:onclick="|location.href='@{/myPage/myInfo}'|"
+              type="button" th:text="#{button.myInfo}">내정보 조회</button>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-5 mx-auto">
+      <button class="w-100 btn btn-primary btn-lg"
+              onclick="location.href='home.html'"
+              th:onclick="|location.href='@{/home}'|"
+              type="button" th:text="#{button.order.history}">주문내역</button>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-5 mx-auto">
+      <button class="w-100 btn btn-secondary btn-lg"
+              onclick="location.href='home.html'"
+              th:onclick="|location.href='@{/home}'|"
+              type="button" th:text="#{button.home}">목록으로</button>
+    </div>
+  </div>
+
+</div> <!-- /container -->
+</body>
+</html>
