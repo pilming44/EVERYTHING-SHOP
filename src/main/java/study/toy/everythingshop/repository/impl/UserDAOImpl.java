@@ -3,7 +3,7 @@ package study.toy.everythingshop.repository.impl;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
-import study.toy.everythingshop.dto.SignInDTO;
+import study.toy.everythingshop.dto.JoinDTO;
 import study.toy.everythingshop.entity.UserMEntity;
 import study.toy.everythingshop.repository.UserDAO;
 
@@ -26,14 +26,14 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public Optional<SignInDTO> findById(String userId){
-        List<SignInDTO> result = sqlSession.selectList("study.toy.everythingshop.repository.UserDAO.findById", userId);
+    public Optional<JoinDTO> findById(String userId){
+        List<JoinDTO> result = sqlSession.selectList("study.toy.everythingshop.repository.UserDAO.findById", userId);
         return result.stream().findAny();
     }
 
     @Override
-    public int join(SignInDTO signInDTO) {
-        return sqlSession.insert("study.toy.everythingshop.repository.UserDAO.join", signInDTO);
+    public int join(JoinDTO joinDTO) {
+        return sqlSession.insert("study.toy.everythingshop.repository.UserDAO.join", joinDTO);
     }
 
     @Override

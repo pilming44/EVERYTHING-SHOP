@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>회원가입</title>
+    <title th:text="#{page.title.join}">회원가입</title>
     <!-- 부트스트랩 CSS 파일 불러오기 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
+    <script th:inline="javascript">
         $(document).ready(function() {
             init();
             bind();
@@ -51,14 +51,14 @@
                             validateAll();
                         },
                         error: function(xhr) {
-                            alert("error 발생 , 잠시후 다시 시도해주세요.")
+                            alert(/*[[#{error.exist}]]*/ "error 발생")
                         }
                     });
                 }else{
-                    alert("ID를 입력해주세요");
+                    alert(/*[[#{error.join.needID}]]*/ "ID를 입력");
                 }
             }else{
-                $('#dupCheckMsg').text("이미 체크한 ID 입니다.");
+                $('#dupCheckMsg').text(/*[[#{error.join.alreadyCheckDup}]]*/ "이미 체크한 ID");
             }
         }
         function changeId(){
@@ -76,12 +76,12 @@
                     const userPwConfirm = $('#userPwConfirm').val();
 
                     if (userPw !== userPwConfirm) {
-                        $('#userPwConfirmMsg').text("비밀번호가 일치하지 않습니다.");
+                        $('#userPwConfirmMsg').text(/*[[#{error.join.notSamePw}]]*/ "비밀번호가 일치하지 않음");
                         $('#pwMessage').show();
                         validatedPw = false;
                     }else{
                         validatedPw = true;
-                        $('#userPwConfirmMsg').text("비밀번호가 일치합니다");
+                        $('#userPwConfirmMsg').text(/*[[#{join.samePw}]]*/"비밀번호가 일치");
                         $('#pwMessage').show();
                     }
                     $('#userPwConfirmMsg').toggleClass('text-success', validatedPw);
@@ -120,7 +120,7 @@
             <div class="alert alert-danger" role="alert" th:text="${failMessage}"></div>
         </div>
     </div>
-    <form id="signInForm" th:action="@{/users/join}" th:object="${signInDTO}" method="post">
+    <form id="signInForm" th:action="@{/users/join}" th:object="${joinDTO}" method="post">
         <div class="row mt-3">
             <div class="col-md-5" style="margin-left:29%;">
                 <div>*ID : </div>
@@ -142,13 +142,13 @@
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
                 <div>*PW : </div>
-                <input type="text" name="password" th:field="*{userPw}" id="userPw" class="form-control" placeholder="비밀번호" >
+                <input type="password" name="password" th:field="*{userPw}" id="userPw" class="form-control" placeholder="비밀번호" >
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
                 <div>*PW 확인 : </div>
-                <input type="text" class="form-control" th:field="*{userPwConfirm}" id="userPwConfirm" placeholder="비밀번호 확인" >
+                <input type="password" class="form-control" th:field="*{userPwConfirm}" id="userPwConfirm" placeholder="비밀번호 확인" >
             </div>
         </div>
         <div class="row mt-0" style="display: none" id="pwMessage">
