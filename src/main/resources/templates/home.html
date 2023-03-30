@@ -71,8 +71,8 @@
 				<div class="col-md-2">
 					<div class="text-right">
 						<button class="btn btn-primary btn-block"
-								onclick="location.href=''"
-								th:onclick="|location.href='@{/}'|" sec:authorize="isAuthenticated()" th:text="#{button.product.add}">상품등록</button>
+								th:onclick="|event.preventDefault(); location.href='@{/product/register}'|"
+								sec:authorize="isAuthenticated()" th:text="#{button.product.add}">상품등록</button>
 					</div>
 				</div>
 			</div>
