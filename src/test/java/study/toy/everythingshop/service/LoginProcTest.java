@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import study.toy.everythingshop.dto.SignInDTO;
+import study.toy.everythingshop.dto.JoinDTO;
 import study.toy.everythingshop.entity.UserMEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,11 +37,11 @@ public class LoginProcTest {
     @BeforeEach
     void beforeEach() {
         //테스트용 사용자 계정 생성
-        SignInDTO signInDTO = new SignInDTO();
-        signInDTO.setUserId("testId");
-        signInDTO.setUserPw("testPw");
-        signInDTO.setUserNm("테스트계정");
-        userService.insertMember(signInDTO);
+        JoinDTO joinDTO = new JoinDTO();
+        joinDTO.setUserId("testId");
+        joinDTO.setUserPw("testPw");
+        joinDTO.setUserNm("테스트계정");
+        userService.insertMember(joinDTO);
     }
 
     @Test

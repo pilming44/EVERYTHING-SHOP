@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
-import study.toy.everythingshop.dto.SignInDTO;
+import study.toy.everythingshop.dto.JoinDTO;
 import study.toy.everythingshop.service.UserService;
 
 /**
@@ -28,11 +28,11 @@ public class WithUserSecurityContextFactory implements WithSecurityContextFactor
     public SecurityContext createSecurityContext(WithUser withUser) {
 
         //테스트용 사용자 계정 생성
-        SignInDTO signInDTO = new SignInDTO();
-        signInDTO.setUserId(withUser.value());
-        signInDTO.setUserPw("testPw");
-        signInDTO.setUserNm(withUser.value()+"이름");
-        userService.insertMember(signInDTO);
+        JoinDTO joinDTO = new JoinDTO();
+        joinDTO.setUserId(withUser.value());
+        joinDTO.setUserPw("testPw");
+        joinDTO.setUserNm(withUser.value()+"이름");
+        userService.insertMember(joinDTO);
 
         UserDetails principal = userDetailsService.loadUserByUsername(withUser.value());
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal
