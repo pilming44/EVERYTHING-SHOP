@@ -1,6 +1,6 @@
 package study.toy.everythingshop.repository;
 
-import study.toy.everythingshop.dto.SignInDTO;
+import study.toy.everythingshop.dto.JoinDTO;
 import study.toy.everythingshop.entity.UserMEntity;
 
 import java.util.Optional;
@@ -15,9 +15,9 @@ public interface UserDAO {
 
     UserMEntity findByUserId(String userId);
 
-    Optional<SignInDTO> findById(String userId);
+    Optional<JoinDTO> findById(String userId);
 
-    int join(SignInDTO userMEntity);
+    int join(JoinDTO userMEntity);
 
     int updateUserInfo(UserMEntity userMEntity);
 }
