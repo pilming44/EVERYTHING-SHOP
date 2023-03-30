@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="study.toy.everythingshop.repository.UserDAO">
-    <insert id="save" parameterType="SignInDTO">
+    <insert id="save" parameterType="JoinDTO">
         INSERT INTO USER_M
         (
             USER_ID
@@ -29,7 +29,7 @@
          WHERE T01.USER_ID = #{userId}
     </select>
 
-    <insert id="join" parameterType="SignInDTO">
+    <insert id="join" parameterType="JoinDTO">
         INSERT INTO USER_M
         (
           USER_ID
@@ -48,7 +48,7 @@
             )
     </insert>
 
-    <select id="findById" parameterType="String" resultType="signInDTO">
+    <select id="findById" parameterType="String" resultType="joinDTO">
         SELECT * FROM USER_M
         WHERE USER_ID = #{userId}
     </select>

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignInDTO {
+public class JoinDTO {
     private Long userNum;
     private String userId;
     private String userPw;

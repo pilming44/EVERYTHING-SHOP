@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.toy.everythingshop.dto.ErrorResponse;
-import study.toy.everythingshop.dto.SignInDTO;
+import study.toy.everythingshop.dto.JoinDTO;
 import study.toy.everythingshop.entity.UserMEntity;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.UserService;
@@ -33,16 +33,16 @@ public class UserController {
     private final MessageSource messageSource;
 
     @GetMapping("/join")
-    public String joinForm(SignInDTO signInDTO){
+    public String joinForm(JoinDTO joinDTO){
         return "join";
     }
     
     @PostMapping("/join")
-    public String join(@Validated @ModelAttribute SignInDTO signInDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+    public String join(@Validated @ModelAttribute JoinDTO joinDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if (bindingResult.hasErrors()) {
             return "redirect:/users/join";
         }
-        int result = userService.insertMember(signInDTO);
+        int result = userService.insertMember(joinDTO);
         if(result > 0){
             String message = messageSource.getMessage("id.joinSuccess", null, Locale.getDefault());
             redirectAttributes.addFlashAttribute("successMessage", message);
@@ -64,7 +64,7 @@ public class UserController {
             return message;
         } catch (ResponseStatusException ex) {
             HttpStatus status = ex.getStatus();
-            String message = messageSource.getMessage("member.alreadyExists", null, Locale.getDefault());
+            String message = messageSource.getMessage("user.alreadyExists", null, Locale.getDefault());
             ErrorResponse errorResponse = new ErrorResponse(status.value(), message);
             return errorResponse;
         }

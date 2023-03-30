@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import study.toy.everythingshop.dto.SignInDTO;
+import study.toy.everythingshop.dto.JoinDTO;
 import study.toy.everythingshop.entity.UserMEntity;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.UserService;
@@ -24,9 +24,9 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public int insertMember(SignInDTO signInDTO) {
-        signInDTO.setUserPw(bCryptPasswordEncoder.encode(signInDTO.getUserPw()));
-        return userDAO.join(signInDTO);
+    public int insertMember(JoinDTO joinDTO) {
+        joinDTO.setUserPw(bCryptPasswordEncoder.encode(joinDTO.getUserPw()));
+        return userDAO.join(joinDTO);
     }
     @Override
     public List<UserMEntity> findAll() {
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public void checkDupId(String userId){
         userDAO.findById(userId)
                 .ifPresent(m -> {
-                    throw new ResponseStatusException(HttpStatus.CONFLICT, "member.alreadyExists");
+                    throw new ResponseStatusException(HttpStatus.CONFLICT, "user.alreadyExists");
                 });
     }
 
