@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 
 /**
  * fileName : UserMEntity
@@ -19,6 +21,8 @@ public class UserMEntity {
     private Long userNum;
     private String userId;
     private String userPw;
+
+    @NotBlank
     private String userNm;
     private String userRoleCd;
     private String registerDt;

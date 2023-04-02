@@ -5,23 +5,32 @@
   <title>내정보</title>
   <!-- 부트스트랩 CSS 파일 불러오기 -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+    .field-error {
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+  </style>
 </head>
 <body>
 <div class="container justify-content-center">
   <div class="row mt-3">
     <div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.editMyInfo}">내정보 수정</h2></div>
   </div>
-  <form id="editForm" th:action="@{/myPage/editMyInfo/{userId}(userId=${userInfo.userId})}" method="POST">
+  <form id="editForm" th:object="${userInfo}" th:action="@{/myPage/editMyInfo/{userId}(userId=${userInfo.userId})}" method="POST">
     <div class="row mt-3">
       <div class="col-md-5 mx-auto">
         <label for="userId" th:text="#{label.member.id}">ID</label>
-        <input type="text" id="userId" th:field="*{userInfo.userId}" class="form-control" value="아이디" readonly>
+        <input type="text" id="userId" th:field="*{userId}" class="form-control" value="아이디" readonly>
       </div>
     </div>
     <div class="row mt-3">
       <div class="col-md-5 mx-auto">
         <label for="userName" th:text="#{label.member.name}">이름</label>
-        <input type="text" id="userName" th:field="*{userInfo.userNm}" class="form-control" value="이름">
+        <input type="text" id="userName" th:field="*{userNm}" class="form-control" value="이름">
+        <div class="field-error" th:errors="*{userNm}">
+          사용자명 오류
+        </div>
       </div>
     </div>
   </form>

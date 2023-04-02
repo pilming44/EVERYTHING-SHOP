@@ -7,6 +7,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -66,7 +69,14 @@ public class MyPageController {
     }
 
     @RequestMapping(value = "/editMyInfo/{userId}", method = RequestMethod.POST)
-    public String editMyInfo(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String userId, UserMEntity userMEntity) {
+    public String editMyInfo(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String userId,
+                             @Validated @ModelAttribute("userInfo") UserMEntity userMEntity, BindingResult bindingResult) {
+        log.info("userMEntity={}", userMEntity);
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            return "editMyInfo";
+        }
+
         //로그인 한 아이디와 수정 요청 한 아이디가 동일한지 체크
         if (!userId.equals(userDetails.getUsername()) || !userMEntity.getUserId().equals(userDetails.getUsername())) {
             //todo 예외 페이지로 처리할지 아니면 수정화면에서 bindingResult로 처리할지 결정 필요
