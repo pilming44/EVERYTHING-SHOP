@@ -36,7 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringJUnitConfig
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource(properties = "spring.messages.basename=messages,errors")
 public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;

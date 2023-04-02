@@ -126,3 +126,12 @@
 	</div>
 </body>
 </html>
+<script th:inline="javascript">
+	var successMessage = /*[[${productRegi_success}]]*/ "";
+	var failMessage = /*[[${productRegi_fail}]]*/ "";
+
+	if (successMessage || failMessage) {
+		var message = successMessage ? successMessage : failMessage;
+		alert(message);
+	}
+</script>

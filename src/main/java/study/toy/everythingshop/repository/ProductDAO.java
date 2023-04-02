@@ -1,5 +1,6 @@
 package study.toy.everythingshop.repository;
 
+import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.ProductMEntity;
 
@@ -17,4 +18,5 @@ public interface ProductDAO {
 
     ProductMEntity findByProductNum(Long productNum);
 
+    int registerProduct(ProductRegisterDTO productRegisterDTO);
 }
