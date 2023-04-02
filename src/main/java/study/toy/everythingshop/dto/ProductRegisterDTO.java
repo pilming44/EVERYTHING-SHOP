@@ -21,8 +21,10 @@ public class ProductRegisterDTO {
     private String productName;     //상품명
     private Long userNum; //등록자번호
     private String productStts; //상품상태
-    @Range(min = 0, max = 999999999)
+
+    @Range(min = 1, max = 999999999)
     private Long quantity; //수량
+
     @Range(min = 0, max = 999999999)
     private Long price;    //가격
 

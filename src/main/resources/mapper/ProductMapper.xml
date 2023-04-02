@@ -55,4 +55,24 @@
           FROM PRODUCT_M T01
          WHERE T01.PRODUCT_NUM = #{productNum}
     </select>
+
+    <insert id="registerProduct" parameterType="ProductRegisterDTO" useGeneratedKeys="true" keyProperty="productNum">
+        INSERT INTO PRODUCT_M
+        (
+          USER_NUM
+        , PRODUCT_NAME
+        , QUANTITY
+        , PRICE
+        , PRODUCT_STTS
+        )
+        VALUES
+        (
+          #{userNum}
+        , #{productName}
+        , #{quantity}
+        , #{price}
+        , #{productStts}
+        )
+    </insert>
+
 </mapper>

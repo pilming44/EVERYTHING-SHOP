@@ -13,7 +13,7 @@
         <div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.product.register}">상품등록</h2></div>
     </div>
     <!-- 입력정보 -->
-    <form id="productRegisterForm" th:action="@{/users/join}" th:object="${productRegisterDTO}" method="post">
+    <form id="productRegisterForm" th:action="@{/product/register}" th:object="${productRegisterDTO}" method="post">
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
                 <div>*상품명 : </div>
@@ -23,19 +23,33 @@
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
                 <div>*가격 : </div>
-                <input type="text" th:field="*{price}" id="price" class="form-control" placeholder="가격" >
+                <input type="number" th:field="*{price}" th:errorclass="border-danger" id="price" class="form-control" placeholder="가격" >
+            </div>
+        </div>
+        <div th:if="${#fields.hasErrors('price')}">
+            <div class="row mt-0" id="priceError">
+                <div class="col-md-5 mx-auto">
+                    <span th:errors="*{price}" class="text-danger"></span>
+                </div>
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
                 <div>*수량 : </div>
-                <input type="number" th:field="*{quantity}" id="quantity" class="form-control" placeholder="수량" >
+                <input type="number"  th:errorclass="border-danger" th:field="*{quantity}" id="quantity" class="form-control" placeholder="수량" >
+            </div>
+        </div>
+        <div th:if="${#fields.hasErrors('quantity')}">
+            <div class="row mt-0" id="quantityError">
+                <div class="col-md-5 mx-auto">
+                    <span th:errors="*{quantity}" class="text-danger"></span>
+                </div>
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
-                <div>*수량 : </div>
-                <select th:field="*{productStts}">
+                <div>*상태 : </div>
+                <select class="custom-select" th:field="*{productStts}">
                     <option value="01">판매준비</option>
                     <option value="02">판매중</option>
                 </select>
