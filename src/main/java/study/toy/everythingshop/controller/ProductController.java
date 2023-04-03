@@ -9,20 +9,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import study.toy.everythingshop.dto.JoinDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
-import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.ProductMEntity;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.service.ProductService;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import java.security.InvalidParameterException;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * fileName : ProductController
@@ -75,4 +73,42 @@ public class ProductController {
         }
     }
 
+    @RequestMapping("/{productNum}/edit")
+    public String productEditView(@PathVariable long productNum, Model model) {
+        ProductMEntity productMEntity = productDAO.findByProductNum(productNum);
+
+        log.info("productMEntity 객체 : {}", productMEntity);
+        model.addAttribute("product", productMEntity);
+        return "productEdit";
+    }
+
+    @RequestMapping(value = "/{productNum}/edit", method = RequestMethod.POST)
+    public String productEdit(HttpServletRequest request, @PathVariable long productNum,
+                              @Validated @ModelAttribute("product") ProductRegisterDTO productRegisterDTO,
+                              BindingResult bindingResult) {
+        //검증. 이전 url의 productNum과 post요청의 productNum이 다를경우 AccessDeniedException
+        //todo 이 방법또한 완벽하진않음. Referer 헤더값이 없거나 Referer 헤더값이 조작될수도있음 좀더 좋은 방법 고민
+        long refererProductNum = 0L;
+
+        String refererUrl = request.getHeader("Referer");
+
+        Pattern pattern = Pattern.compile("product/(\\d+)/edit");
+        Matcher matcher = pattern.matcher(refererUrl);
+        if (matcher.find()) {
+            log.info("matcher.find() : {}", matcher.group(1));
+            refererProductNum = Long.parseLong(matcher.group(1)) ;
+        }
+
+        if(productNum != refererProductNum) {
+            throw new InvalidParameterException("Invalid parameter value");
+        }
+
+        if(bindingResult.hasErrors()) {
+            log.info("바인딩오류발생");
+            return "productEdit";
+        }
+
+        log.info("refererUrl : {}", refererUrl);
+        return "redirect:/product/"+productNum+"/edit";
+    }
 }
