@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import study.toy.everythingshop.controller.WithUser;
 import study.toy.everythingshop.dto.JoinDTO;
 import study.toy.everythingshop.entity.UserMEntity;
 
@@ -77,6 +78,7 @@ public class LoginProcTest {
 
     @Test
     @DisplayName("로그아웃")
+    @WithUser(value = "admin")
     void test_3() throws Exception {
         mockMvc.perform(post("/logout") // 로그아웃요청
                         .with(csrf()))

@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional //계정 중복 생성을 막기위해 추가
-public class myPageControllerTest {
+public class MyPageControllerTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -70,7 +70,6 @@ public class myPageControllerTest {
     @DisplayName("로그인 사용자 내정보 수정 - 성공")
     @WithUser(value = "admin") //@BeforeEach 와 @WithUserDetails 사용시 오류로 인해 커스텀 태그 생성
     void test_4() throws Exception{
-        //todo
         String userId = "admin";
         String newUserName = "변경이름";
 
@@ -81,7 +80,7 @@ public class myPageControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/myPage/myInfo"));
 
-        //검증
+        //todo dao와의 의존성 제거 필요
         UserMEntity userMEntity = userDAO.findByUserId(userId);
         assertThat(newUserName).isEqualTo(userMEntity.getUserNm());
     }
