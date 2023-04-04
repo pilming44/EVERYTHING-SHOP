@@ -5,4 +5,6 @@ import study.toy.everythingshop.dto.ProductRegisterDTO;
 
 public interface ProductService {
     int registerProduct(ProductRegisterDTO productRegisterDTO, UserDetails userDetails);
+
+    int editProduct(ProductRegisterDTO productRegisterDTO);
 }

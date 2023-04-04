@@ -107,8 +107,8 @@ public class ProductController {
             log.info("바인딩오류발생");
             return "productEdit";
         }
-
-        log.info("refererUrl : {}", refererUrl);
-        return "redirect:/product/"+productNum+"/edit";
+        int updateResult = productService.editProduct(productRegisterDTO);
+        log.info("updateResult : {}", updateResult);
+        return "redirect:/product/"+productNum;
     }
 }
