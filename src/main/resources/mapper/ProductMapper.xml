@@ -75,4 +75,12 @@
         )
     </insert>
 
+    <update id="editProduct" parameterType="ProductRegisterDTO">
+        UPDATE PRODUCT_M
+           SET PRODUCT_NAME = #{productName}
+             , PRICE = #{price}
+             , QUANTITY = #{quantity}
+         WHERE PRODUCT_NUM = #{productNum}
+    </update>
+
 </mapper>

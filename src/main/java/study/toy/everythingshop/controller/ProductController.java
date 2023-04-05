@@ -87,7 +87,7 @@ public class ProductController {
                               @Validated @ModelAttribute("product") ProductRegisterDTO productRegisterDTO,
                               BindingResult bindingResult) {
         //검증. 이전 url의 productNum과 post요청의 productNum이 다를경우 AccessDeniedException
-        //todo 이 방법또한 완벽하진않음. Referer 헤더값이 없거나 Referer 헤더값이 조작될수도있음 좀더 좋은 방법 고민
+        //todo 이 방법도 완벽하진않음. Referer 헤더값이 없거나 Referer 헤더값이 조작될수도있음 좀더 좋은 방법 고민
         long refererProductNum = 0L;
 
         String refererUrl = request.getHeader("Referer");
@@ -104,11 +104,11 @@ public class ProductController {
         }
 
         if(bindingResult.hasErrors()) {
-            log.info("바인딩오류발생");
+            log.info("bindingResult: {}", bindingResult);
             return "productEdit";
         }
-
-        log.info("refererUrl : {}", refererUrl);
-        return "redirect:/product/"+productNum+"/edit";
+        int updateResult = productService.editProduct(productRegisterDTO);
+        log.info("updateResult : {}", updateResult);
+        return "redirect:/product/"+productNum;
     }
 }

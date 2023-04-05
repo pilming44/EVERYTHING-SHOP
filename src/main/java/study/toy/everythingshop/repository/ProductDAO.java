@@ -19,4 +19,6 @@ public interface ProductDAO {
     ProductMEntity findByProductNum(Long productNum);
 
     int registerProduct(ProductRegisterDTO productRegisterDTO);
+
+    int editProduct(ProductRegisterDTO productRegisterDTO);
 }
