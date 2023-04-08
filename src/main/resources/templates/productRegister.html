@@ -20,6 +20,13 @@
                 <input type="text" th:field="*{productName}" id="productName" class="form-control" placeholder="상품명" >
             </div>
         </div>
+        <div th:if="${#fields.hasErrors('productName')}">
+            <div class="row mt-0" id="productName">
+                <div class="col-md-5 mx-auto">
+                    <span th:errors="*{productName}" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
                 <div>*가격 : </div>
@@ -57,13 +64,17 @@
         </div>
         <!-- 버튼 -->
         <div class="row mt-3">
-            <div class="col">
-                <div class="text-center">
-                    <button class="btn btn-primary"
-                            onclick="location.href='home.html'"
-                            th:onclick="|location.href='@{/home}'|"
-                            type="button" th:text="#{button.home}">목록으로</button>
-                    <button id="" class="btn btn-primary" type="submit" >상품등록</button>
+            <div class="col-md-5 mx-auto">
+                <div class="row">
+                    <div class="col">
+                        <button id="" class="btn btn-primary btn-lg btn-block" type="submit" >등록</button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-secondary btn-lg btn-block"
+                                onclick="location.href='home.html'"
+                                th:onclick="|location.href='@{/home}'|"
+                                type="button" th:text="#{button.cancel}">취소</button>
+                    </div>
                 </div>
             </div>
         </div>
