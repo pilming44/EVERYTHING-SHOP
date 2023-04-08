@@ -83,4 +83,30 @@
          WHERE PRODUCT_NUM = #{productNum}
     </update>
 
+    <insert id="orderM" parameterType="productOrderDTO" useGeneratedKeys="true" keyProperty="orderNum">
+        INSERT INTO ORDER_M
+            (
+                USER_NUM
+            )
+        VALUES
+            (
+              #{userNum}
+            )
+    </insert>
+
+    <insert id="orderProduct" parameterType="productOrderDTO" useGeneratedKeys="true" keyProperty="orderProductNum">
+        INSERT INTO ORDER_M
+            (
+                ORDER_NUM
+                , PRODUCT_NUM
+                , QUANTITY
+            )
+        VALUES
+            (
+                #{orderNum}
+                , #{productNum}
+                , #{orderQuantity}
+            )
+    </insert>
+
 </mapper>

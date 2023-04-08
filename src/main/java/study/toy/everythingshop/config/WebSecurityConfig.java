@@ -24,6 +24,8 @@ public class WebSecurityConfig {
         return http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/myPage/**").authenticated()
+                .antMatchers("/product/**/order").authenticated()
+                .antMatchers("/product/**/register").authenticated()
 //                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll()
                 .and()

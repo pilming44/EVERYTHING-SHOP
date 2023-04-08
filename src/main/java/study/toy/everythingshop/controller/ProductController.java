@@ -2,6 +2,7 @@ package study.toy.everythingshop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.entity.ProductMEntity;
 import study.toy.everythingshop.repository.ProductDAO;
@@ -110,5 +112,43 @@ public class ProductController {
         int updateResult = productService.editProduct(productRegisterDTO);
         log.info("updateResult : {}", updateResult);
         return "redirect:/product/"+productNum;
+    }
+    @GetMapping("/{productNum}/order")
+    public String productOrderForm(@PathVariable long productNum, Model model ){
+            ProductMEntity productMEntity = productDAO.findByProductNum(productNum);
+            ModelMapper modelMapper = new ModelMapper();
+            ProductOrderDTO productOrderDTO = modelMapper.map(productMEntity, ProductOrderDTO.class);
+
+            log.info("productMEntity 객체 : {}", productMEntity);
+            model.addAttribute("productOrderDTO", productOrderDTO);
+            return "productOrder";
+    }
+
+    @PostMapping("/{productNum}/order")
+    public String productOrder(@Validated @ModelAttribute ProductOrderDTO productOrderDTO,
+                               BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes,
+                               @AuthenticationPrincipal UserDetails userDetails){
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("productOrderDTO",productOrderDTO);
+            log.info("바인딩오류발생");
+            log.info("ProductOrderDTO : "+productOrderDTO);
+            return "productOrder";
+        }
+        if(productOrderDTO.getQuantity() < productOrderDTO.getOrderQuantity()){
+            log.info("재고초과");
+            redirectAttributes.addFlashAttribute("errorMessage", "재고수량을 초과하여 주문할 수 없습니다.");
+            return "redirect:/product/" + productOrderDTO.getProductNum() + "/order";
+        }
+        log.info("등록");
+        int result = productService.orderProduct(productOrderDTO,userDetails);
+//            if(result > 0){
+//                String message = messageSource.getMessage("product.register.success", null, Locale.getDefault());
+//                redirectAttributes.addFlashAttribute("productRegi_success", message);
+//            }else{
+//                String message = messageSource.getMessage("product.register.fail", null, Locale.getDefault());
+//                redirectAttributes.addFlashAttribute("productRegi_fail", message);
+//            }
+        return "redirect:/productDetail";
+
     }
 }
