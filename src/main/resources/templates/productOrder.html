@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{page.title.product.order}">상품주문</title>
+    <!-- 부트스트랩 CSS 파일 불러오기 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container justify-content-center">
+    <!-- 페이지 타이틀 -->
+    <div class="row mt-3">
+        <div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.product.order}">상품주문</h2></div>
+    </div>
+    <!-- 입력정보 -->
+    <form id="productRegisterForm" th:action="@{/product/{productNum}/order(productNum=${productOrderDTO.productNum})}" th:object="${productOrderDTO}" method="post">
+        <div class="row mt-3">
+            <div class="col-md-5 mx-auto">
+                <label for="productName" th:text="#{label.product.productName}">상품명 : </label>
+                <input type="text" th:field="*{productName}" id="productName" class="form-control" readonly >
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-5 mx-auto">
+                <label for="price" th:text="#{label.product.price}">가격 : </label>
+                <input type="number" th:field="*{price}" th:errorclass="border-danger" id="price" class="form-control" readonly>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-5 mx-auto">
+                <label for="quantity" th:text="#{label.product.quantity}">수량(개) : </label>
+                <input type="number"  th:errorclass="border-danger" th:field="*{quantity}" id="quantity" class="form-control" readonly >
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-5 mx-auto">
+                <label for="orderQuantity" th:text="#{label.product.orderQuantity}">주문수량(개) : </label>
+                <input type="number"  th:errorclass="border-danger" th:field="*{orderQuantity}" id="orderQuantity" class="form-control" placeholder="주문수량" >
+            </div>
+        </div>
+        <div th:if="${#fields.hasErrors('orderQuantity')}">
+            <div class="row mt-0" id="orderQuantityError">
+                <div class="col-md-5 mx-auto">
+                    <span th:errors="*{orderQuantity}" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3"th:if="${errorMessage}">
+            <div class="col-md-5 mx-auto">
+                <div class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+            </div>
+        </div>
+
+        <!-- 버튼 -->
+        <div class="row mt-3">
+            <div class="col-md-5 mx-auto">
+                <div class="row">
+                    <div class="col">
+                        <button id="" class="btn btn-primary btn-lg btn-block" type="submit"th:text="#{button.complete}" >완료</button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-secondary btn-lg btn-block"
+                                onclick="location.href='home.html'"
+                                th:onclick="|location.href='@{/home}'|"
+                                type="button" th:text="#{button.cancel}">취소</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

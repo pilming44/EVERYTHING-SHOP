@@ -16,7 +16,7 @@
     <form id="productRegisterForm" th:action="@{/product/register}" th:object="${productRegisterDTO}" method="post">
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
-                <div>*상품명 : </div>
+                <label for="productName" th:text="#{label.product.productName}">*상품명 : </label>
                 <input type="text" th:field="*{productName}" id="productName" class="form-control" placeholder="상품명" >
             </div>
         </div>
@@ -29,7 +29,7 @@
         </div>
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
-                <div>*가격 : </div>
+                <label for="price" th:text="#{label.product.price}">*가격 : </label>
                 <input type="number" th:field="*{price}" th:errorclass="border-danger" id="price" class="form-control" placeholder="가격" >
             </div>
         </div>
@@ -42,7 +42,7 @@
         </div>
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
-                <div>*수량 : </div>
+                <label for="quantity" th:text="#{label.product.quantity}">*수량 : </label>
                 <input type="number"  th:errorclass="border-danger" th:field="*{quantity}" id="quantity" class="form-control" placeholder="수량" >
             </div>
         </div>
@@ -55,8 +55,8 @@
         </div>
         <div class="row mt-3">
             <div class="col-md-5 mx-auto">
-                <div>*상태 : </div>
-                <select class="custom-select" th:field="*{productStts}">
+                <label for="productStts" th:text="#{label.product.productStts}">*상태 : </label>
+                <select class="custom-select" id="productStts" th:field="*{productStts}">
                     <option value="01">판매준비</option>
                     <option value="02">판매중</option>
                 </select>
@@ -67,7 +67,7 @@
             <div class="col-md-5 mx-auto">
                 <div class="row">
                     <div class="col">
-                        <button id="" class="btn btn-primary btn-lg btn-block" type="submit" >등록</button>
+                        <button id="" class="btn btn-primary btn-lg btn-block" type="submit" th:text="#{button.register}">등록</button>
                     </div>
                     <div class="col">
                         <button class="btn btn-secondary btn-lg btn-block"
