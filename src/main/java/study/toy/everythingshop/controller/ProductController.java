@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
+import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.ProductMEntity;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.service.ProductService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.InvalidParameterException;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -136,19 +138,19 @@ public class ProductController {
         }
         if(productOrderDTO.getQuantity() < productOrderDTO.getOrderQuantity()){
             log.info("재고초과");
-            redirectAttributes.addFlashAttribute("errorMessage", "재고수량을 초과하여 주문할 수 없습니다.");
+            String message = messageSource.getMessage("product.order.overQty", null, Locale.getDefault());
+            redirectAttributes.addFlashAttribute("errorMessage", message);
             return "redirect:/product/" + productOrderDTO.getProductNum() + "/order";
         }
         log.info("등록");
         int result = productService.orderProduct(productOrderDTO,userDetails);
-//            if(result > 0){
-//                String message = messageSource.getMessage("product.register.success", null, Locale.getDefault());
-//                redirectAttributes.addFlashAttribute("productRegi_success", message);
-//            }else{
-//                String message = messageSource.getMessage("product.register.fail", null, Locale.getDefault());
-//                redirectAttributes.addFlashAttribute("productRegi_fail", message);
-//            }
-        return "redirect:/productDetail";
+        log.info("result"+result);
+            if(result >= 3){
+                String message = messageSource.getMessage("product.order.success", null, Locale.getDefault());
+                redirectAttributes.addFlashAttribute("productOrdr_success", message);
+            }
+        return "redirect:/product/"+ productOrderDTO.getProductNum() ;
 
     }
+
 }

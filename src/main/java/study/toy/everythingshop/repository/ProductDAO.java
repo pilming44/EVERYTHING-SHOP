@@ -26,4 +26,7 @@ public interface ProductDAO {
     int orderM(ProductOrderDTO productOrderDTO);
 
     int orderProduct(ProductOrderDTO productOrderDTO);
+
+    int updateQuantityStts(ProductMEntity productMEntity);
+
 }

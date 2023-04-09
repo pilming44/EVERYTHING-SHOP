@@ -59,4 +59,10 @@ public class ProductDAOImpl implements ProductDAO {
         return sqlSession.insert("study.toy.everythingshop.repository.ProductDAO.orderProduct", productOrderDTO);
     }
 
+    @Override
+    public int updateQuantityStts(ProductMEntity productMEntity) {
+        return sqlSession.update("study.toy.everythingshop.repository.ProductDAO.updateQuantityStts", productMEntity);
+    }
+
+
 }
