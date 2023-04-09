@@ -124,51 +124,183 @@ public class ProductControllerTest {
 
     @Test
     @DisplayName("상품수정 - 상품명 미입력")
-    void test_2() {
+    void test_2() throws Exception {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+
+        productDAO.registerProduct(productRegisterDTO);
+
+        //service진입하지않고 리턴됨.
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
+                        .param("productName", "")
+                        .param("price", "20000")
+                        .param("quantity", "100"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("product", "productName", "NotBlank"))
+                .andExpect(view().name("productEdit"));
     }
 
     @Test
     @DisplayName("상품수정 - 가격 미입력")
-    void test_3() {
+    void test_3() throws Exception {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+
+        productDAO.registerProduct(productRegisterDTO);
+
+        //service진입하지않고 리턴됨.
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
+                        .param("productName", "수정테스트물품")
+                        .param("price", "")
+                        .param("quantity", "100"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("product", "price", "NotNull"))
+                .andExpect(view().name("productEdit"));
     }
 
     @Test
     @DisplayName("상품수정 - 가격 타입오류")
-    void test_4() {
+    void test_4() throws Exception {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+
+        productDAO.registerProduct(productRegisterDTO);
+
+        //service진입하지않고 리턴됨.
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
+                        .param("productName", "수정테스트물품")
+                        .param("price", "문자열")
+                        .param("quantity", "100"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("product", "price", "typeMismatch"))
+                .andExpect(view().name("productEdit"));
     }
 
     @Test
-    @DisplayName("상품수정 - 가격 범위오류")
-    void test_5() {
+    @DisplayName("상품수정 - 가격 범위오류(under)")
+    void test_5() throws Exception {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+
+        productDAO.registerProduct(productRegisterDTO);
+
+        //service진입하지않고 리턴됨.
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
+                        .param("productName", "수정테스트물품")
+                        .param("price", "-1")
+                        .param("quantity", "100"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("product", "price", "Range"))
+                .andExpect(view().name("productEdit"));
+    }
+
+    @Test
+    @DisplayName("상품수정 - 가격 범위오류(over)")
+    void test_6() throws Exception {
+        //수정할 상품 데이터 입력
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+
+        productDAO.registerProduct(productRegisterDTO);
+
+        //service진입하지않고 리턴됨.
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
+                        .param("productName", "수정테스트물품")
+                        .param("price", "1000000000")
+                        .param("quantity", "100"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("product", "price", "Range"))
+                .andExpect(view().name("productEdit"));
     }
 
     @Test
     @DisplayName("상품수정 - 수량 미입력")
-    void test_6() {
+    void test_7() throws Exception {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+
+        productDAO.registerProduct(productRegisterDTO);
+
+        //service진입하지않고 리턴됨.
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
+                        .param("productName", "수정테스트물품")
+                        .param("price", "15000")
+                        .param("quantity", ""))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "NotNull"))
+                .andExpect(view().name("productEdit"));
     }
 
     @Test
     @DisplayName("상품수정 - 수량 타입오류")
-    void test_7() {
+    void test_8() throws Exception {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+
+        productDAO.registerProduct(productRegisterDTO);
+
+        //service진입하지않고 리턴됨.
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
+                        .param("productName", "수정테스트물품")
+                        .param("price", "15000")
+                        .param("quantity", "문자열"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "typeMismatch"))
+                .andExpect(view().name("productEdit"));
     }
 
     @Test
-    @DisplayName("상품수정 - 수량 범위오류")
-    void test_8() {
+    @DisplayName("상품수정 - 수량 범위오류(under)")
+    void test_9() throws Exception {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+
+        productDAO.registerProduct(productRegisterDTO);
+
+        //service진입하지않고 리턴됨.
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
+                        .param("productName", "수정테스트물품")
+                        .param("price", "15000")
+                        .param("quantity", "0"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "Range"))
+                .andExpect(view().name("productEdit"));
     }
 
+    @Test
+    @DisplayName("상품수정 - 수량 범위오류(over)")
+    void test_10() throws Exception {
+        //수정할 상품 데이터 입력
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+
+        productDAO.registerProduct(productRegisterDTO);
+
+        //service진입하지않고 리턴됨.
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
+                        .param("productName", "수정테스트물품")
+                        .param("price", "15000")
+                        .param("quantity", "1000000000"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "Range"))
+                .andExpect(view().name("productEdit"));
+    }
+
+    @Test
+    @DisplayName("상품수정 - 복합검증오류")
+    void test_11() throws Exception {
+        //수정할 상품 데이터 입력
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+
+        productDAO.registerProduct(productRegisterDTO);
+
+        //service진입하지않고 리턴됨.
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
+                        .param("productName", "")
+                        .param("price", "-1")
+                        .param("quantity", "0"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("product", "productName", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "price", "Range"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "Range"))
+                .andExpect(view().name("productEdit"));
+    }
 }
