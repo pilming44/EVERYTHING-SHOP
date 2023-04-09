@@ -95,7 +95,7 @@
     </insert>
 
     <insert id="orderProduct" parameterType="productOrderDTO" useGeneratedKeys="true" keyProperty="orderProductNum">
-        INSERT INTO ORDER_M
+        INSERT INTO ORDER_PRODUCT
             (
                 ORDER_NUM
                 , PRODUCT_NUM
@@ -108,5 +108,14 @@
                 , #{orderQuantity}
             )
     </insert>
+
+    <update id="updateQuantityStts" parameterType="ProductMEntity">
+        UPDATE PRODUCT_M
+        SET QUANTITY = #{quantity}
+        , PRODUCT_STTS = #{productStts}
+        <where>
+            PRODUCT_NUM = #{productNum}
+        </where>
+    </update>
 
 </mapper>

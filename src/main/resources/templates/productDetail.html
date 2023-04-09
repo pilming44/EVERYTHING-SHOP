@@ -13,6 +13,11 @@
   <div class="row mt-3">
     <div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.product.detail}">상품 상세</h2></div>
   </div>
+  <div class="row mt-3"th:if="${productOrdr_success}">
+    <div class="col-md-5 mx-auto">
+      <div class="alert alert-danger" role="alert" th:text="${productOrdr_success}"></div>
+    </div>
+  </div>
   <div class="row mt-3">
     <div class="col-md-5 mx-auto">
       <label for="productNum" th:text="#{label.product.detail.productNum}">상품 번호</label>
