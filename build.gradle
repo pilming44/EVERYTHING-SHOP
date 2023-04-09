@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.modelmapper:modelmapper:2.4.4'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation' //bean validation 의존성

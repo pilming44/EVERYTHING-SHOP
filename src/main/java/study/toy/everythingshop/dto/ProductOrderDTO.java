@@ -9,29 +9,22 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-/**
- * fileName : ProductRegisterDTO
- * author   : Annie
- * date     : 2023-03-30
- */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductRegisterDTO {
+public class ProductOrderDTO {
 
     private Long productNum; //상품넘버
-    @NotBlank(message = "{NotBlank.product.productName}")
-    private String productName;     //상품명
+    private Long orderNum; //주문넘버
+    private Long orderProductNum; //상품주문넘버
+    private String productName; //상품명
+    private Long price; //가격
     private Long userNum; //등록자번호
     private String productStts; //상품상태
-
-    @Range(min = 1, max = 999999999)
-    @NotNull(message = "{NotNull.product.quantity}")
     private Long quantity; //수량
-
-    @Range(min = 0, max = 999999999)
-    @NotNull(message = "{NotNull.product.price}")
-    private Long price;    //가격
+    @NotNull(message = "{NotNull.product.orderQuantity}")
+    @Range(min = 1, max = 999999999)
+    private Long orderQuantity; //주문수량
 
 }
