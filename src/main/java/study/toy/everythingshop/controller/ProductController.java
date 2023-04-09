@@ -41,7 +41,7 @@ public class ProductController {
     private final ProductService productService;
     private final MessageSource messageSource;
 
-    @RequestMapping("/{productNum}")
+    @GetMapping("/{productNum}")
     public String productDetail(@PathVariable long productNum, Model model) {
         ProductMEntity productMEntity = productDAO.findByProductNum(productNum);
 
@@ -55,7 +55,7 @@ public class ProductController {
         return "productRegister";
     }
 
-    @RequestMapping("/register")
+    @PostMapping("/register")
     public String productRegister(@Validated @ModelAttribute ProductRegisterDTO productRegisterDTO,
                                   BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes,
                                   @AuthenticationPrincipal UserDetails userDetails) {
@@ -77,7 +77,7 @@ public class ProductController {
         }
     }
 
-    @RequestMapping("/{productNum}/edit")
+    @GetMapping("/{productNum}/edit")
     public String productEditView(@PathVariable long productNum, Model model) {
         ProductMEntity productMEntity = productDAO.findByProductNum(productNum);
 
@@ -86,7 +86,7 @@ public class ProductController {
         return "productEdit";
     }
 
-    @RequestMapping(value = "/{productNum}/edit", method = RequestMethod.POST)
+    @PostMapping("/{productNum}/edit")
     public String productEdit(@PathVariable long productNum, @Validated @ModelAttribute("product") ProductRegisterDTO productRegisterDTO,
                               BindingResult bindingResult) {
         //검증. 이전 url의 productNum과 post요청의 productNum이 다를경우 AccessDeniedException
