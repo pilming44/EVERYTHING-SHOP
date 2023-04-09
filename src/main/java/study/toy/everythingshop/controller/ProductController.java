@@ -87,31 +87,18 @@ public class ProductController {
     }
 
     @RequestMapping(value = "/{productNum}/edit", method = RequestMethod.POST)
-    public String productEdit(HttpServletRequest request, @PathVariable long productNum,
-                              @Validated @ModelAttribute("product") ProductRegisterDTO productRegisterDTO,
+    public String productEdit(@PathVariable long productNum, @Validated @ModelAttribute("product") ProductRegisterDTO productRegisterDTO,
                               BindingResult bindingResult) {
         //검증. 이전 url의 productNum과 post요청의 productNum이 다를경우 AccessDeniedException
-        //todo 이 방법도 완벽하진않음. Referer 헤더값이 없거나 Referer 헤더값이 조작될수도있음 좀더 좋은 방법 고민
-        long refererProductNum = 0L;
-
-        String refererUrl = request.getHeader("Referer");
-
-        Pattern pattern = Pattern.compile("product/(\\d+)/edit");
-        Matcher matcher = pattern.matcher(refererUrl);
-        if (matcher.find()) {
-            log.info("matcher.find() : {}", matcher.group(1));
-            refererProductNum = Long.parseLong(matcher.group(1)) ;
-        }
-
-        if(productNum != refererProductNum) {
-            throw new InvalidParameterException("Invalid parameter value");
-        }
+        //todo 추후 role을 적용할때 작성자 또는 권한을 가진사람이 productNum에 대해 수정권한이 있는지 체크 할것.
 
         if(bindingResult.hasErrors()) {
             log.info("bindingResult: {}", bindingResult);
             return "productEdit";
         }
         int updateResult = productService.editProduct(productRegisterDTO);
+
+        //todo updateResult가 0일경우 예외처리 방법 필요
         log.info("updateResult : {}", updateResult);
         return "redirect:/product/"+productNum;
     }

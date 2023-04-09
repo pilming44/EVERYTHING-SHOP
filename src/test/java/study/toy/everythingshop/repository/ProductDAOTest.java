@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.ProductMEntity;
 
@@ -256,5 +257,34 @@ public class ProductDAOTest {
 
         // then
         assertThat(findAll).hasSize(0);
+    }
+
+    @Test
+    @DisplayName("상품 수정 - 성공")
+    void test_1() {
+        // given
+        //기존 상품 등록
+        ProductRegisterDTO productRegisterDTO = ProductRegisterDTO.builder()
+                .productName("테스트물품")
+                .price(15000L)
+                .userNum(1L)
+                .quantity(2000L)
+                .productStts("01")
+                .build();
+
+        productDAO.registerProduct(productRegisterDTO);
+
+        // when
+        productRegisterDTO.setProductName("물품수정");
+        productRegisterDTO.setQuantity(100L);
+        productRegisterDTO.setPrice(10000L);
+
+        productDAO.editProduct(productRegisterDTO);
+
+        // then
+        ProductMEntity editedProduct = productDAO.findByProductNum(productRegisterDTO.getProductNum());
+        assertThat(editedProduct.getProductName()).isEqualTo("물품수정");
+        assertThat(editedProduct.getQuantity()).isEqualTo(100L);
+        assertThat(editedProduct.getPrice()).isEqualTo(10000L);
     }
 }
