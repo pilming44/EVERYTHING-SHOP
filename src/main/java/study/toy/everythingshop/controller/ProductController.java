@@ -14,17 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
-import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.ProductMEntity;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.service.ProductService;
-
-import javax.servlet.http.HttpServletRequest;
-import java.security.InvalidParameterException;
-import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * fileName : ProductController
@@ -89,13 +82,13 @@ public class ProductController {
     @PostMapping("/{productNum}/edit")
     public String productEdit(@PathVariable long productNum, @Validated @ModelAttribute("product") ProductRegisterDTO productRegisterDTO,
                               BindingResult bindingResult) {
-        //검증. 이전 url의 productNum과 post요청의 productNum이 다를경우 AccessDeniedException
         //todo 추후 role을 적용할때 작성자 또는 권한을 가진사람이 productNum에 대해 수정권한이 있는지 체크 할것.
 
         if(bindingResult.hasErrors()) {
             log.info("bindingResult: {}", bindingResult);
             return "productEdit";
         }
+        log.info("productRegisterDTO : {}", productRegisterDTO);
         int updateResult = productService.editProduct(productRegisterDTO);
 
         //todo updateResult가 0일경우 예외처리 방법 필요

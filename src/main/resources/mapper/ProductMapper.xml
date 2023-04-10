@@ -80,6 +80,7 @@
            SET PRODUCT_NAME = #{productName}
              , PRICE = #{price}
              , QUANTITY = #{quantity}
+             , PRODUCT_STTS = #{productStts}
          WHERE PRODUCT_NUM = #{productNum}
     </update>
 
