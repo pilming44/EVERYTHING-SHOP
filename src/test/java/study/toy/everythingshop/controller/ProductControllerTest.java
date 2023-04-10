@@ -117,7 +117,8 @@ public class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
                         .param("productName", "수정테스트물품")
                         .param("price", "20000")
-                        .param("quantity", "100"))
+                        .param("quantity", "100")
+                        .param("productStts","01"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/product/"+productRegisterDTO.getProductNum()));
     }
@@ -134,7 +135,8 @@ public class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
                         .param("productName", "")
                         .param("price", "20000")
-                        .param("quantity", "100"))
+                        .param("quantity", "100")
+                        .param("productStts","01"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode("product", "productName", "NotBlank"))
                 .andExpect(view().name("productEdit"));
@@ -152,7 +154,8 @@ public class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
                         .param("productName", "수정테스트물품")
                         .param("price", "")
-                        .param("quantity", "100"))
+                        .param("quantity", "100")
+                        .param("productStts","01"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode("product", "price", "NotNull"))
                 .andExpect(view().name("productEdit"));
@@ -170,7 +173,8 @@ public class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
                         .param("productName", "수정테스트물품")
                         .param("price", "문자열")
-                        .param("quantity", "100"))
+                        .param("quantity", "100")
+                        .param("productStts","01"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode("product", "price", "typeMismatch"))
                 .andExpect(view().name("productEdit"));
@@ -188,7 +192,8 @@ public class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
                         .param("productName", "수정테스트물품")
                         .param("price", "-1")
-                        .param("quantity", "100"))
+                        .param("quantity", "100")
+                        .param("productStts","01"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode("product", "price", "Range"))
                 .andExpect(view().name("productEdit"));
@@ -206,7 +211,8 @@ public class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
                         .param("productName", "수정테스트물품")
                         .param("price", "1000000000")
-                        .param("quantity", "100"))
+                        .param("quantity", "100")
+                        .param("productStts","01"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode("product", "price", "Range"))
                 .andExpect(view().name("productEdit"));
@@ -224,7 +230,8 @@ public class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
                         .param("productName", "수정테스트물품")
                         .param("price", "15000")
-                        .param("quantity", ""))
+                        .param("quantity", "")
+                        .param("productStts","01"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "NotNull"))
                 .andExpect(view().name("productEdit"));
@@ -242,7 +249,8 @@ public class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
                         .param("productName", "수정테스트물품")
                         .param("price", "15000")
-                        .param("quantity", "문자열"))
+                        .param("quantity", "문자열")
+                        .param("productStts","01"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "typeMismatch"))
                 .andExpect(view().name("productEdit"));
@@ -260,7 +268,8 @@ public class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
                         .param("productName", "수정테스트물품")
                         .param("price", "15000")
-                        .param("quantity", "0"))
+                        .param("quantity", "0")
+                        .param("productStts","01"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "Range"))
                 .andExpect(view().name("productEdit"));
@@ -278,7 +287,8 @@ public class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
                         .param("productName", "수정테스트물품")
                         .param("price", "15000")
-                        .param("quantity", "1000000000"))
+                        .param("quantity", "1000000000")
+                        .param("productStts","01"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "Range"))
                 .andExpect(view().name("productEdit"));
@@ -296,7 +306,8 @@ public class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
                         .param("productName", "")
                         .param("price", "-1")
-                        .param("quantity", "0"))
+                        .param("quantity", "0")
+                        .param("productStts","01"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode("product", "productName", "NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("product", "price", "Range"))
