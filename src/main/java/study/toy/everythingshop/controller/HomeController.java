@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import study.toy.everythingshop.dto.ProductSearchDTO;
@@ -21,12 +22,12 @@ public class HomeController {
 
     private final ProductDAO productDAO;
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String index() {
         return "redirect:/home";
     }
 
-    @RequestMapping("/home")
+    @GetMapping("/home")
     public String home(@Validated  @ModelAttribute ProductSearchDTO productSearchDTO, BindingResult bindingResult, Model model) {
         log.info("시작시 productSearchDTO : {}", productSearchDTO);
         if(bindingResult.hasErrors()) {
