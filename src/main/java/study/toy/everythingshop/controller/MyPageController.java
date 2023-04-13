@@ -9,13 +9,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import study.toy.everythingshop.dto.ProductOrderDTO;
+import study.toy.everythingshop.dto.ProductSearchDTO;
+import study.toy.everythingshop.entity.ProductMEntity;
 import study.toy.everythingshop.entity.UserMEntity;
+import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.MyPageService;
+
+import java.util.List;
 
 /**
  * fileName : MypageController
@@ -30,6 +33,7 @@ public class MyPageController {
 
     private final UserDAO userDAO;
     private final MyPageService myPageService;
+    private final ProductDAO productDAO;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String myPage() {
@@ -90,5 +94,26 @@ public class MyPageController {
         log.info(">>>>>>>>>>>>userId : {}",userId);
 
         return "redirect:/myPage/myInfo";
+    }
+
+    @GetMapping("/myOrderList")
+    public String myOrderList(@AuthenticationPrincipal UserDetails userDetails, Model model,
+                              @Validated  @ModelAttribute ProductSearchDTO productSearchDTO, BindingResult bindingResult) {
+        //사용자 정보 조회
+        UserMEntity userMEntity = userDAO.findByUserId(userDetails.getUsername());
+        Long userNum = userMEntity.getUserNum();
+        productSearchDTO.setUserNum(userNum);
+
+        if(bindingResult.hasErrors()) {
+            //검색값중 잘못된 값이 있다면 검색값 초기화
+            productSearchDTO = new ProductSearchDTO();
+            log.info("바인딩오류발생");
+        }
+        List<ProductOrderDTO> myOrderList = myPageService.getMyOrderList(productSearchDTO);
+        model.addAttribute("products", myOrderList);
+        if(!bindingResult.hasErrors()) {
+            model.addAttribute("productSearchDTO", productSearchDTO);
+        }
+        return "myOrderList";
     }
 }

@@ -29,4 +29,5 @@ public interface ProductDAO {
 
     int updateQuantityStts(ProductMEntity productMEntity);
 
+    List<ProductOrderDTO> getMyOrderList(ProductSearchDTO productSearchDTO);
 }

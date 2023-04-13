@@ -34,18 +34,20 @@
 				<table class="table table-bordered">
 					<thead>
 						<tr>
-							<th class="text-center" style="width: 5%" th:text="#{label.product.productNum}">No.</th>
+							<th class="text-center" style="width: 5%" th:text="#{label.product.orderNum}">주문 번호</th>
 							<th class="text-center" style="width: 25%" th:text="#{label.product.productName}">상품명</th>
 							<th class="text-center" style="width: 10%" th:text="#{label.product.price}">가격(원)</th>
-							<th class="text-center" style="width: 10%" th:text="#{label.product.quantity}">남은 수량(개)</th>
+							<th class="text-center" style="width: 10%" th:text="#{label.product.orderQuantity}">주문 수량(개)</th>
+							<th class="text-center" style="width: 10%" th:text="#{label.product.totalPrice}">주문 가격(원)</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="product : ${products}">
-							<td class="text-center" th:text="${product.productNum}">상품번호</td>
+							<td class="text-center" th:text="${product.orderNum}">주문번호</td>
 							<td><a href="/" th:href="@{|/product/${product.productNum}|}" th:text="${product.productName}">상품명</a></td>
 							<td class="text-center" th:text="${product.price}">상품가격</td>
-							<td class="text-center" th:text="${product.quantity}">수량</td>
+							<td class="text-center" th:text="${product.orderQuantity}">수량</td>
+							<td class="text-center" th:text="${product.totalPrice}">주문가격</td>
 						</tr>
 					</tbody>
 				</table>

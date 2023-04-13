@@ -64,5 +64,10 @@ public class ProductDAOImpl implements ProductDAO {
         return sqlSession.update("study.toy.everythingshop.repository.ProductDAO.updateQuantityStts", productMEntity);
     }
 
+    @Override
+    public List<ProductOrderDTO> getMyOrderList(ProductSearchDTO productSearchDTO) {
+        return sqlSession.selectList("study.toy.everythingshop.repository.ProductDAO.getMyOrderList", productSearchDTO);
+    }
+
 
 }
