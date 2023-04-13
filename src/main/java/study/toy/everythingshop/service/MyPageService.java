@@ -1,6 +1,10 @@
 package study.toy.everythingshop.service;
 
+import study.toy.everythingshop.dto.ProductOrderDTO;
+import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.UserMEntity;
+
+import java.util.List;
 
 /**
  * fileName : MyPageService
@@ -10,4 +14,6 @@ import study.toy.everythingshop.entity.UserMEntity;
 public interface MyPageService {
 
     void updateUserInfo(UserMEntity userMEntity);
+
+    List<ProductOrderDTO> getMyOrderList(ProductSearchDTO productSearchDTO);
 }

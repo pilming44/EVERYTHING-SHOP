@@ -25,4 +25,6 @@ public class ProductSearchDTO {
 
     @Range(min = 0, max = 999999999)
     private Long toPrice;           //끝가격
+
+    private Long userNum; //등록자번호
 }

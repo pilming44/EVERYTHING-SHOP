@@ -119,4 +119,29 @@
         </where>
     </update>
 
+    <select id="getMyOrderList" parameterType="ProductSearchDTO" resultType="ProductOrderDTO">
+        SELECT
+            T01.USER_NUM
+             ,T01.ORDER_NUM
+             ,T03.PRODUCT_NAME
+             ,T03.PRODUCT_NUM
+             ,T03.PRICE
+             ,T02.QUANTITY AS ORDER_QUANTITY
+             ,(T02.QUANTITY * T03.PRICE) TOTAL_PRICE
+             ,TO_CHAR(T01.REGISTER_DT,'YYYY-MM-DD') REGITSTER_DT
+             ,T01.ORDER_STTS
+        FROM ORDER_M T01
+                 LEFT JOIN ORDER_PRODUCT T02
+                           ON T01.ORDER_NUM = T02.ORDER_NUM
+                 LEFT JOIN PRODUCT_M T03
+                           ON T02.PRODUCT_NUM = T03.PRODUCT_NUM
+        <where>
+            T01.USER_NUM = #{userNum}
+            AND T03.PRODUCT_NAME IS NOT NULL
+            <if test="productName != '' and productName != null">
+                AND T03.PRODUCT_NAME LIKE '%' || #{productName} || '%'
+            </if>
+        </where>
+    </select>
+
 </mapper>

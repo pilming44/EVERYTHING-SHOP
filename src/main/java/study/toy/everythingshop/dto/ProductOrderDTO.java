@@ -26,5 +26,6 @@ public class ProductOrderDTO {
     @NotNull(message = "{NotNull.product.orderQuantity}")
     @Range(min = 1, max = 999999999)
     private Long orderQuantity; //주문수량
+    private Long totalPrice; //총주문가격
 
 }
