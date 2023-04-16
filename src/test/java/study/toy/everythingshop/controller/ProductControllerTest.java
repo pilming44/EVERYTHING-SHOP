@@ -10,9 +10,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.service.ProductService;
@@ -314,4 +316,63 @@ public class ProductControllerTest {
                 .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "Range"))
                 .andExpect(view().name("productEdit"));
     }
+    @Test
+    @DisplayName("상품주문 - 성공")
+    @WithMockUser
+    void productOrderTest_success() throws Exception{
+        ProductOrderDTO productOrderDTO = new ProductOrderDTO();
+        productOrderDTO.setQuantity(10L);
+        productOrderDTO.setOrderQuantity(5L);
+        productOrderDTO.setProductNum(1L);
+
+        doReturn(3).when(productService).orderProduct(eq(productOrderDTO), (UserDetails) any());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/order", productOrderDTO.getProductNum())
+                        .flashAttr("productOrderDTO", productOrderDTO))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/product/" + productOrderDTO.getProductNum())) // 이동할 URL 확인
+                .andExpect(flash().attributeExists("productOrdr_success"));
+    }
+    @Test
+    @DisplayName("상품주문 - 바인딩 오류 발생(수량)")
+    @WithMockUser
+    void productOrderTest_bindingError() throws Exception {
+        // given
+        ProductOrderDTO productOrderDTO = new ProductOrderDTO();
+        productOrderDTO.setProductNum(1L);
+        productOrderDTO.setOrderQuantity(-5L); // 올바르지 않은 값
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/order", productOrderDTO.getProductNum())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .flashAttr("productOrderDTO", productOrderDTO))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors("productOrderDTO", "orderQuantity")) // 바인딩 오류 발생 확인
+                .andExpect(model().attributeExists("productOrderDTO")) // 모델에 productOrderDTO 객체 존재 확인
+                .andExpect(view().name("productOrder")); // 이동할 뷰 확인
+    }
+
+    @Test
+    @DisplayName("상품주문 - 재고초과")
+    @WithMockUser
+    void productOrderTest_overQty() throws Exception {
+        // given
+        ProductOrderDTO productOrderDTO = new ProductOrderDTO();
+        productOrderDTO.setProductNum(1L);
+        productOrderDTO.setOrderQuantity(50L); // 재고초과
+        productOrderDTO.setQuantity(10L);
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/order", productOrderDTO.getProductNum())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .flashAttr("productOrderDTO", productOrderDTO))
+                .andExpect(status().is3xxRedirection()) // 리다이렉션 상태 확인
+                .andExpect(flash().attributeExists("errorMessage")) // 에러 메시지 flash attribute 존재 확인
+                .andExpect(redirectedUrl("/product/" + productOrderDTO.getProductNum() + "/order")); // 이동할 URL 확인
+
+    }
+
+
+
+
 }
