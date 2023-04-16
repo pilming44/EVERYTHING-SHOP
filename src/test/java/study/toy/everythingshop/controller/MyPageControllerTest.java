@@ -5,18 +5,27 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
+import study.toy.everythingshop.dto.ProductOrderDTO;
+import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.UserMEntity;
 import study.toy.everythingshop.repository.UserDAO;
+import study.toy.everythingshop.service.MyPageService;
 import study.toy.everythingshop.service.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -34,6 +43,8 @@ public class MyPageControllerTest {
     MockMvc mockMvc;
     @Autowired
     UserService userService;
+    @MockBean
+    MyPageService myPageService;
     @Autowired
     UserDAO userDAO;
 
@@ -112,5 +123,49 @@ public class MyPageControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrorCode("userInfo", "userNm", "NotBlank"));
+    }
+
+    @Test
+    @DisplayName("나의 주문정보 목록 - 성공")
+    @WithUser(value = "test")
+    void myOrderList_noSearch() throws Exception {
+        // given
+        ProductSearchDTO productSearchDTO = new ProductSearchDTO();
+        productSearchDTO.setUserNum(1L); // userNum 추가
+
+        List<ProductOrderDTO> myOrderList = new ArrayList<>();
+        myOrderList.add(new ProductOrderDTO());
+        doReturn(myOrderList).when(myPageService).getMyOrderList(productSearchDTO);
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.get("/myPage/myOrderList")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .flashAttr("productSearchDTO", productSearchDTO))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("products")) // 모델에 products 속성이 존재하는지 확인
+                .andExpect(model().attribute("productSearchDTO", productSearchDTO)) // 검색값이 제대로 모델에 추가되었는지 확인
+                .andExpect(view().name("myOrderList")); // 이동할 뷰 확인
+
+    }
+    @Test
+    @DisplayName("나의 주문정보 목록 - 주문목록 없음")
+    @WithUser(value = "test")
+    void myOrderList_noList() throws Exception {
+        // given
+        ProductSearchDTO productSearchDTO = new ProductSearchDTO();
+        productSearchDTO.setUserNum(1L); // userNum 추가
+
+        List<ProductOrderDTO> myOrderList = new ArrayList<>();
+        doReturn(myOrderList).when(myPageService).getMyOrderList(productSearchDTO);
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.get("/myPage/myOrderList")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .flashAttr("productSearchDTO", productSearchDTO))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("message"))
+                .andExpect(model().attribute("productSearchDTO", productSearchDTO)) // 검색값이 제대로 모델에 추가되었는지 확인
+                .andExpect(view().name("myOrderList")); // 이동할 뷰 확인
+
     }
 }
