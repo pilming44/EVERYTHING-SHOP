@@ -25,6 +25,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -45,8 +46,6 @@ public class MyPageControllerTest {
     UserService userService;
     @MockBean
     MyPageService myPageService;
-    @Autowired
-    UserDAO userDAO;
 
     @Test
     @DisplayName("비로그인 마이페이지 접근시 리다이렉트")
@@ -84,16 +83,14 @@ public class MyPageControllerTest {
         String userId = "admin";
         String newUserName = "변경이름";
 
+        doNothing().when(myPageService).updateUserInfo(new UserMEntity());
+
         //이름 수정 post요청
         mockMvc.perform(MockMvcRequestBuilders.post("/myPage/editMyInfo/{userId}", userId)
                         .param("userId", userId)
                         .param("userNm", newUserName))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/myPage/myInfo"));
-
-        //todo dao와의 의존성 제거 필요
-        UserMEntity userMEntity = userDAO.findByUserId(userId);
-        assertThat(newUserName).isEqualTo(userMEntity.getUserNm());
     }
 
     @Test
