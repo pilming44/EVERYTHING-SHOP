@@ -110,7 +110,12 @@ public class MyPageController {
             log.info("바인딩오류발생");
         }
         List<ProductOrderDTO> myOrderList = myPageService.getMyOrderList(productSearchDTO);
-        model.addAttribute("products", myOrderList);
+        if (myOrderList.isEmpty()) {
+            model.addAttribute("message", "주문 내역이 없습니다.");
+        } else {
+            model.addAttribute("products", myOrderList);
+            model.addAttribute("productSearchDTO", productSearchDTO);
+        }
         if(!bindingResult.hasErrors()) {
             model.addAttribute("productSearchDTO", productSearchDTO);
         }
