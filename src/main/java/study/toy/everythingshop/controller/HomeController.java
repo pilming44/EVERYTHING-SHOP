@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.ProductMEntity;
+import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
+@Trace
 public class HomeController {
 
     private final ProductDAO productDAO;

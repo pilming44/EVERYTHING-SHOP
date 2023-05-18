@@ -7,6 +7,7 @@ import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.ProductMEntity;
+import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
+@Trace
 public class ProductDAOImpl implements ProductDAO {
 
     private final SqlSession sqlSession;

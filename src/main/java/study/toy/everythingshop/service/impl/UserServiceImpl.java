@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import study.toy.everythingshop.dto.JoinDTO;
 import study.toy.everythingshop.entity.UserMEntity;
+import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.UserService;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Trace
 public class UserServiceImpl implements UserService {
     /**
      * 새로운 멤버 save

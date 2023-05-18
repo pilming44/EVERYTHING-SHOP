@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.entity.ProductMEntity;
+import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.service.ProductService;
 import java.util.Locale;
@@ -28,6 +29,7 @@ import java.util.Locale;
 @RequiredArgsConstructor
 @RequestMapping("/product")
 @Slf4j
+@Trace
 public class ProductController {
 
     private final ProductDAO productDAO;
