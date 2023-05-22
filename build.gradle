@@ -26,6 +26,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation' //bean validation 의존성
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.2' //MariaDB JDBC 드라이버 의존성
 	testImplementation 'org.springframework.security:spring-security-test' //스프링 시큐리티 테스트용 의존성
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation 'org.springframework.boot:spring-boot-devtools' //리소스 수정시 서버 재시작 없이 ctrl+shift+f9로 바로 확인 가능
