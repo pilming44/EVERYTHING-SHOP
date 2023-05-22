@@ -2,7 +2,7 @@ package study.toy.everythingshop.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import study.toy.everythingshop.entity.SampleEntity;
+import study.toy.everythingshop.entity.h2.SampleEntity;
 import study.toy.everythingshop.repository.SampleDAO;
 import study.toy.everythingshop.service.SampleService;
 

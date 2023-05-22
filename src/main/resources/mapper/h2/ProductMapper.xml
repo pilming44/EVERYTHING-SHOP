@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="study.toy.everythingshop.repository.ProductDAO">
-    <select id="findAll" parameterType="ProductSearchDTO" resultType="ProductMEntity">
+    <select id="findAll" parameterType="ProductSearchDTO" resultType="ProductMㅗEntity">
         SELECT T01.PRODUCT_NUM      /* 상품번호*/
              , T01.USER_NUM         /* 등록사용자번호*/
              , T01.PRODUCT_NAME     /* 상품명*/

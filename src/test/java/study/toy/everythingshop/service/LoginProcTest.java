@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.controller.WithUser;
 import study.toy.everythingshop.dto.JoinDTO;
-import study.toy.everythingshop.entity.UserMEntity;
+import study.toy.everythingshop.entity.h2.UserMEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;

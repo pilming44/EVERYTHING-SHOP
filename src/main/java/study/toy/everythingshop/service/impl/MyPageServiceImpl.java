@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.entity.UserMEntity;
+import study.toy.everythingshop.entity.h2.UserMEntity;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.repository.UserDAO;

@@ -13,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.toy.everythingshop.dto.ErrorResponse;
 import study.toy.everythingshop.dto.JoinDTO;
-import study.toy.everythingshop.entity.UserMEntity;
+import study.toy.everythingshop.entity.h2.UserMEntity;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.UserService;

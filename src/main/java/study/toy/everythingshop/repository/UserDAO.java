@@ -1,7 +1,7 @@
 package study.toy.everythingshop.repository;
 
 import study.toy.everythingshop.dto.JoinDTO;
-import study.toy.everythingshop.entity.UserMEntity;
+import study.toy.everythingshop.entity.h2.UserMEntity;
 
 import java.util.Optional;
 

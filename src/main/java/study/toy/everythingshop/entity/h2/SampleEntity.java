@@ -1,4 +1,4 @@
-package study.toy.everythingshop.entity;
+package study.toy.everythingshop.entity.h2;
 
 import lombok.Data;
 

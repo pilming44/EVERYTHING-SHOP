@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.entity.ProductMEntity;
+import study.toy.everythingshop.entity.h2.ProductMEntity;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 

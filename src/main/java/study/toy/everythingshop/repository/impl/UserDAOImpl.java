@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import study.toy.everythingshop.dto.JoinDTO;
-import study.toy.everythingshop.entity.UserMEntity;
+import study.toy.everythingshop.entity.h2.UserMEntity;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.UserDAO;
 

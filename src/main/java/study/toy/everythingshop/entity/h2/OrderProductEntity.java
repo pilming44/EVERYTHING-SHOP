@@ -1,4 +1,4 @@
-package study.toy.everythingshop.entity;
+package study.toy.everythingshop.entity.h2;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderMEntity {
+public class OrderProductEntity {
+    private Long orderProductNum;
     private Long orderNum;
-    private Long userNum;
-    private String orderStts;
+    private Long productNum;
+    private Long quantity;
     private String registerDt;
     private String changeDt;
 }

@@ -8,9 +8,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
 import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.entity.ProductMEntity;
+import study.toy.everythingshop.entity.h2.ProductMEntity;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 
