@@ -28,47 +28,47 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public List<ProductMEntity> findAll(ProductSearchDTO productSearchDTO) {
 
-        return sqlSession.selectList("study.toy.everythingshop.repository.ProductDAO.findAll", productSearchDTO);
+        return sqlSession.selectList("maria.ProductDAO.findAll", productSearchDTO);
     }
 
     @Override
     public int save(ProductMEntity productMEntity) {
 
-        return sqlSession.insert("study.toy.everythingshop.repository.ProductDAO.save", productMEntity);
+        return sqlSession.insert("h2.ProductDAO.save", productMEntity);
     }
 
     @Override
     public ProductMEntity findByProductNum(Long productNum) {
-        return sqlSession.selectOne("study.toy.everythingshop.repository.ProductDAO.findByProductNum", productNum);
+        return sqlSession.selectOne("h2.ProductDAO.findByProductNum", productNum);
     }
     @Override
     public int registerProduct(ProductRegisterDTO productRegisterDTO){
-        return sqlSession.insert("study.toy.everythingshop.repository.ProductDAO.registerProduct", productRegisterDTO);
+        return sqlSession.insert("h2.ProductDAO.registerProduct", productRegisterDTO);
     }
 
     @Override
     public int editProduct(ProductRegisterDTO productRegisterDTO) {
-        return sqlSession.update("study.toy.everythingshop.repository.ProductDAO.editProduct", productRegisterDTO);
+        return sqlSession.update("h2.ProductDAO.editProduct", productRegisterDTO);
     }
 
     @Override
     public int orderM(ProductOrderDTO productOrderDTO) {
-        return sqlSession.insert("study.toy.everythingshop.repository.ProductDAO.orderM", productOrderDTO);
+        return sqlSession.insert("h2.ProductDAO.orderM", productOrderDTO);
     }
 
     @Override
     public int orderProduct(ProductOrderDTO productOrderDTO) {
-        return sqlSession.insert("study.toy.everythingshop.repository.ProductDAO.orderProduct", productOrderDTO);
+        return sqlSession.insert("h2.ProductDAO.orderProduct", productOrderDTO);
     }
 
     @Override
     public int updateQuantityStts(ProductMEntity productMEntity) {
-        return sqlSession.update("study.toy.everythingshop.repository.ProductDAO.updateQuantityStts", productMEntity);
+        return sqlSession.update("h2.ProductDAO.updateQuantityStts", productMEntity);
     }
 
     @Override
     public List<ProductOrderDTO> getMyOrderList(ProductSearchDTO productSearchDTO) {
-        return sqlSession.selectList("study.toy.everythingshop.repository.ProductDAO.getMyOrderList", productSearchDTO);
+        return sqlSession.selectList("h2.ProductDAO.getMyOrderList", productSearchDTO);
     }
 
 

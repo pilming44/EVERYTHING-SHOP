@@ -1,29 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="h2.ProductDAO">
-    <select id="findAll" parameterType="ProductSearchDTO" resultType="ProductMEntity">
+<mapper namespace="maria.ProductDAO">
+    <select id="findAll" parameterType="ProductSearchDTO" resultType="ProductEntity">
         SELECT T01.PRODUCT_NUM      /* 상품번호*/
              , T01.USER_NUM         /* 등록사용자번호*/
-             , T01.PRODUCT_NAME     /* 상품명*/
-             , T01.QUANTITY         /* 수량*/
+             , T01.PRODUCT_NM       /* 상품명*/
+             , T01.REGISTER_QUANTITY         /* 수량*/
              , T01.PRICE            /* 가격*/
-             , T01.PRODUCT_STTS     /* 판매상태*/
-          FROM PRODUCT_M T01
-          <where>
-              <if test="productName != null and productName != ''">
-                  and T01.PRODUCT_NAME LIKE CONCAT('%',#{productName},'%')
-              </if>
-              <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice == null">
-                  and T01.PRICE &gt;= #{fromPrice}  /* 시작가격만 있고 끝 가격은 없을경우*/
-              </if>
-              <if test="toPrice != null and toPrice &gt;= 0 and fromPrice == null">
-                  and T01.PRICE &lt;= #{toPrice}  /* 끝 가격만 있고 시작가격은 없을경우*/
-              </if>
-              <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice != null and toPrice &gt;= 0">
-                  and T01.PRICE BETWEEN #{fromPrice} AND #{toPrice}
-              </if>
-          </where>
+             , T01.PRODUCT_STATUS_CD     /* 판매상태*/
+          FROM T_PRODUCT T01
     </select>
 
     <insert id="save" parameterType="ProductMEntity" useGeneratedKeys="true" keyProperty="productNum">
