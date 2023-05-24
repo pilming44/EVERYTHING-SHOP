@@ -6,8 +6,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
-import study.toy.everythingshop.entity.ProductMEntity;
-import study.toy.everythingshop.entity.UserMEntity;
+import study.toy.everythingshop.entity.h2.ProductMEntity;
+import study.toy.everythingshop.entity.h2.UserMEntity;
+import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.ProductService;
@@ -15,6 +16,7 @@ import study.toy.everythingshop.service.ProductService;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Trace
 public class ProductServiceImpl implements ProductService {
 
     private final ProductDAO productDAO;

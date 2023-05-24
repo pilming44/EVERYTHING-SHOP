@@ -14,8 +14,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.entity.UserMEntity;
-import study.toy.everythingshop.repository.UserDAO;
+import study.toy.everythingshop.entity.h2.UserMEntity;
 import study.toy.everythingshop.service.MyPageService;
 import study.toy.everythingshop.service.UserService;
 

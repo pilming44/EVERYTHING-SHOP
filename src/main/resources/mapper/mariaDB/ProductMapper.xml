@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="maria.ProductDAO">
+    <select id="findAll" parameterType="ProductSearchDTO" resultType="ProductEntity">
+        SELECT T01.PRODUCT_NUM      /* 상품번호*/
+             , T01.USER_NUM         /* 등록사용자번호*/
+             , T01.PRODUCT_NM       /* 상품명*/
+             , T01.REGISTER_QUANTITY         /* 수량*/
+             , T01.PRICE            /* 가격*/
+             , T01.PRODUCT_STATUS_CD     /* 판매상태*/
+          FROM T_PRODUCT T01
+    </select>
+
+    <insert id="save" parameterType="ProductMEntity" useGeneratedKeys="true" keyProperty="productNum">
+        INSERT INTO PRODUCT_M
+        (
+            USER_NUM
+          , PRODUCT_NAME
+          , QUANTITY
+          , PRICE
+          , PRODUCT_STTS
+        )
+        VALUES
+        (
+            #{userNum}
+          , #{productName}
+          , #{quantity}
+          , #{price}
+          , #{productStts}
+        )
+    </insert>
+
+    <select id="findByProductNum" parameterType="Long" resultType="ProductMEntity">
+        SELECT T01.PRODUCT_NUM      /* 상품번호*/
+             , T01.USER_NUM         /* 등록사용자번호*/
+             , T01.PRODUCT_NAME     /* 상품명*/
+             , T01.QUANTITY         /* 수량*/
+             , T01.PRICE            /* 가격*/
+             , T01.PRODUCT_STTS     /* 판매상태*/
+          FROM PRODUCT_M T01
+         WHERE T01.PRODUCT_NUM = #{productNum}
+    </select>
+
+    <insert id="registerProduct" parameterType="ProductRegisterDTO" useGeneratedKeys="true" keyProperty="productNum">
+        INSERT INTO PRODUCT_M
+        (
+          USER_NUM
+        , PRODUCT_NAME
+        , QUANTITY
+        , PRICE
+        , PRODUCT_STTS
+        )
+        VALUES
+        (
+          #{userNum}
+        , #{productName}
+        , #{quantity}
+        , #{price}
+        , #{productStts}
+        )
+    </insert>
+
+    <update id="editProduct" parameterType="ProductRegisterDTO">
+        UPDATE PRODUCT_M
+           SET PRODUCT_NAME = #{productName}
+             , PRICE = #{price}
+             , QUANTITY = #{quantity}
+             , PRODUCT_STTS = #{productStts}
+         WHERE PRODUCT_NUM = #{productNum}
+    </update>
+
+    <insert id="orderM" parameterType="productOrderDTO" useGeneratedKeys="true" keyProperty="orderNum">
+        INSERT INTO ORDER_M
+            (
+                USER_NUM
+            )
+        VALUES
+            (
+              #{userNum}
+            )
+    </insert>
+
+    <insert id="orderProduct" parameterType="productOrderDTO" useGeneratedKeys="true" keyProperty="orderProductNum">
+        INSERT INTO ORDER_PRODUCT
+            (
+                ORDER_NUM
+                , PRODUCT_NUM
+                , QUANTITY
+            )
+        VALUES
+            (
+                #{orderNum}
+                , #{productNum}
+                , #{orderQuantity}
+            )
+    </insert>
+
+    <update id="updateQuantityStts" parameterType="ProductMEntity">
+        UPDATE PRODUCT_M
+        SET QUANTITY = #{quantity}
+        , PRODUCT_STTS = #{productStts}
+        <where>
+            PRODUCT_NUM = #{productNum}
+        </where>
+    </update>
+
+    <select id="getMyOrderList" parameterType="ProductSearchDTO" resultType="ProductOrderDTO">
+        SELECT
+            T01.USER_NUM
+             ,T01.ORDER_NUM
+             ,T03.PRODUCT_NAME
+             ,T03.PRODUCT_NUM
+             ,T03.PRICE
+             ,T02.QUANTITY AS ORDER_QUANTITY
+             ,(T02.QUANTITY * T03.PRICE) TOTAL_PRICE
+             ,TO_CHAR(T01.REGISTER_DT,'YYYY-MM-DD') REGITSTER_DT
+             ,T01.ORDER_STTS
+        FROM ORDER_M T01
+                 LEFT JOIN ORDER_PRODUCT T02
+                           ON T01.ORDER_NUM = T02.ORDER_NUM
+                 LEFT JOIN PRODUCT_M T03
+                           ON T02.PRODUCT_NUM = T03.PRODUCT_NUM
+        <where>
+            T01.USER_NUM = #{userNum}
+            AND T03.PRODUCT_NAME IS NOT NULL
+            <if test="productName != '' and productName != null">
+                AND T03.PRODUCT_NAME LIKE '%' || #{productName} || '%'
+            </if>
+        </where>
+    </select>
+
+</mapper>

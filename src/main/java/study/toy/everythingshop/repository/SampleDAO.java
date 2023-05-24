@@ -1,8 +1,6 @@
 package study.toy.everythingshop.repository;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.type.Alias;
-import study.toy.everythingshop.entity.SampleEntity;
+import study.toy.everythingshop.entity.h2.SampleEntity;
 
 import java.util.List;
 

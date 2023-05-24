@@ -13,7 +13,8 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.toy.everythingshop.dto.ErrorResponse;
 import study.toy.everythingshop.dto.JoinDTO;
-import study.toy.everythingshop.entity.UserMEntity;
+import study.toy.everythingshop.entity.h2.UserMEntity;
+import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,6 +27,7 @@ import java.util.Locale;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @Slf4j
+@Trace
 public class UserController {
     private final UserDAO userDAO;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
