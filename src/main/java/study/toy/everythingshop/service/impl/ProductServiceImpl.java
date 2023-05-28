@@ -8,6 +8,8 @@ import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.entity.h2.ProductMEntity;
 import study.toy.everythingshop.entity.h2.UserMEntity;
+import study.toy.everythingshop.entity.mariaDB.Product;
+import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.repository.UserDAO;
@@ -29,26 +31,26 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public int orderProduct(ProductOrderDTO productOrderDTO, UserDetails userDetails) {
-        UserMEntity userMEntity = userDAO.findByUserId(userDetails.getUsername());
-        productOrderDTO.setUserNum(userMEntity.getUserNum());
+        User user = userDAO.findByUserId(userDetails.getUsername());
+        productOrderDTO.setUserNum(user.getUserNum());
         int result = productDAO.orderM(productOrderDTO);
         result += productDAO.orderProduct(productOrderDTO);
 
-        // 상품 수량 업데이트
-        ProductMEntity productMEntity = productDAO.findByProductNum(productOrderDTO.getProductNum());
-        Long remainingQuantity = productMEntity.getQuantity() - productOrderDTO.getOrderQuantity();
-        productMEntity.setQuantity(remainingQuantity);
-        if(remainingQuantity < 1){
-            productMEntity.setProductStts("04");
-        }
-        result +=  productDAO.updateQuantityStts(productMEntity);
+        //TODO db 구조 변경으로 인한 주석처리. 작성자 확인 후 삭제할것
+//        Product product = productDAO.findByProductNum(productOrderDTO.getProductNum());
+//        Integer remainingQuantity = product.getRegisterQuantity() - productOrderDTO.getOrderQuantity();
+//        product.setRegisterQuantity(remainingQuantity);
+//        if(remainingQuantity < 1){
+//            product.setProductStts("04");
+//        }
+//        result +=  productDAO.updateQuantityStts(productMEntity);
 
         return result;
     }
 
     public int registerProduct(ProductRegisterDTO productRegisterDTO, UserDetails userDetails){
-        UserMEntity userMEntity = userDAO.findByUserId(userDetails.getUsername());
-        productRegisterDTO.setUserNum(userMEntity.getUserNum());
+        User user = userDAO.findByUserId(userDetails.getUsername());
+        productRegisterDTO.setUserNum(user.getUserNum());
         return productDAO.registerProduct(productRegisterDTO);
     };
 

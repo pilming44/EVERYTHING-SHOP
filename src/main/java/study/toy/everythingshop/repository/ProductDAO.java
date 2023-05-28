@@ -4,6 +4,7 @@ import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.h2.ProductMEntity;
+import study.toy.everythingshop.entity.mariaDB.Product;
 
 import java.util.List;
 
@@ -13,11 +14,9 @@ import java.util.List;
  * date     : 2023-03-01
  */
 public interface ProductDAO {
-    List<ProductMEntity> findAll(ProductSearchDTO productSearchDTO);
+    List<Product> findAll(ProductSearchDTO productSearchDTO);
 
-    int save(ProductMEntity productMEntity);
-
-    ProductMEntity findByProductNum(Long productNum);
+    Product findByProductNum(Integer productNum);
 
     int registerProduct(ProductRegisterDTO productRegisterDTO);
 

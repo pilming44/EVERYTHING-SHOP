@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.entity.h2.ProductMEntity;
+import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.service.ProductService;
@@ -37,11 +38,11 @@ public class ProductController {
     private final MessageSource messageSource;
 
     @GetMapping("/{productNum}")
-    public String productDetail(@PathVariable long productNum, Model model) {
-        ProductMEntity productMEntity = productDAO.findByProductNum(productNum);
+    public String productDetail(@PathVariable Integer productNum, Model model) {
+        Product product = productDAO.findByProductNum(productNum);
 
-        log.info("productMEntity 객체 : {}", productMEntity);
-        model.addAttribute("product", productMEntity);
+        log.info("Product 객체 : {}", product);
+        model.addAttribute("product", product);
         return "productDetail";
     }
 
@@ -73,16 +74,16 @@ public class ProductController {
     }
 
     @GetMapping("/{productNum}/edit")
-    public String productEditView(@PathVariable long productNum, Model model) {
-        ProductMEntity productMEntity = productDAO.findByProductNum(productNum);
+    public String productEditView(@PathVariable Integer productNum, Model model) {
+        Product product = productDAO.findByProductNum(productNum);
 
-        log.info("productMEntity 객체 : {}", productMEntity);
-        model.addAttribute("product", productMEntity);
+        log.info("product 객체 : {}", product);
+        model.addAttribute("product", product);
         return "productEdit";
     }
 
     @PostMapping("/{productNum}/edit")
-    public String productEdit(@PathVariable long productNum, @Validated @ModelAttribute("product") ProductRegisterDTO productRegisterDTO,
+    public String productEdit(@PathVariable Integer productNum, @Validated @ModelAttribute("product") ProductRegisterDTO productRegisterDTO,
                               BindingResult bindingResult) {
         //todo 추후 role을 적용할때 작성자 또는 권한을 가진사람이 productNum에 대해 수정권한이 있는지 체크 할것.
 
@@ -98,12 +99,12 @@ public class ProductController {
         return "redirect:/product/"+productNum;
     }
     @GetMapping("/{productNum}/order")
-    public String productOrderForm(@PathVariable long productNum, Model model ){
-            ProductMEntity productMEntity = productDAO.findByProductNum(productNum);
+    public String productOrderForm(@PathVariable Integer productNum, Model model ){
+            Product product = productDAO.findByProductNum(productNum);
             ModelMapper modelMapper = new ModelMapper();
-            ProductOrderDTO productOrderDTO = modelMapper.map(productMEntity, ProductOrderDTO.class);
+            ProductOrderDTO productOrderDTO = modelMapper.map(product, ProductOrderDTO.class);
 
-            log.info("productMEntity 객체 : {}", productMEntity);
+            log.info("product 객체 : {}", product);
             model.addAttribute("productOrderDTO", productOrderDTO);
             return "productOrder";
     }
@@ -118,7 +119,7 @@ public class ProductController {
             log.info("ProductOrderDTO : "+productOrderDTO);
             return "productOrder";
         }
-        if(productOrderDTO.getQuantity() < productOrderDTO.getOrderQuantity()){
+        if(productOrderDTO.getOrderQuantity() < productOrderDTO.getOrderQuantity()){
             log.info("재고초과");
             String message = messageSource.getMessage("product.order.overQty", null, Locale.getDefault());
             redirectAttributes.addFlashAttribute("errorMessage", message);

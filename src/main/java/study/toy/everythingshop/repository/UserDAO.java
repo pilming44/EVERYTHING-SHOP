@@ -2,6 +2,7 @@ package study.toy.everythingshop.repository;
 
 import study.toy.everythingshop.dto.JoinDTO;
 import study.toy.everythingshop.entity.h2.UserMEntity;
+import study.toy.everythingshop.entity.mariaDB.User;
 
 import java.util.Optional;
 
@@ -11,13 +12,9 @@ import java.util.Optional;
  * date     : 2023-03-08
  */
 public interface UserDAO {
-    int save(UserMEntity userMEntity);
+    int save(JoinDTO userMEntity);
 
-    UserMEntity findByUserId(String userId);
+    User findByUserId(String userId);
 
-    Optional<JoinDTO> findById(String userId);
-
-    int join(JoinDTO userMEntity);
-
-    int updateUserInfo(UserMEntity userMEntity);
+    int updateUserInfo(User userMEntity);
 }

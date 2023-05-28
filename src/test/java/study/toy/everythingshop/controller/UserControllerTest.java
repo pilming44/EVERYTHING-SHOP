@@ -58,7 +58,7 @@ public class UserControllerTest {
         joinDTO.setUserNm("testName");
 
         doNothing().when(userService).checkDupId(anyString());
-        doReturn(1).when(userService).insertMember(joinDTO);
+        doReturn(1).when(userService).saveMember(joinDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/users/join")
                 .param("userId", "testuser")

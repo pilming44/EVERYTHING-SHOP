@@ -44,7 +44,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "redirect:/users/join";
         }
-        int result = userService.insertMember(joinDTO);
+        int result = userService.saveMember(joinDTO);
         if(result > 0){
             String message = messageSource.getMessage("id.joinSuccess", null, Locale.getDefault());
             redirectAttributes.addFlashAttribute("successMessage", message);
@@ -89,11 +89,11 @@ public class UserController {
     }
 
     @PostMapping("/testJoin")
-    public String testUserJoin(UserMEntity userMEntity) {
-        String rawPassword = userMEntity.getUserPw();
+    public String testUserJoin(JoinDTO joinDTO) {
+        String rawPassword = joinDTO.getUserPw();
         String encPassword = bCryptPasswordEncoder.encode(rawPassword);
-        userMEntity.setUserPw(encPassword);
-        userDAO.save(userMEntity);
+        joinDTO.setUserPw(encPassword);
+        userDAO.save(joinDTO);
         return "redirect:/";
     }
 }
