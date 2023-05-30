@@ -39,7 +39,6 @@
           , PRODUCT_STATUS_CD
           , POST_YN
           , REGISTER_DT
-          , CHANGE_DT
         )
         VALUES
         (
@@ -49,7 +48,6 @@
           , #{productPrice}
           , #{productStatusCd}
           , nvl(#{postYn}, 'Y')
-          , now()
           , now()
         )
     </insert>
@@ -64,30 +62,42 @@
          WHERE PRODUCT_NUM = #{productNum}
     </update>
 
-    <insert id="orderM" parameterType="productOrderDTO" useGeneratedKeys="true" keyProperty="orderNum">
-        INSERT INTO ORDER_M
-            (
-                USER_NUM
-            )
+    <insert id="insertOrder" parameterType="productOrderDTO" useGeneratedKeys="true" keyProperty="orderNum">
+        INSERT INTO T_ORDER
+        (
+            USER_NUM
+          , ORDER_STATUS_CD
+          , REGISTER_DT
+        )
         VALUES
-            (
-              #{userNum}
-            )
+        (
+            #{userNum}
+          , '01'
+          , now()
+        )
     </insert>
 
-    <insert id="orderProduct" parameterType="productOrderDTO" useGeneratedKeys="true" keyProperty="orderProductNum">
-        INSERT INTO ORDER_PRODUCT
-            (
-                ORDER_NUM
-                , PRODUCT_NUM
-                , QUANTITY
-            )
+    <insert id="insertOrderedProduct" parameterType="productOrderDTO" useGeneratedKeys="true" keyProperty="orderProductNum">
+        INSERT INTO T_ORDERED_PRODUCT
+        (
+            ORDER_NUM
+          , PRODUCT_NUM
+          , PRODUCT_PRICE
+          , ORDER_QUANTITY
+          , DISCOUNT_PRICE
+          , FINAL_PAYMENT_PRICE
+          , REGISTER_DT
+        )
         VALUES
-            (
-                #{orderNum}
-                , #{productNum}
-                , #{orderQuantity}
-            )
+        (
+            #{orderNum}
+          , #{productNum}
+          , #{productPrice}
+          , #{orderQuantity}
+          , #{discountPrice}
+          , #{finalPaymentPrice}
+          , now()
+        )
     </insert>
 
     <update id="updateQuantityStts" parameterType="ProductMEntity">

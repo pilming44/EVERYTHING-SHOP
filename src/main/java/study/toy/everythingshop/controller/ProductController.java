@@ -119,7 +119,7 @@ public class ProductController {
             log.info("ProductOrderDTO : "+productOrderDTO);
             return "productOrder";
         }
-        if(productOrderDTO.getOrderQuantity() < productOrderDTO.getOrderQuantity()){
+        if(productOrderDTO.getRegisterQuantity() < productOrderDTO.getOrderQuantity()){
             log.info("재고초과");
             String message = messageSource.getMessage("product.order.overQty", null, Locale.getDefault());
             redirectAttributes.addFlashAttribute("errorMessage", message);
@@ -128,10 +128,10 @@ public class ProductController {
         log.info("등록");
         int result = productService.orderProduct(productOrderDTO,userDetails);
         log.info("result"+result);
-            if(result >= 3){
-                String message = messageSource.getMessage("product.order.success", null, Locale.getDefault());
-                redirectAttributes.addFlashAttribute("productOrdr_success", message);
-            }
+        if(result >= 3){
+            String message = messageSource.getMessage("product.order.success", null, Locale.getDefault());
+            redirectAttributes.addFlashAttribute("productOrdr_success", message);
+        }
         return "redirect:/product/"+ productOrderDTO.getProductNum() ;
 
     }

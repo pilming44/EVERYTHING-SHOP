@@ -19,6 +19,7 @@ public class ProductOrderDTO {
     private Integer orderNum;      //주문번호
     private String productNm;       //상품명
     private Integer productPrice;  //상품가격
+    private Integer registerQuantity;   //등록수량
     private Integer orderQuantity; //주문수량(개)
     private Integer discountPrice;  //할인금액(계정등급에따른 할인)
     private Integer finalPaymentPrice;  //최종결제금액(총금액 - 할인금액)

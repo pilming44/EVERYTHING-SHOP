@@ -33,8 +33,20 @@ public class ProductServiceImpl implements ProductService {
     public int orderProduct(ProductOrderDTO productOrderDTO, UserDetails userDetails) {
         User user = userDAO.findByUserId(userDetails.getUsername());
         productOrderDTO.setUserNum(user.getUserNum());
-        int result = productDAO.orderM(productOrderDTO);
-        result += productDAO.orderProduct(productOrderDTO);
+        int result = 0;
+        //최종결제금액 계산
+
+        //보유포인트 결제가능 여부 확인
+
+        //주문테이블 insert
+        result += productDAO.insertOrder(productOrderDTO);
+
+        //주문 상품 테이블 insert
+        result += productDAO.insertOrderedProduct(productOrderDTO);
+
+        //사용자 보유 포인트 차감
+
+        //포인트 이력테이블에 내역 insert
 
         //TODO db 구조 변경으로 인한 주석처리. 작성자 확인 후 삭제할것
 //        Product product = productDAO.findByProductNum(productOrderDTO.getProductNum());

@@ -47,13 +47,13 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public int orderM(ProductOrderDTO productOrderDTO) {
-        return sqlSession.insert("h2.ProductDAO.orderM", productOrderDTO);
+    public int insertOrder(ProductOrderDTO productOrderDTO) {
+        return sqlSession.insert("maria.ProductDAO.insertOrder", productOrderDTO);
     }
 
     @Override
-    public int orderProduct(ProductOrderDTO productOrderDTO) {
-        return sqlSession.insert("h2.ProductDAO.orderProduct", productOrderDTO);
+    public int insertOrderedProduct(ProductOrderDTO productOrderDTO) {
+        return sqlSession.insert("maria.ProductDAO.insertOrderedProduct", productOrderDTO);
     }
 
     @Override

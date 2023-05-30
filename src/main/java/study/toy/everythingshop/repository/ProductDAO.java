@@ -22,9 +22,9 @@ public interface ProductDAO {
 
     int editProduct(ProductRegisterDTO productRegisterDTO);
 
-    int orderM(ProductOrderDTO productOrderDTO);
+    int insertOrder(ProductOrderDTO productOrderDTO);
 
-    int orderProduct(ProductOrderDTO productOrderDTO);
+    int insertOrderedProduct(ProductOrderDTO productOrderDTO);
 
     int updateQuantityStts(ProductMEntity productMEntity);
 
