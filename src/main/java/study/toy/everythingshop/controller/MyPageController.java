@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.h2.UserMEntity;
+import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.repository.UserDAO;
@@ -47,13 +48,13 @@ public class MyPageController {
         //이렇게 주입받은 객체는 UserDetails타입으로 캐스팅해서 사용 가능
 
         //사용자 정보 조회
-        UserMEntity userMEntity = userDAO.findByUserId(userDetails.getUsername());
+        User user = userDAO.findByUserId(userDetails.getUsername());
 
         //디버깅
-        log.info(">>>>>>>>>>>>userMEntity : {}",userMEntity);
+        log.info(">>>>>>>>>>>>user : {}",user);
 
         //모델 추가
-        model.addAttribute("userInfo", userMEntity);
+        model.addAttribute("userInfo", user);
         return "myInfo";
     }
 
@@ -63,35 +64,35 @@ public class MyPageController {
         //이렇게 주입받은 객체는 UserDetails타입으로 캐스팅해서 사용 가능
 
         //사용자 정보 조회
-        UserMEntity userMEntity = userDAO.findByUserId(userDetails.getUsername());
+        User user = userDAO.findByUserId(userDetails.getUsername());
 
         //디버깅
-        log.info(">>>>>>>>>>>>userMEntity : {}",userMEntity);
+        log.info(">>>>>>>>>>>>userMEntity : {}",user);
 
         //모델 추가
-        model.addAttribute("userInfo", userMEntity);
+        model.addAttribute("userInfo", user);
         return "editMyInfo";
     }
 
     @PostMapping("/editMyInfo/{userId}")
     public String editMyInfo(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String userId,
-                             @Validated @ModelAttribute("userInfo") UserMEntity userMEntity, BindingResult bindingResult) {
-        log.info("userMEntity={}", userMEntity);
+                             @Validated @ModelAttribute("userInfo") User user, BindingResult bindingResult) {
+        log.info("user={}", user);
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             return "editMyInfo";
         }
 
         //로그인 한 아이디와 수정 요청 한 아이디가 동일한지 체크
-        if (!userId.equals(userDetails.getUsername()) || !userMEntity.getUserId().equals(userDetails.getUsername())) {
+        if (!userId.equals(userDetails.getUsername()) || !user.getUserId().equals(userDetails.getUsername())) {
             //todo 예외 페이지로 처리할지 아니면 수정화면에서 bindingResult로 처리할지 결정 필요
             throw new AccessDeniedException("Cannot update other users' information");
         }
 
-        myPageService.updateUserInfo(userMEntity);
+        myPageService.updateUserInfo(user);
 
         //디버깅
-        log.info(">>>>>>>>>>>>userMEntity : {}",userMEntity);
+        log.info(">>>>>>>>>>>>user : {}",user);
         log.info(">>>>>>>>>>>>userId : {}",userId);
 
         return "redirect:/myPage/myInfo";
@@ -101,8 +102,8 @@ public class MyPageController {
     public String myOrderList(@AuthenticationPrincipal UserDetails userDetails, Model model,
                               @Validated  @ModelAttribute ProductSearchDTO productSearchDTO, BindingResult bindingResult) {
         //사용자 정보 조회
-        UserMEntity userMEntity = userDAO.findByUserId(userDetails.getUsername());
-        Long userNum = userMEntity.getUserNum();
+        User user = userDAO.findByUserId(userDetails.getUsername());
+        Integer userNum = user.getUserNum();
         productSearchDTO.setUserNum(userNum);
 
         if(bindingResult.hasErrors()) {

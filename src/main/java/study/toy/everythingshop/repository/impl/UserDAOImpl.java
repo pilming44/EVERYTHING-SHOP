@@ -5,6 +5,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import study.toy.everythingshop.dto.JoinDTO;
 import study.toy.everythingshop.entity.h2.UserMEntity;
+import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.UserDAO;
 
@@ -23,28 +24,17 @@ public class UserDAOImpl implements UserDAO {
     private final SqlSession sqlSession;
 
     @Override
-    public UserMEntity findByUserId(String userId) {
-        return sqlSession.selectOne("study.toy.everythingshop.repository.UserDAO.findByUserId", userId);
+    public User findByUserId(String userId) {
+        return sqlSession.selectOne("maria.UserDAO.findByUserId", userId);
     }
 
     @Override
-    public Optional<JoinDTO> findById(String userId){
-        List<JoinDTO> result = sqlSession.selectList("study.toy.everythingshop.repository.UserDAO.findById", userId);
-        return result.stream().findAny();
+    public int save(JoinDTO userMEntity) {
+        return sqlSession.insert("maria.UserDAO.save", userMEntity);
     }
 
     @Override
-    public int join(JoinDTO joinDTO) {
-        return sqlSession.insert("study.toy.everythingshop.repository.UserDAO.join", joinDTO);
-    }
-
-    @Override
-    public int save(UserMEntity userMEntity) {
-        return sqlSession.insert("study.toy.everythingshop.repository.UserDAO.save", userMEntity);
-    }
-
-    @Override
-    public int updateUserInfo(UserMEntity userMEntity) {
-        return sqlSession.update("study.toy.everythingshop.repository.UserDAO.updateUserInfo", userMEntity);
+    public int updateUserInfo(User user) {
+        return sqlSession.update("maria.UserDAO.updateUserInfo", user);
     }
 }

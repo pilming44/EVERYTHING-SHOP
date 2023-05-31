@@ -17,7 +17,7 @@
 			<div class="row mt-3">
 				<div class="col-md-5">
 					<!-- 상품명 검색 input -->
-					<input type="text" class="form-control" th:field="*{productName}" placeholder="상품명을 입력하세요">
+					<input type="text" class="form-control" th:field="*{productNm}" placeholder="상품명을 입력하세요">
 				</div>
 				<div class="col-md-2">
 					<div class="d-flex justify-content-between">
@@ -45,10 +45,10 @@
 						<th:block th:if="${products != null}">
 							<tr th:each="product : ${products}">
 								<td class="text-center" th:text="${product.orderNum}">주문번호</td>
-								<td><a href="/" th:href="@{|/product/${product.productNum}|}" th:text="${product.productName}">상품명</a></td>
-								<td class="text-center" th:text="${product.price}">상품가격</td>
+								<td><a href="/" th:href="@{|/product/${product.productNum}|}" th:text="${product.productNm}">상품명</a></td>
+								<td class="text-center" th:text="${product.productPrice}">상품가격</td>
 								<td class="text-center" th:text="${product.orderQuantity}">수량</td>
-								<td class="text-center" th:text="${product.totalPrice}">주문가격</td>
+								<td class="text-center" th:text="${product.finalPaymentPrice}">주문가격</td>
 							</tr>
 						</th:block>
 						<tr th:if="${message}">

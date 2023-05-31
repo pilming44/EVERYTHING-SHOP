@@ -7,6 +7,7 @@ import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.h2.ProductMEntity;
+import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 
@@ -26,39 +27,33 @@ public class ProductDAOImpl implements ProductDAO {
     private final SqlSession sqlSession;
 
     @Override
-    public List<ProductMEntity> findAll(ProductSearchDTO productSearchDTO) {
+    public List<Product> findAll(ProductSearchDTO productSearchDTO) {
 
         return sqlSession.selectList("maria.ProductDAO.findAll", productSearchDTO);
     }
 
     @Override
-    public int save(ProductMEntity productMEntity) {
-
-        return sqlSession.insert("h2.ProductDAO.save", productMEntity);
-    }
-
-    @Override
-    public ProductMEntity findByProductNum(Long productNum) {
-        return sqlSession.selectOne("h2.ProductDAO.findByProductNum", productNum);
+    public Product findByProductNum(Integer productNum) {
+        return sqlSession.selectOne("maria.ProductDAO.findByProductNum", productNum);
     }
     @Override
     public int registerProduct(ProductRegisterDTO productRegisterDTO){
-        return sqlSession.insert("h2.ProductDAO.registerProduct", productRegisterDTO);
+        return sqlSession.insert("maria.ProductDAO.registerProduct", productRegisterDTO);
     }
 
     @Override
     public int editProduct(ProductRegisterDTO productRegisterDTO) {
-        return sqlSession.update("h2.ProductDAO.editProduct", productRegisterDTO);
+        return sqlSession.update("maria.ProductDAO.editProduct", productRegisterDTO);
     }
 
     @Override
-    public int orderM(ProductOrderDTO productOrderDTO) {
-        return sqlSession.insert("h2.ProductDAO.orderM", productOrderDTO);
+    public int insertOrder(ProductOrderDTO productOrderDTO) {
+        return sqlSession.insert("maria.ProductDAO.insertOrder", productOrderDTO);
     }
 
     @Override
-    public int orderProduct(ProductOrderDTO productOrderDTO) {
-        return sqlSession.insert("h2.ProductDAO.orderProduct", productOrderDTO);
+    public int insertOrderedProduct(ProductOrderDTO productOrderDTO) {
+        return sqlSession.insert("maria.ProductDAO.insertOrderedProduct", productOrderDTO);
     }
 
     @Override

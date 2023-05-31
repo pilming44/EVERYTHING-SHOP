@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import study.toy.everythingshop.dto.JoinDTO;
 import study.toy.everythingshop.entity.h2.UserMEntity;
+import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.UserService;
@@ -26,9 +27,9 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public int insertMember(JoinDTO joinDTO) {
+    public int saveMember(JoinDTO joinDTO) {
         joinDTO.setUserPw(bCryptPasswordEncoder.encode(joinDTO.getUserPw()));
-        return userDAO.join(joinDTO);
+        return userDAO.save(joinDTO);
     }
     @Override
     public List<UserMEntity> findAll() {
@@ -37,10 +38,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void checkDupId(String userId){
-        userDAO.findById(userId)
-                .ifPresent(m -> {
-                    throw new ResponseStatusException(HttpStatus.CONFLICT, "user.alreadyExists");
-                });
+        User user = userDAO.findByUserId(userId);
+        if (user != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "user.alreadyExists");
+        }
     }
 
 

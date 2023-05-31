@@ -26,26 +26,26 @@
   </div>
   <div class="row mt-3">
     <div class="col-md-5 mx-auto">
-      <label for="productName" th:text="#{label.product.productName}">상품명</label>
-      <input type="text" id="productName" th:field="*{product.productName}" class="form-control" value="상품A" readonly>
+      <label for="productNm" th:text="#{label.product.productName}">상품명</label>
+      <input type="text" id="productNm" th:field="*{product.productNm}" class="form-control" value="상품A" readonly>
     </div>
   </div>
   <div class="row mt-3">
     <div class="col-md-5 mx-auto">
-      <label for="price" th:text="#{label.product.price}">가격</label>
-      <input type="text" id="price" th:field="*{product.price}" class="form-control" value="10000" readonly>
+      <label for="productPrice" th:text="#{label.product.price}">가격</label>
+      <input type="text" id="productPrice" th:field="*{product.productPrice}" class="form-control" value="10000" readonly>
     </div>
   </div>
   <div class="row mt-3">
     <div class="col-md-5 mx-auto">
-      <label for="quantity" th:text="#{label.product.quantity}">수량</label>
-      <input type="text" id="quantity" th:field="*{product.quantity}" class="form-control" value="10" readonly>
+      <label for="registerQuantity" th:text="#{label.product.quantity}">수량</label>
+      <input type="text" id="registerQuantity" th:field="*{product.registerQuantity}" class="form-control" value="10" readonly>
     </div>
   </div>
   <div class="row mt-3">
     <div class="col-md-5 mx-auto">
-      <label for="productStts" th:text="#{label.product.productStts}">상품 상태</label>
-      <input type="text" id="productStts" class="form-control" th:value="*{product.productStts}" th:readonly="true" readonly>
+      <label for="productStatusCd" th:text="#{label.product.productStts}">상품 상태</label>
+      <input type="text" id="productStatusCd" class="form-control" th:value="*{product.productStatusCd}" th:readonly="true" readonly>
     </div>
   </div>
 
