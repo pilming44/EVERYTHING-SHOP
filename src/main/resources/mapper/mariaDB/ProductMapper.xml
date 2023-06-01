@@ -13,6 +13,20 @@
              , T01.REGISTER_DT          /* 등록일자*/
              , T01.CHANGE_DT            /* 수정일자*/
           FROM T_PRODUCT T01
+        <where>
+            <if test="productNm != null and productNm != ''">
+                and T01.PRODUCT_NM LIKE CONCAT('%',#{productNm},'%')
+            </if>
+            <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice == null">
+                and T01.PRODUCT_PRICE &gt;= #{fromPrice}  /* 시작가격만 있고 끝 가격은 없을경우*/
+            </if>
+            <if test="toPrice != null and toPrice &gt;= 0 and fromPrice == null">
+                and T01.PRODUCT_PRICE &lt;= #{toPrice}  /* 끝 가격만 있고 시작가격은 없을경우*/
+            </if>
+            <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice != null and toPrice &gt;= 0">
+                and T01.PRODUCT_PRICE BETWEEN #{fromPrice} AND #{toPrice}
+            </if>
+        </where>
     </select>
 
     <select id="findByProductNum" parameterType="Integer" resultType="Product">
