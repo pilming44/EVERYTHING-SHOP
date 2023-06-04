@@ -41,7 +41,7 @@
 			<div class="row mt-3">
 				<div class="col-md-5">
 					<!-- 상품명 검색 input -->
-					<input type="text" class="form-control" th:field="*{productName}" placeholder="상품명을 입력하세요">
+					<input type="text" class="form-control" th:field="*{productNm}" placeholder="상품명을 입력하세요">
 				</div>
 			</div>
 			<div class="row mt-3">
@@ -115,9 +115,9 @@
 					<tbody>
 						<tr th:each="product : ${products}">
 							<td class="text-center" th:text="${product.productNum}">상품번호</td>
-							<td><a href="/" th:href="@{|/product/${product.productNum}|}" th:text="${product.productName}">상품명</a></td>
-							<td class="text-center" th:text="${product.price}">상품가격</td>
-							<td class="text-center" th:text="${product.quantity}">수량</td>
+							<td><a href="/" th:href="@{|/product/${product.productNum}|}" th:text="${product.productNm}">상품명</a></td>
+							<td class="text-center" th:text="${product.productPrice}">상품가격</td>
+							<td class="text-center" th:text="${product.registerQuantity}">수량</td>
 						</tr>
 					</tbody>
 				</table>

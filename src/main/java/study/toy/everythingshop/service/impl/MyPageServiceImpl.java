@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.h2.UserMEntity;
+import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.repository.UserDAO;
@@ -28,8 +29,8 @@ public class MyPageServiceImpl implements MyPageService {
     private final ProductDAO productDAO;
 
     @Override
-    public void updateUserInfo(UserMEntity userMEntity) {
-        userDAO.updateUserInfo(userMEntity);
+    public void updateUserInfo(User user) {
+        userDAO.updateUserInfo(user);
     }
 
     @Override

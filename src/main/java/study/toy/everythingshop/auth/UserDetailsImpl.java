@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import study.toy.everythingshop.entity.h2.UserMEntity;
+import study.toy.everythingshop.entity.mariaDB.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,16 +20,16 @@ import java.util.List;
 @Data
 @Slf4j
 public class UserDetailsImpl implements UserDetails {
-    private UserMEntity userMEntity;
+    private User user;
 
-    public UserDetailsImpl(UserMEntity userMEntity) {
-        this.userMEntity = userMEntity;
+    public UserDetailsImpl(User user) {
+        this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(userMEntity.getUserRoleCd()));
+        authorities.add(new SimpleGrantedAuthority(user.getRoleCd()));
         /*권한이 여러개일경우 예시. 반목문을 사용해도 됨(추가로직필요)*/
 //        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 //        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
@@ -38,12 +39,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userMEntity.getUserPw();
+        return user.getUserPw();
     }
 
     @Override
     public String getUsername() {
-        return userMEntity.getUserId();
+        return user.getUserId();
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.h2.ProductMEntity;
+import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 
@@ -40,12 +41,12 @@ public class HomeController {
         if(productSearchDTO.getFromPrice() != null && productSearchDTO.getToPrice() != null
                 && (productSearchDTO.getFromPrice() > productSearchDTO.getToPrice())) {
             //검색 시작가격이 종료가격보다 크다면 스왑
-            Long tempPrice = productSearchDTO.getFromPrice();
+            Integer tempPrice = productSearchDTO.getFromPrice();
             productSearchDTO.setFromPrice(productSearchDTO.getToPrice());
             productSearchDTO.setToPrice(tempPrice);
         }
 
-        List<ProductMEntity> products = productDAO.findAll(productSearchDTO);
+        List<Product> products = productDAO.findAll(productSearchDTO);
         model.addAttribute("products", products);
         if(!bindingResult.hasErrors()) {
             model.addAttribute("productSearchDTO", productSearchDTO);
