@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -40,8 +41,14 @@ public class UserController {
     }
     
     @PostMapping("/join")
-    public String join(@Validated @ModelAttribute JoinDTO joinDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+    public String join(@Validated @ModelAttribute JoinDTO joinDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes,Model model){
         if (bindingResult.hasErrors()) {
+            log.info("오류남");
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                log.info("Field: " + error.getField());
+                log.info("Error: " + error.getDefaultMessage());
+            }
+            model.addAttribute("joinDTO", joinDTO);
             return "redirect:/users/join";
         }
         int result = userService.saveMember(joinDTO);
