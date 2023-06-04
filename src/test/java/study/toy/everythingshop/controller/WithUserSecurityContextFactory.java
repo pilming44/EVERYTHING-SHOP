@@ -32,7 +32,7 @@ public class WithUserSecurityContextFactory implements WithSecurityContextFactor
         joinDTO.setUserId(withUser.value());
         joinDTO.setUserPw("testPw");
         joinDTO.setUserNm(withUser.value()+"이름");
-        userService.saveMember(joinDTO);
+        userService.saveNewMember(joinDTO);
 
         UserDetails principal = userDetailsService.loadUserByUsername(withUser.value());
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal

@@ -6,9 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
-import study.toy.everythingshop.entity.h2.ProductMEntity;
-import study.toy.everythingshop.entity.h2.UserMEntity;
-import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
@@ -26,12 +23,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public int editProduct(ProductRegisterDTO productRegisterDTO) {
-        return productDAO.editProduct(productRegisterDTO);
+        return productDAO.updateProduct(productRegisterDTO);
     }
 
     @Override
-    public int orderProduct(ProductOrderDTO productOrderDTO, UserDetails userDetails) {
-        User user = userDAO.findByUserId(userDetails.getUsername());
+    public int saveOrderProduct(ProductOrderDTO productOrderDTO, UserDetails userDetails) {
+        User user = userDAO.selectByeUserId(userDetails.getUsername());
         productOrderDTO.setUserNum(user.getUserNum());
         int result = 0;
         //최종결제금액 계산
@@ -60,10 +57,10 @@ public class ProductServiceImpl implements ProductService {
         return result;
     }
 
-    public int registerProduct(ProductRegisterDTO productRegisterDTO, UserDetails userDetails){
-        User user = userDAO.findByUserId(userDetails.getUsername());
+    public int saveNewProduct(ProductRegisterDTO productRegisterDTO, UserDetails userDetails){
+        User user = userDAO.selectByeUserId(userDetails.getUsername());
         productRegisterDTO.setUserNum(user.getUserNum());
-        return productDAO.registerProduct(productRegisterDTO);
+        return productDAO.insertNewProduct(productRegisterDTO);
     };
 
 

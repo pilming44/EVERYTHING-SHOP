@@ -8,7 +8,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.entity.h2.ProductMEntity;
 import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.repository.ProductDAO;
 
@@ -40,7 +39,7 @@ public class RestHomeController {
             productSearchDTO.setToPrice(tempPrice);
         }
 
-        List<Product> products = productDAO.findAll(productSearchDTO);
+        List<Product> products = productDAO.selectProductList(productSearchDTO);
 
         return products;
     }

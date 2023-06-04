@@ -14,7 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.toy.everythingshop.dto.ErrorResponse;
 import study.toy.everythingshop.dto.JoinDTO;
-import study.toy.everythingshop.entity.h2.UserMEntity;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.UserService;
@@ -36,12 +35,12 @@ public class UserController {
     private final MessageSource messageSource;
 
     @GetMapping("/join")
-    public String joinForm(JoinDTO joinDTO){
+    public String findJoinForm(JoinDTO joinDTO){
         return "join";
     }
     
     @PostMapping("/join")
-    public String join(@Validated @ModelAttribute JoinDTO joinDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes,Model model){
+    public String saveJoin(@Validated @ModelAttribute JoinDTO joinDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes,Model model){
         if (bindingResult.hasErrors()) {
             log.info("오류남");
             for (FieldError error : bindingResult.getFieldErrors()) {
@@ -51,7 +50,7 @@ public class UserController {
             model.addAttribute("joinDTO", joinDTO);
             return "redirect:/users/join";
         }
-        int result = userService.saveMember(joinDTO);
+        int result = userService.saveNewMember(joinDTO);
         if(result > 0){
             String message = messageSource.getMessage("id.joinSuccess", null, Locale.getDefault());
             redirectAttributes.addFlashAttribute("successMessage", message);
@@ -66,9 +65,9 @@ public class UserController {
 
     @GetMapping("/join/checkDupId")
     @ResponseBody
-    public Object checkDupId(@RequestParam("userId") String userId) {
+    public Object findCheckDupId(@RequestParam("userId") String userId) {
         try {
-            userService.checkDupId(userId);
+            userService.findDupId(userId);
             String message = messageSource.getMessage("id.available", null, Locale.getDefault());
             return message;
         } catch (ResponseStatusException ex) {
@@ -79,7 +78,7 @@ public class UserController {
         }
     }
     @GetMapping("/signIn")
-    public String signIn(Model model, HttpSession session) {
+    public String saveSignIn(Model model, HttpSession session) {
         String errorMessage = (String) session.getAttribute("errorMessage");
         //log.info(errorMessage);
         if (errorMessage != null) {
@@ -100,7 +99,7 @@ public class UserController {
         String rawPassword = joinDTO.getUserPw();
         String encPassword = bCryptPasswordEncoder.encode(rawPassword);
         joinDTO.setUserPw(encPassword);
-        userDAO.save(joinDTO);
+        userDAO.insertNewUser(joinDTO);
         return "redirect:/";
     }
 }

@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="maria.UserDAO">
-    <insert id="save" parameterType="JoinDTO">
-        /* UserDAO.save 사용자추가*/
+    <insert id="inserNewUser" parameterType="JoinDTO">
+        /* UserDAO.inserNewUser 사용자추가*/
         INSERT INTO T_USER
         (
             USER_ID
@@ -22,8 +22,8 @@
         )
     </insert>
 
-    <select id="findByUserId" parameterType="String" resultType="User">
-        /* UserDAO.findByUserId USER_ID로 사용자 조회*/
+    <select id="selectByUserId" parameterType="String" resultType="User">
+        /* UserDAO.selectByUserId USER_ID로 사용자 조회*/
         SELECT T01.USER_NUM             /* 사용자번호*/
              , T01.USER_ID              /* 사용자ID*/
              , T01.USER_PW              /* 비밀번호*/
@@ -63,6 +63,7 @@
 <!--    </select>-->
 
     <update id="updateUserInfo" parameterType="User">
+        /* UserDAO.updateUserInfo USER정보 업데이트*/
         UPDATE T_USER
            SET USER_NM = #{userNm}
              , CHANGE_DT = SYSDATE()

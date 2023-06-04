@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import study.toy.everythingshop.entity.h2.UserMEntity;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.repository.UserDAO;
 
@@ -26,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User user = userDAO.findByUserId(userId);
+        User user = userDAO.selectByeUserId(userId);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + userId);
         }

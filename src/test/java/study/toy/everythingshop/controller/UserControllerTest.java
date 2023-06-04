@@ -9,13 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import study.toy.everythingshop.dto.ErrorResponse;
 import study.toy.everythingshop.dto.JoinDTO;
@@ -57,8 +54,8 @@ public class UserControllerTest {
         joinDTO.setUserPw("testpassword");
         joinDTO.setUserNm("testName");
 
-        doNothing().when(userService).checkDupId(anyString());
-        doReturn(1).when(userService).saveMember(joinDTO);
+        doNothing().when(userService).findDupId(anyString());
+        doReturn(1).when(userService).saveNewMember(joinDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/users/join")
                 .param("userId", "testuser")
@@ -77,7 +74,7 @@ public class UserControllerTest {
         joinDTO.setUserPw("testpassword");
         joinDTO.setUserNm("testName");
 
-        doThrow(new ResponseStatusException(HttpStatus.CONFLICT)).when(userService).checkDupId(anyString());
+        doThrow(new ResponseStatusException(HttpStatus.CONFLICT)).when(userService).findDupId(anyString());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/users/join")
                 .param("userId", "testuser")
@@ -92,7 +89,7 @@ public class UserControllerTest {
     @DisplayName("중복 ID 검사 테스트 - 사용 가능")
     public void testCheckDupId_available() throws Exception {
         String userId = "testuser";
-        doNothing().when(userService).checkDupId(userId);
+        doNothing().when(userService).findDupId(userId);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users/join/checkDupId")
                 .param("userId", userId))
@@ -107,7 +104,7 @@ public class UserControllerTest {
 
         String errorMessage = messageSource.getMessage("user.alreadyExists", null, Locale.getDefault());
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(), errorMessage);
-        doThrow(new ResponseStatusException(HttpStatus.CONFLICT, errorMessage)).when(userService).checkDupId(userId);
+        doThrow(new ResponseStatusException(HttpStatus.CONFLICT, errorMessage)).when(userService).findDupId(userId);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users/join/checkDupId")
                 .param("userId", userId))

@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.entity.h2.UserMEntity;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.service.MyPageService;
 import study.toy.everythingshop.service.UserService;
@@ -83,7 +82,7 @@ public class MyPageControllerTest {
         String userId = "admin";
         String newUserName = "변경이름";
 
-        doNothing().when(myPageService).updateUserInfo(new User());
+        doNothing().when(myPageService).editUserInfo(new User());
 
         //이름 수정 post요청
         mockMvc.perform(MockMvcRequestBuilders.post("/myPage/editMyInfo/{userId}", userId)
@@ -132,7 +131,7 @@ public class MyPageControllerTest {
 
         List<ProductOrderDTO> myOrderList = new ArrayList<>();
         myOrderList.add(new ProductOrderDTO());
-        doReturn(myOrderList).when(myPageService).getMyOrderList(productSearchDTO);
+        doReturn(myOrderList).when(myPageService).findMyOrderList(productSearchDTO);
 
         // when
         mockMvc.perform(MockMvcRequestBuilders.get("/myPage/myOrderList")
@@ -153,7 +152,7 @@ public class MyPageControllerTest {
         productSearchDTO.setUserNum(1); // userNum 추가
 
         List<ProductOrderDTO> myOrderList = new ArrayList<>();
-        doReturn(myOrderList).when(myPageService).getMyOrderList(productSearchDTO);
+        doReturn(myOrderList).when(myPageService).findMyOrderList(productSearchDTO);
 
         // when
         mockMvc.perform(MockMvcRequestBuilders.get("/myPage/myOrderList")

@@ -6,9 +6,9 @@ import study.toy.everythingshop.entity.h2.UserMEntity;
 import java.util.List;
 public interface UserService {
 
-    int saveMember(JoinDTO joinDTO);
-    List<UserMEntity> findAll();
+    int saveNewMember(JoinDTO joinDTO);
+    List<UserMEntity> findAllUser();
 
 
-    void checkDupId(String userId);
+    void findDupId(String userId);
 }

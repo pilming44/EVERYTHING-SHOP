@@ -82,7 +82,7 @@ public class ProductControllerTest {
 
         UserDetails userDetails = new User("test", "password", AuthorityUtils.createAuthorityList("01"));
 
-        doReturn(1).when(productService).registerProduct(dto, userDetails);
+        doReturn(1).when(productService).saveNewProduct(dto, userDetails);
 
         // when
         mockMvc.perform(MockMvcRequestBuilders.post("/product/register")
@@ -111,7 +111,7 @@ public class ProductControllerTest {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
 
-        productDAO.registerProduct(productRegisterDTO);
+        productDAO.insertNewProduct(productRegisterDTO);
 
         //서비스에서 업데이트 성공 리턴하는 mock객체
         doReturn(1).when(productService).editProduct(any(ProductRegisterDTO.class));
@@ -131,7 +131,7 @@ public class ProductControllerTest {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
 
-        productDAO.registerProduct(productRegisterDTO);
+        productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
@@ -150,7 +150,7 @@ public class ProductControllerTest {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
 
-        productDAO.registerProduct(productRegisterDTO);
+        productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
@@ -169,7 +169,7 @@ public class ProductControllerTest {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
 
-        productDAO.registerProduct(productRegisterDTO);
+        productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
@@ -188,7 +188,7 @@ public class ProductControllerTest {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
 
-        productDAO.registerProduct(productRegisterDTO);
+        productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
@@ -207,7 +207,7 @@ public class ProductControllerTest {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
 
-        productDAO.registerProduct(productRegisterDTO);
+        productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
@@ -226,7 +226,7 @@ public class ProductControllerTest {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
 
-        productDAO.registerProduct(productRegisterDTO);
+        productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
@@ -245,7 +245,7 @@ public class ProductControllerTest {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
 
-        productDAO.registerProduct(productRegisterDTO);
+        productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
@@ -264,7 +264,7 @@ public class ProductControllerTest {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
 
-        productDAO.registerProduct(productRegisterDTO);
+        productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
@@ -283,7 +283,7 @@ public class ProductControllerTest {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
 
-        productDAO.registerProduct(productRegisterDTO);
+        productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
@@ -302,7 +302,7 @@ public class ProductControllerTest {
         //수정할 상품 데이터 입력
         ProductRegisterDTO productRegisterDTO = registerProductForEdit();
 
-        productDAO.registerProduct(productRegisterDTO);
+        productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
