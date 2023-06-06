@@ -7,15 +7,19 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
+import study.toy.everythingshop.auth.UserDetailsImpl;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
+import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.service.ProductService;
 import static org.mockito.Mockito.*;
@@ -30,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringJUnitConfig
 @SpringBootTest
+@Transactional
 @AutoConfigureMockMvc
 public class ProductControllerTest {
     @Autowired
@@ -41,18 +46,36 @@ public class ProductControllerTest {
     @Autowired
     private ProductDAO productDAO;
 
+    //테스트용으로 생성된 사용자의 정보를 가져오는 매서드
+    User getUserInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        return userDetails.getUser();
+    }
+
+    private ProductRegisterDTO registerProductForEdit(User user) {
+        //수정할 상품 데이터 입력
+        return ProductRegisterDTO.builder()
+                .productNm("테스트물품")
+                .productPrice(15000)
+                .userNum(user.getUserNum())
+                .registerQuantity(2000)
+                .productStatusCd("01")
+                .build();
+    }
+
     @Test
     @DisplayName("상품등록 - 가격 오류")
     public void testProductRegisterWithBindingErrors1() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/product/register")
-                .param("productName", "test상품명")
-                .param("price", "-10") // 가격을 -로 해서 바인딩 오류 발생
-                .param("quantity", "100")
-                .param("productStts", "01")
+                .param("productNm", "test상품명")
+                .param("productPrice", "-10") // 가격을 -로 해서 바인딩 오류 발생
+                .param("registerQuantity", "100")
+                .param("productStatusCd", "01")
                 .with(user("test").password("test").roles("01"))
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("productRegisterDTO", "price", "Range"))
+                .andExpect(model().attributeHasFieldErrorCode("productRegisterDTO", "productPrice", "Range"))
                 .andExpect(view().name("productRegister"));
     }
 
@@ -60,18 +83,19 @@ public class ProductControllerTest {
     @DisplayName("상품등록 - 수량 오류")
     public void testProductRegisterWithBindingErrors2() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/product/register")
-                .param("productName", "test상품명")
-                .param("price", "10")
-                .param("quantity", "-100")
-                .param("productStts", "01")
+                .param("productNm", "test상품명")
+                .param("productPrice", "10")
+                .param("registerQuantity", "-100")
+                .param("productStatusCd", "01")
                 .with(user("test").password("test").roles("01"))
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrors("productRegisterDTO", "quantity"))
+                .andExpect(model().attributeHasFieldErrors("productRegisterDTO", "registerQuantity"))
                 .andExpect(view().name("productRegister"));
     }
     @Test
     @DisplayName("상품등록 - 성공")
+    @WithUser(value = "admin")
     public void testProductRegister_success() throws Exception {
         // given
         ProductRegisterDTO dto = new ProductRegisterDTO();
@@ -80,7 +104,10 @@ public class ProductControllerTest {
         dto.setRegisterQuantity(100);
         dto.setProductStatusCd("01");
 
-        UserDetails userDetails = new User("test", "password", AuthorityUtils.createAuthorityList("01"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+//        UserDetails userDetails = new User("test", "password", AuthorityUtils.createAuthorityList("01"));
 
         doReturn(1).when(productService).saveNewProduct(dto, userDetails);
 
@@ -94,22 +121,14 @@ public class ProductControllerTest {
                 .andExpect(flash().attributeExists("productRegi_success"))
                 .andExpect(redirectedUrl("/home"));
     }
-    private ProductRegisterDTO registerProductForEdit() {
-        //수정할 상품 데이터 입력
-        return ProductRegisterDTO.builder()
-                .productNm("테스트물품")
-                .productPrice(15000)
-                .userNum(1)
-                .registerQuantity(2000)
-                .productStatusCd("01")
-                .build();
-    }
 
     @Test
     @DisplayName("상품수정 - 성공")
+    @WithUser(value = "admin") //@BeforeEach 와 @WithUserDetails 사용시 오류로 인해 커스텀 태그 생성
     void test_1() throws Exception {
         //수정할 상품 데이터 입력
-        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+        User user = getUserInfo();
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit(user);
 
         productDAO.insertNewProduct(productRegisterDTO);
 
@@ -117,203 +136,223 @@ public class ProductControllerTest {
         doReturn(1).when(productService).editProduct(any(ProductRegisterDTO.class));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
-                        .param("productName", "수정테스트물품")
-                        .param("price", "20000")
-                        .param("quantity", "100")
-                        .param("productStts","01"))
+                        .param("productNm", "수정테스트물품")
+                        .param("productPrice", "20000")
+                        .param("registerQuantity", "100")
+                        .param("productStatusCd","01"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/product/"+productRegisterDTO.getProductNum()));
     }
 
     @Test
     @DisplayName("상품수정 - 상품명 미입력")
+    @WithUser(value = "admin") //@BeforeEach 와 @WithUserDetails 사용시 오류로 인해 커스텀 태그 생성
     void test_2() throws Exception {
         //수정할 상품 데이터 입력
-        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+        User user = getUserInfo();
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit(user);
 
         productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
-                        .param("productName", "")
-                        .param("price", "20000")
-                        .param("quantity", "100")
-                        .param("productStts","01"))
+                        .param("productNm", "")
+                        .param("productPrice", "20000")
+                        .param("registerQuantity", "100")
+                        .param("productStatusCd","01"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("product", "productName", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "productNm", "NotBlank"))
                 .andExpect(view().name("productEdit"));
     }
 
     @Test
     @DisplayName("상품수정 - 가격 미입력")
+    @WithUser(value = "admin") //@BeforeEach 와 @WithUserDetails 사용시 오류로 인해 커스텀 태그 생성
     void test_3() throws Exception {
         //수정할 상품 데이터 입력
-        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+        User user = getUserInfo();
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit(user);
 
         productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
-                        .param("productName", "수정테스트물품")
-                        .param("price", "")
-                        .param("quantity", "100")
-                        .param("productStts","01"))
+                        .param("productNm", "수정테스트물품")
+                        .param("productPrice", "")
+                        .param("registerQuantity", "100")
+                        .param("productStatusCd","01"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("product", "price", "NotNull"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "productPrice", "NotNull"))
                 .andExpect(view().name("productEdit"));
     }
 
     @Test
     @DisplayName("상품수정 - 가격 타입오류")
+    @WithUser(value = "admin") //@BeforeEach 와 @WithUserDetails 사용시 오류로 인해 커스텀 태그 생성
     void test_4() throws Exception {
         //수정할 상품 데이터 입력
-        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+        User user = getUserInfo();
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit(user);
 
         productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
-                        .param("productName", "수정테스트물품")
-                        .param("price", "문자열")
-                        .param("quantity", "100")
-                        .param("productStts","01"))
+                        .param("productNm", "수정테스트물품")
+                        .param("productPrice", "문자열")
+                        .param("registerQuantity", "100")
+                        .param("productStatusCd","01"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("product", "price", "typeMismatch"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "productPrice", "typeMismatch"))
                 .andExpect(view().name("productEdit"));
     }
 
     @Test
     @DisplayName("상품수정 - 가격 범위오류(under)")
+    @WithUser(value = "admin") //@BeforeEach 와 @WithUserDetails 사용시 오류로 인해 커스텀 태그 생성
     void test_5() throws Exception {
         //수정할 상품 데이터 입력
-        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+        User user = getUserInfo();
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit(user);
 
         productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
-                        .param("productName", "수정테스트물품")
-                        .param("price", "-1")
-                        .param("quantity", "100")
-                        .param("productStts","01"))
+                        .param("productNm", "수정테스트물품")
+                        .param("productPrice", "-1")
+                        .param("registerQuantity", "100")
+                        .param("productStatusCd","01"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("product", "price", "Range"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "productPrice", "Range"))
                 .andExpect(view().name("productEdit"));
     }
 
     @Test
     @DisplayName("상품수정 - 가격 범위오류(over)")
+    @WithUser(value = "admin") //@BeforeEach 와 @WithUserDetails 사용시 오류로 인해 커스텀 태그 생성
     void test_6() throws Exception {
         //수정할 상품 데이터 입력
-        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+        User user = getUserInfo();
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit(user);
 
         productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
-                        .param("productName", "수정테스트물품")
-                        .param("price", "1000000000")
-                        .param("quantity", "100")
-                        .param("productStts","01"))
+                        .param("productNm", "수정테스트물품")
+                        .param("productPrice", "1000000000")
+                        .param("registerQuantity", "100")
+                        .param("productStatusCd","01"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("product", "price", "Range"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "productPrice", "Range"))
                 .andExpect(view().name("productEdit"));
     }
 
     @Test
     @DisplayName("상품수정 - 수량 미입력")
+    @WithUser(value = "admin") //@BeforeEach 와 @WithUserDetails 사용시 오류로 인해 커스텀 태그 생성
     void test_7() throws Exception {
         //수정할 상품 데이터 입력
-        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+        User user = getUserInfo();
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit(user);
 
         productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
-                        .param("productName", "수정테스트물품")
-                        .param("price", "15000")
-                        .param("quantity", "")
-                        .param("productStts","01"))
+                        .param("productNm", "수정테스트물품")
+                        .param("productPrice", "15000")
+                        .param("registerQuantity", "")
+                        .param("productStatusCd","01"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "NotNull"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "registerQuantity", "NotNull"))
                 .andExpect(view().name("productEdit"));
     }
 
     @Test
     @DisplayName("상품수정 - 수량 타입오류")
+    @WithUser(value = "admin") //@BeforeEach 와 @WithUserDetails 사용시 오류로 인해 커스텀 태그 생성
     void test_8() throws Exception {
         //수정할 상품 데이터 입력
-        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+        User user = getUserInfo();
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit(user);
 
         productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
-                        .param("productName", "수정테스트물품")
-                        .param("price", "15000")
-                        .param("quantity", "문자열")
-                        .param("productStts","01"))
+                        .param("productNm", "수정테스트물품")
+                        .param("productPrice", "15000")
+                        .param("registerQuantity", "문자열")
+                        .param("productStatusCd","01"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "typeMismatch"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "registerQuantity", "typeMismatch"))
                 .andExpect(view().name("productEdit"));
     }
 
     @Test
     @DisplayName("상품수정 - 수량 범위오류(under)")
+    @WithUser(value = "admin") //@BeforeEach 와 @WithUserDetails 사용시 오류로 인해 커스텀 태그 생성
     void test_9() throws Exception {
         //수정할 상품 데이터 입력
-        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+        User user = getUserInfo();
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit(user);
 
         productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
-                        .param("productName", "수정테스트물품")
-                        .param("price", "15000")
-                        .param("quantity", "0")
-                        .param("productStts","01"))
+                        .param("productNm", "수정테스트물품")
+                        .param("productPrice", "15000")
+                        .param("registerQuantity", "0")
+                        .param("productStatusCd","01"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "Range"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "registerQuantity", "Range"))
                 .andExpect(view().name("productEdit"));
     }
 
     @Test
     @DisplayName("상품수정 - 수량 범위오류(over)")
+    @WithUser(value = "admin") //@BeforeEach 와 @WithUserDetails 사용시 오류로 인해 커스텀 태그 생성
     void test_10() throws Exception {
         //수정할 상품 데이터 입력
-        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+        User user = getUserInfo();
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit(user);
 
         productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
-                        .param("productName", "수정테스트물품")
-                        .param("price", "15000")
-                        .param("quantity", "1000000000")
-                        .param("productStts","01"))
+                        .param("productNm", "수정테스트물품")
+                        .param("productPrice", "15000")
+                        .param("registerQuantity", "1000000000")
+                        .param("productStatusCd","01"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "Range"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "registerQuantity", "Range"))
                 .andExpect(view().name("productEdit"));
     }
 
     @Test
     @DisplayName("상품수정 - 복합검증오류")
+    @WithUser(value = "admin") //@BeforeEach 와 @WithUserDetails 사용시 오류로 인해 커스텀 태그 생성
     void test_11() throws Exception {
         //수정할 상품 데이터 입력
-        ProductRegisterDTO productRegisterDTO = registerProductForEdit();
+        User user = getUserInfo();
+        ProductRegisterDTO productRegisterDTO = registerProductForEdit(user);
 
         productDAO.insertNewProduct(productRegisterDTO);
 
         //service진입하지않고 리턴됨.
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
-                        .param("productName", "")
-                        .param("price", "-1")
-                        .param("quantity", "0")
-                        .param("productStts","01"))
+                        .param("productNm", "")
+                        .param("productPrice", "-1")
+                        .param("registerQuantity", "0")
+                        .param("productStatusCd","01"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("product", "productName", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("product", "price", "Range"))
-                .andExpect(model().attributeHasFieldErrorCode("product", "quantity", "Range"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "productNm", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "productPrice", "Range"))
+                .andExpect(model().attributeHasFieldErrorCode("product", "registerQuantity", "Range"))
                 .andExpect(view().name("productEdit"));
     }
 
@@ -323,8 +362,8 @@ public class ProductControllerTest {
 //    @WithMockUser
 //    void productOrderTest_success() throws Exception{
 //        ProductOrderDTO productOrderDTO = new ProductOrderDTO();
-//        productOrderDTO.setRegisterQuantity(10);
-//        productOrderDTO.setOrderQuantity(5);
+//        productOrderDTO.setregisterQuantity(10);
+//        productOrderDTO.setOrderregisterQuantity(5);
 //        productOrderDTO.setProductNum(1);
 //
 //        doReturn(3).when(productService).orderProduct(eq(productOrderDTO), (UserDetails) any());
@@ -362,8 +401,8 @@ public class ProductControllerTest {
 //        // given
 //        ProductOrderDTO productOrderDTO = new ProductOrderDTO();
 //        productOrderDTO.setProductNum(1L);
-//        productOrderDTO.setOrderQuantity(50L); // 재고초과
-//        productOrderDTO.setRegisterQuantity(10L);
+//        productOrderDTO.setOrderregisterQuantity(50L); // 재고초과
+//        productOrderDTO.setregisterQuantity(10L);
 //
 //        // when
 //        mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/order", productOrderDTO.getProductNum())
