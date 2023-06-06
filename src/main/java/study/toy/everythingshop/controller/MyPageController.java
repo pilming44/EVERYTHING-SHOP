@@ -12,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.entity.h2.UserMEntity;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
@@ -43,12 +42,12 @@ public class MyPageController {
     }
 
     @GetMapping("/myInfo")
-    public String myInfo(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String findMyInfo(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         //AuthenticationPrincipal어노테이션으로 현재 로그인한 사용자의 정보를 나타내는 객체인 Principal객체를 주입받을수있다
         //이렇게 주입받은 객체는 UserDetails타입으로 캐스팅해서 사용 가능
 
         //사용자 정보 조회
-        User user = userDAO.findByUserId(userDetails.getUsername());
+        User user = userDAO.selectByeUserId(userDetails.getUsername());
 
         //디버깅
         log.info(">>>>>>>>>>>>user : {}",user);
@@ -64,7 +63,7 @@ public class MyPageController {
         //이렇게 주입받은 객체는 UserDetails타입으로 캐스팅해서 사용 가능
 
         //사용자 정보 조회
-        User user = userDAO.findByUserId(userDetails.getUsername());
+        User user = userDAO.selectByeUserId(userDetails.getUsername());
 
         //디버깅
         log.info(">>>>>>>>>>>>userMEntity : {}",user);
@@ -89,7 +88,7 @@ public class MyPageController {
             throw new AccessDeniedException("Cannot update other users' information");
         }
 
-        myPageService.updateUserInfo(user);
+        myPageService.editUserInfo(user);
 
         //디버깅
         log.info(">>>>>>>>>>>>user : {}",user);
@@ -99,10 +98,10 @@ public class MyPageController {
     }
 
     @GetMapping("/myOrderList")
-    public String myOrderList(@AuthenticationPrincipal UserDetails userDetails, Model model,
+    public String findMyOrderList(@AuthenticationPrincipal UserDetails userDetails, Model model,
                               @Validated  @ModelAttribute ProductSearchDTO productSearchDTO, BindingResult bindingResult) {
         //사용자 정보 조회
-        User user = userDAO.findByUserId(userDetails.getUsername());
+        User user = userDAO.selectByeUserId(userDetails.getUsername());
         Integer userNum = user.getUserNum();
         productSearchDTO.setUserNum(userNum);
 
@@ -111,7 +110,7 @@ public class MyPageController {
             productSearchDTO = new ProductSearchDTO();
             log.info("바인딩오류발생");
         }
-        List<ProductOrderDTO> myOrderList = myPageService.getMyOrderList(productSearchDTO);
+        List<ProductOrderDTO> myOrderList = myPageService.findMyOrderList(productSearchDTO);
         if (myOrderList.isEmpty()) {
             model.addAttribute("message", "주문 내역이 없습니다.");
         } else {

@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="maria.ProductDAO">
-    <select id="findAll" parameterType="ProductSearchDTO" resultType="Product">
+    <select id="selectProductList" parameterType="ProductSearchDTO" resultType="Product">
+        /* ProductDAO.selectProductList 전체 PRODUCT LIST 조회*/
         SELECT T01.PRODUCT_NUM          /* 상품번호*/
              , T01.USER_NUM             /* 등록사용자번호*/
              , T01.PRODUCT_NM           /* 상품명*/
@@ -29,7 +30,7 @@
         </where>
     </select>
 
-    <select id="findByProductNum" parameterType="Integer" resultType="Product">
+    <select id="selectByProductNum" parameterType="Integer" resultType="Product">
         SELECT T01.PRODUCT_NUM          /* 상품번호*/
              , T01.USER_NUM             /* 등록사용자번호*/
              , T01.PRODUCT_NM           /* 상품명*/
@@ -43,7 +44,7 @@
          WHERE T01.PRODUCT_NUM = #{productNum}
     </select>
 
-    <insert id="registerProduct" parameterType="ProductRegisterDTO" useGeneratedKeys="true" keyProperty="productNum">
+    <insert id="insertNewProduct" parameterType="ProductRegisterDTO" useGeneratedKeys="true" keyProperty="productNum">
         INSERT INTO T_PRODUCT
         (
             USER_NUM
@@ -66,7 +67,7 @@
         )
     </insert>
 
-    <update id="editProduct" parameterType="ProductRegisterDTO">
+    <update id="updateProduct" parameterType="ProductRegisterDTO">
         UPDATE T_PRODUCT
            SET PRODUCT_NM = #{productNm}
              , PRODUCT_PRICE = #{productPrice}
@@ -123,7 +124,7 @@
         </where>
     </update>
 
-    <select id="getMyOrderList" parameterType="ProductSearchDTO" resultType="ProductOrderDTO">
+    <select id="selectMyOrderList" parameterType="ProductSearchDTO" resultType="ProductOrderDTO">
         SELECT T01.USER_NUM
              , T01.ORDER_NUM
              , T03.PRODUCT_NAME

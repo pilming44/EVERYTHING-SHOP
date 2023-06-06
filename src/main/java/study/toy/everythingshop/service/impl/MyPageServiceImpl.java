@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.entity.h2.UserMEntity;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
@@ -29,12 +28,12 @@ public class MyPageServiceImpl implements MyPageService {
     private final ProductDAO productDAO;
 
     @Override
-    public void updateUserInfo(User user) {
+    public void editUserInfo(User user) {
         userDAO.updateUserInfo(user);
     }
 
     @Override
-    public List<ProductOrderDTO> getMyOrderList(ProductSearchDTO productSearchDTO) {
-       return productDAO.getMyOrderList(productSearchDTO);
+    public List<ProductOrderDTO> findMyOrderList(ProductSearchDTO productSearchDTO) {
+       return productDAO.selectMyOrderList(productSearchDTO);
     }
 }

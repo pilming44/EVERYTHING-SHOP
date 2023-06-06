@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
-import study.toy.everythingshop.entity.h2.ProductMEntity;
 import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
@@ -38,8 +37,8 @@ public class ProductController {
     private final MessageSource messageSource;
 
     @GetMapping("/{productNum}")
-    public String productDetail(@PathVariable Integer productNum, Model model) {
-        Product product = productDAO.findByProductNum(productNum);
+    public String findProductDetail(@PathVariable Integer productNum, Model model) {
+        Product product = productDAO.selectByProductNum(productNum);
 
         log.info("Product 객체 : {}", product);
         model.addAttribute("product", product);
@@ -47,12 +46,12 @@ public class ProductController {
     }
 
     @GetMapping("/register")
-    public String productRegisterForm(ProductRegisterDTO productRegisterDTO){
+    public String findProductRegisterForm(ProductRegisterDTO productRegisterDTO){
         return "productRegister";
     }
 
     @PostMapping("/register")
-    public String productRegister(@Validated @ModelAttribute ProductRegisterDTO productRegisterDTO,
+    public String saveProductRegister(@Validated @ModelAttribute ProductRegisterDTO productRegisterDTO,
                                   BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes,
                                   @AuthenticationPrincipal UserDetails userDetails) {
         if(bindingResult.hasErrors()) {
@@ -61,7 +60,7 @@ public class ProductController {
             return "productRegister";
         }else{
             log.info("등록");
-            int result = productService.registerProduct(productRegisterDTO,userDetails);
+            int result = productService.saveNewProduct(productRegisterDTO,userDetails);
            if(result > 0){
                String message = messageSource.getMessage("product.register.success", null, Locale.getDefault());
                redirectAttributes.addFlashAttribute("productRegi_success", message);
@@ -74,8 +73,8 @@ public class ProductController {
     }
 
     @GetMapping("/{productNum}/edit")
-    public String productEditView(@PathVariable Integer productNum, Model model) {
-        Product product = productDAO.findByProductNum(productNum);
+    public String editProductView(@PathVariable Integer productNum, Model model) {
+        Product product = productDAO.selectByProductNum(productNum);
 
         log.info("product 객체 : {}", product);
         model.addAttribute("product", product);
@@ -83,7 +82,7 @@ public class ProductController {
     }
 
     @PostMapping("/{productNum}/edit")
-    public String productEdit(@PathVariable Integer productNum, @Validated @ModelAttribute("product") ProductRegisterDTO productRegisterDTO,
+    public String editProduct(@PathVariable Integer productNum, @Validated @ModelAttribute("product") ProductRegisterDTO productRegisterDTO,
                               BindingResult bindingResult) {
         //todo 추후 role을 적용할때 작성자 또는 권한을 가진사람이 productNum에 대해 수정권한이 있는지 체크 할것.
 
@@ -99,8 +98,8 @@ public class ProductController {
         return "redirect:/product/"+productNum;
     }
     @GetMapping("/{productNum}/order")
-    public String productOrderForm(@PathVariable Integer productNum, Model model ){
-            Product product = productDAO.findByProductNum(productNum);
+    public String findProductOrderForm(@PathVariable Integer productNum, Model model ){
+            Product product = productDAO.selectByProductNum(productNum);
             ModelMapper modelMapper = new ModelMapper();
             ProductOrderDTO productOrderDTO = modelMapper.map(product, ProductOrderDTO.class);
 
@@ -110,7 +109,7 @@ public class ProductController {
     }
 
     @PostMapping("/{productNum}/order")
-    public String productOrder(@Validated @ModelAttribute ProductOrderDTO productOrderDTO,
+    public String saveProductOrder(@Validated @ModelAttribute ProductOrderDTO productOrderDTO,
                                BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes,
                                @AuthenticationPrincipal UserDetails userDetails){
         if(bindingResult.hasErrors()) {
@@ -126,7 +125,7 @@ public class ProductController {
             return "redirect:/product/" + productOrderDTO.getProductNum() + "/order";
         }
         log.info("등록");
-        int result = productService.orderProduct(productOrderDTO,userDetails);
+        int result = productService.saveOrderProduct(productOrderDTO,userDetails);
         log.info("result"+result);
         if(result >= 3){
             String message = messageSource.getMessage("product.order.success", null, Locale.getDefault());

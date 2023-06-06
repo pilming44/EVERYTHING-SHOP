@@ -14,13 +14,13 @@ import java.util.List;
  * date     : 2023-03-01
  */
 public interface ProductDAO {
-    List<Product> findAll(ProductSearchDTO productSearchDTO);
+    List<Product> selectProductList(ProductSearchDTO productSearchDTO);
 
-    Product findByProductNum(Integer productNum);
+    Product selectByProductNum(Integer productNum);
 
-    int registerProduct(ProductRegisterDTO productRegisterDTO);
+    int insertNewProduct(ProductRegisterDTO productRegisterDTO);
 
-    int editProduct(ProductRegisterDTO productRegisterDTO);
+    int updateProduct(ProductRegisterDTO productRegisterDTO);
 
     int insertOrder(ProductOrderDTO productOrderDTO);
 
@@ -28,5 +28,5 @@ public interface ProductDAO {
 
     int updateQuantityStts(ProductMEntity productMEntity);
 
-    List<ProductOrderDTO> getMyOrderList(ProductSearchDTO productSearchDTO);
+    List<ProductOrderDTO> selectMyOrderList(ProductSearchDTO productSearchDTO);
 }

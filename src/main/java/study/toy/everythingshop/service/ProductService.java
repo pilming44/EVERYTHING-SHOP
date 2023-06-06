@@ -5,9 +5,9 @@ import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 
 public interface ProductService {
-    int registerProduct(ProductRegisterDTO productRegisterDTO, UserDetails userDetails);
+    int saveNewProduct(ProductRegisterDTO productRegisterDTO, UserDetails userDetails);
 
     int editProduct(ProductRegisterDTO productRegisterDTO);
 
-    int orderProduct(ProductOrderDTO productOrderDTO, UserDetails userDetails);
+    int saveOrderProduct(ProductOrderDTO productOrderDTO, UserDetails userDetails);
 }
