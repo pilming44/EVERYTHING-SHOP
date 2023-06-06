@@ -27,18 +27,18 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public int saveMember(JoinDTO joinDTO) {
+    public int saveNewMember(JoinDTO joinDTO) {
         joinDTO.setUserPw(bCryptPasswordEncoder.encode(joinDTO.getUserPw()));
-        return userDAO.save(joinDTO);
+        return userDAO.insertNewUser(joinDTO);
     }
     @Override
-    public List<UserMEntity> findAll() {
+    public List<UserMEntity> findAllUser() {
         return null;
     }
 
     @Override
-    public void checkDupId(String userId){
-        User user = userDAO.findByUserId(userId);
+    public void findDupId(String userId){
+        User user = userDAO.selectByeUserId(userId);
         if (user != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "user.alreadyExists");
         }

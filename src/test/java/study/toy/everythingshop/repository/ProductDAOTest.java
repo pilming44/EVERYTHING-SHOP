@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.entity.h2.ProductMEntity;
 import study.toy.everythingshop.entity.mariaDB.Product;
 
 import java.util.List;
@@ -35,8 +34,8 @@ public class ProductDAOTest {
         // given
         ProductRegisterDTO productRegisterDTO = ProductRegisterDTO.builder().productNm("만물상자").productStatusCd("02").productPrice(30000).registerQuantity(30).userNum(1).build();
         // when
-        productDAO.registerProduct(productRegisterDTO);
-        Product product = productDAO.findByProductNum(productRegisterDTO.getProductNum());
+        productDAO.insertNewProduct(productRegisterDTO);
+        Product product = productDAO.selectByProductNum(productRegisterDTO.getProductNum());
         // then
         assertThat(productRegisterDTO).isEqualTo(product);
     }
@@ -50,7 +49,7 @@ public class ProductDAOTest {
                 .fromPrice(null)
                 .toPrice(null).build();
         // when
-        List<Product> findAll = productDAO.findAll(productSearchDTO);
+        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
         // then
         assertThat(findAll).hasSize(0);
     }
@@ -66,9 +65,9 @@ public class ProductDAOTest {
                 .toPrice(null).build();
 
         ProductRegisterDTO productRegisterDTO = ProductRegisterDTO.builder().productNm("만물상자").productStatusCd("02").productPrice(30000).registerQuantity(30).userNum(1).build();
-        productDAO.registerProduct(productRegisterDTO);
+        productDAO.insertNewProduct(productRegisterDTO);
         // when
-        List<Product> findAll = productDAO.findAll(productSearchDTO);
+        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
         // then
         assertThat(findAll).hasSize(1);
     }
@@ -87,12 +86,12 @@ public class ProductDAOTest {
         ProductRegisterDTO productRegisterDTO2 = ProductRegisterDTO.builder().productNm("과자").productStatusCd("01").productPrice(10000).registerQuantity(21).userNum(1).build();
         ProductRegisterDTO productRegisterDTO3 = ProductRegisterDTO.builder().productNm("선물").productStatusCd("02").productPrice(23000).registerQuantity(5).userNum(1).build();
         ProductRegisterDTO productRegisterDTO4 = ProductRegisterDTO.builder().productNm("책").productStatusCd("01").productPrice(5000).registerQuantity(10).userNum(1).build();
-        productDAO.registerProduct(productRegisterDTO1);
-        productDAO.registerProduct(productRegisterDTO2);
-        productDAO.registerProduct(productRegisterDTO3);
-        productDAO.registerProduct(productRegisterDTO4);
+        productDAO.insertNewProduct(productRegisterDTO1);
+        productDAO.insertNewProduct(productRegisterDTO2);
+        productDAO.insertNewProduct(productRegisterDTO3);
+        productDAO.insertNewProduct(productRegisterDTO4);
         // when
-        List<Product> findAll = productDAO.findAll(productSearchDTO);
+        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
         // then
         assertThat(findAll).hasSize(4);
     }
@@ -112,12 +111,12 @@ public class ProductDAOTest {
         ProductRegisterDTO productRegisterDTO2 = ProductRegisterDTO.builder().productNm("과자").productStatusCd("01").productPrice(10000).registerQuantity(21).userNum(1).build();
         ProductRegisterDTO productRegisterDTO3 = ProductRegisterDTO.builder().productNm("선물").productStatusCd("02").productPrice(23000).registerQuantity(5).userNum(1).build();
         ProductRegisterDTO productRegisterDTO4 = ProductRegisterDTO.builder().productNm("책").productStatusCd("01").productPrice(5000).registerQuantity(10).userNum(1).build();
-        productDAO.registerProduct(productRegisterDTO1);
-        productDAO.registerProduct(productRegisterDTO2);
-        productDAO.registerProduct(productRegisterDTO3);
-        productDAO.registerProduct(productRegisterDTO4);
+        productDAO.insertNewProduct(productRegisterDTO1);
+        productDAO.insertNewProduct(productRegisterDTO2);
+        productDAO.insertNewProduct(productRegisterDTO3);
+        productDAO.insertNewProduct(productRegisterDTO4);
         // when
-        List<Product> findAll = productDAO.findAll(productSearchDTO);
+        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
 
         // then
         assertThat(findAll).hasSize(0);
@@ -137,12 +136,12 @@ public class ProductDAOTest {
         ProductRegisterDTO productRegisterDTO2 = ProductRegisterDTO.builder().productNm("과자").productStatusCd("01").productPrice(10000).registerQuantity(21).userNum(1).build();
         ProductRegisterDTO productRegisterDTO3 = ProductRegisterDTO.builder().productNm("선물").productStatusCd("02").productPrice(23000).registerQuantity(5).userNum(1).build();
         ProductRegisterDTO productRegisterDTO4 = ProductRegisterDTO.builder().productNm("책").productStatusCd("01").productPrice(5000).registerQuantity(10).userNum(1).build();
-        productDAO.registerProduct(productRegisterDTO1);
-        productDAO.registerProduct(productRegisterDTO2);
-        productDAO.registerProduct(productRegisterDTO3);
-        productDAO.registerProduct(productRegisterDTO4);
+        productDAO.insertNewProduct(productRegisterDTO1);
+        productDAO.insertNewProduct(productRegisterDTO2);
+        productDAO.insertNewProduct(productRegisterDTO3);
+        productDAO.insertNewProduct(productRegisterDTO4);
         // when
-        List<Product> findAll = productDAO.findAll(productSearchDTO);
+        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
 
         // then
         assertThat(findAll).hasSize(1);
@@ -164,12 +163,12 @@ public class ProductDAOTest {
         ProductRegisterDTO productRegisterDTO2 = ProductRegisterDTO.builder().productNm("과자").productStatusCd("01").productPrice(10000).registerQuantity(21).userNum(1).build();
         ProductRegisterDTO productRegisterDTO3 = ProductRegisterDTO.builder().productNm("선물").productStatusCd("02").productPrice(23000).registerQuantity(5).userNum(1).build();
         ProductRegisterDTO productRegisterDTO4 = ProductRegisterDTO.builder().productNm("책").productStatusCd("01").productPrice(5000).registerQuantity(10).userNum(1).build();
-        productDAO.registerProduct(productRegisterDTO1);
-        productDAO.registerProduct(productRegisterDTO2);
-        productDAO.registerProduct(productRegisterDTO3);
-        productDAO.registerProduct(productRegisterDTO4);
+        productDAO.insertNewProduct(productRegisterDTO1);
+        productDAO.insertNewProduct(productRegisterDTO2);
+        productDAO.insertNewProduct(productRegisterDTO3);
+        productDAO.insertNewProduct(productRegisterDTO4);
         // when
-        List<Product> findAll = productDAO.findAll(productSearchDTO);
+        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
 
         // then
         assertThat(findAll).hasSize(2);
@@ -192,12 +191,12 @@ public class ProductDAOTest {
         ProductRegisterDTO productRegisterDTO2 = ProductRegisterDTO.builder().productNm("과자").productStatusCd("01").productPrice(10000).registerQuantity(21).userNum(1).build();
         ProductRegisterDTO productRegisterDTO3 = ProductRegisterDTO.builder().productNm("선물").productStatusCd("02").productPrice(23000).registerQuantity(5).userNum(1).build();
         ProductRegisterDTO productRegisterDTO4 = ProductRegisterDTO.builder().productNm("책").productStatusCd("01").productPrice(5000).registerQuantity(10).userNum(1).build();
-        productDAO.registerProduct(productRegisterDTO1);
-        productDAO.registerProduct(productRegisterDTO2);
-        productDAO.registerProduct(productRegisterDTO3);
-        productDAO.registerProduct(productRegisterDTO4);
+        productDAO.insertNewProduct(productRegisterDTO1);
+        productDAO.insertNewProduct(productRegisterDTO2);
+        productDAO.insertNewProduct(productRegisterDTO3);
+        productDAO.insertNewProduct(productRegisterDTO4);
         // when
-        List<Product> findAll = productDAO.findAll(productSearchDTO);
+        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
 
         // then
         assertThat(findAll).hasSize(4);
@@ -222,12 +221,12 @@ public class ProductDAOTest {
         ProductRegisterDTO productRegisterDTO2 = ProductRegisterDTO.builder().productNm("과자").productStatusCd("01").productPrice(10000).registerQuantity(21).userNum(1).build();
         ProductRegisterDTO productRegisterDTO3 = ProductRegisterDTO.builder().productNm("선물").productStatusCd("02").productPrice(23000).registerQuantity(5).userNum(1).build();
         ProductRegisterDTO productRegisterDTO4 = ProductRegisterDTO.builder().productNm("책").productStatusCd("01").productPrice(5000).registerQuantity(10).userNum(1).build();
-        productDAO.registerProduct(productRegisterDTO1);
-        productDAO.registerProduct(productRegisterDTO2);
-        productDAO.registerProduct(productRegisterDTO3);
-        productDAO.registerProduct(productRegisterDTO4);
+        productDAO.insertNewProduct(productRegisterDTO1);
+        productDAO.insertNewProduct(productRegisterDTO2);
+        productDAO.insertNewProduct(productRegisterDTO3);
+        productDAO.insertNewProduct(productRegisterDTO4);
         // when
-        List<Product> findAll = productDAO.findAll(productSearchDTO);
+        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
 
         // then
         assertThat(findAll).hasSize(0);
@@ -248,12 +247,12 @@ public class ProductDAOTest {
         ProductRegisterDTO productRegisterDTO2 = ProductRegisterDTO.builder().productNm("과자").productStatusCd("01").productPrice(10000).registerQuantity(21).userNum(1).build();
         ProductRegisterDTO productRegisterDTO3 = ProductRegisterDTO.builder().productNm("선물").productStatusCd("02").productPrice(23000).registerQuantity(5).userNum(1).build();
         ProductRegisterDTO productRegisterDTO4 = ProductRegisterDTO.builder().productNm("책").productStatusCd("01").productPrice(5000).registerQuantity(10).userNum(1).build();
-        productDAO.registerProduct(productRegisterDTO1);
-        productDAO.registerProduct(productRegisterDTO2);
-        productDAO.registerProduct(productRegisterDTO3);
-        productDAO.registerProduct(productRegisterDTO4);
+        productDAO.insertNewProduct(productRegisterDTO1);
+        productDAO.insertNewProduct(productRegisterDTO2);
+        productDAO.insertNewProduct(productRegisterDTO3);
+        productDAO.insertNewProduct(productRegisterDTO4);
         // when
-        List<Product> findAll = productDAO.findAll(productSearchDTO);
+        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
 
         // then
         assertThat(findAll).hasSize(0);
@@ -272,17 +271,17 @@ public class ProductDAOTest {
                 .productStatusCd("01")
                 .build();
 
-        productDAO.registerProduct(productRegisterDTO);
+        productDAO.insertNewProduct(productRegisterDTO);
 
         // when
         productRegisterDTO.setProductNm("물품수정");
         productRegisterDTO.setRegisterQuantity(100);
         productRegisterDTO.setProductPrice(10000);
 
-        productDAO.editProduct(productRegisterDTO);
+        productDAO.updateProduct(productRegisterDTO);
 
         // then
-        Product editedProduct = productDAO.findByProductNum(productRegisterDTO.getProductNum());
+        Product editedProduct = productDAO.selectByProductNum(productRegisterDTO.getProductNum());
         assertThat(editedProduct.getProductNm()).isEqualTo("물품수정");
         assertThat(editedProduct.getRegisterQuantity()).isEqualTo(100);
         assertThat(editedProduct.getProductPrice()).isEqualTo(10000);

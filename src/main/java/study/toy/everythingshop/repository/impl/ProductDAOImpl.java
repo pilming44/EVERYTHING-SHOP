@@ -27,23 +27,23 @@ public class ProductDAOImpl implements ProductDAO {
     private final SqlSession sqlSession;
 
     @Override
-    public List<Product> findAll(ProductSearchDTO productSearchDTO) {
+    public List<Product> selectProductList(ProductSearchDTO productSearchDTO) {
 
-        return sqlSession.selectList("maria.ProductDAO.findAll", productSearchDTO);
+        return sqlSession.selectList("maria.ProductDAO.selectProductList", productSearchDTO);
     }
 
     @Override
-    public Product findByProductNum(Integer productNum) {
-        return sqlSession.selectOne("maria.ProductDAO.findByProductNum", productNum);
+    public Product selectByProductNum(Integer productNum) {
+        return sqlSession.selectOne("maria.ProductDAO.selectByProductNum", productNum);
     }
     @Override
-    public int registerProduct(ProductRegisterDTO productRegisterDTO){
-        return sqlSession.insert("maria.ProductDAO.registerProduct", productRegisterDTO);
+    public int insertNewProduct(ProductRegisterDTO productRegisterDTO){
+        return sqlSession.insert("maria.ProductDAO.insertNewProduct", productRegisterDTO);
     }
 
     @Override
-    public int editProduct(ProductRegisterDTO productRegisterDTO) {
-        return sqlSession.update("maria.ProductDAO.editProduct", productRegisterDTO);
+    public int updateProduct(ProductRegisterDTO productRegisterDTO) {
+        return sqlSession.update("maria.ProductDAO.updateProduct", productRegisterDTO);
     }
 
     @Override
@@ -62,8 +62,8 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<ProductOrderDTO> getMyOrderList(ProductSearchDTO productSearchDTO) {
-        return sqlSession.selectList("h2.ProductDAO.getMyOrderList", productSearchDTO);
+    public List<ProductOrderDTO> selectMyOrderList(ProductSearchDTO productSearchDTO) {
+        return sqlSession.selectList("h2.ProductDAO.selectMyOrderList", productSearchDTO);
     }
 
 

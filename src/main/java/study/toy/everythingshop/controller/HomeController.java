@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.entity.h2.ProductMEntity;
 import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
@@ -46,7 +45,7 @@ public class HomeController {
             productSearchDTO.setToPrice(tempPrice);
         }
 
-        List<Product> products = productDAO.findAll(productSearchDTO);
+        List<Product> products = productDAO.selectProductList(productSearchDTO);
         model.addAttribute("products", products);
         if(!bindingResult.hasErrors()) {
             model.addAttribute("productSearchDTO", productSearchDTO);
