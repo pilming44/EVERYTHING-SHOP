@@ -9,9 +9,11 @@ import study.toy.everythingshop.entity.mariaDB.User;
  * date     : 2023-03-08
  */
 public interface UserDAO {
-    int insertNewUser(JoinDTO userMEntity);
+    int insertNewUser(JoinDTO joinDto);
 
-    User selectByeUserId(String userId);
+    User selectUserById(String userId);
 
-    int updateUserInfo(User userMEntity);
+    int updateUserInfo(User user);
+
+    int selectHoldingPoint(String userId);
 }

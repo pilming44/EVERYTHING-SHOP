@@ -24,17 +24,22 @@ public class UserDAOImpl implements UserDAO {
     private final SqlSession sqlSession;
 
     @Override
-    public User selectByeUserId(String userId) {
+    public User selectUserById(String userId) {
         return sqlSession.selectOne("maria.UserDAO.selectByUserId", userId);
     }
 
     @Override
-    public int insertNewUser(JoinDTO userMEntity) {
-        return sqlSession.insert("maria.UserDAO.inserNewUser", userMEntity);
+    public int insertNewUser(JoinDTO joinDTO) {
+        return sqlSession.insert("maria.UserDAO.inserNewUser", joinDTO);
     }
 
     @Override
     public int updateUserInfo(User user) {
         return sqlSession.update("maria.UserDAO.updateUserInfo", user);
+    }
+
+    @Override
+    public int selectHoldingPoint(String userId) {
+        return sqlSession.selectOne("maria.UserDAO.selectHoldingPoint", userId);
     }
 }
