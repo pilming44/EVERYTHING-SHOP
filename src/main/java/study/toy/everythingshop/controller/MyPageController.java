@@ -47,7 +47,7 @@ public class MyPageController {
         //이렇게 주입받은 객체는 UserDetails타입으로 캐스팅해서 사용 가능
 
         //사용자 정보 조회
-        User user = userDAO.selectByeUserId(userDetails.getUsername());
+        User user = userDAO.selectUserById(userDetails.getUsername());
 
         //디버깅
         log.info(">>>>>>>>>>>>user : {}",user);
@@ -63,7 +63,7 @@ public class MyPageController {
         //이렇게 주입받은 객체는 UserDetails타입으로 캐스팅해서 사용 가능
 
         //사용자 정보 조회
-        User user = userDAO.selectByeUserId(userDetails.getUsername());
+        User user = userDAO.selectUserById(userDetails.getUsername());
 
         //디버깅
         log.info(">>>>>>>>>>>>userMEntity : {}",user);
@@ -101,7 +101,7 @@ public class MyPageController {
     public String findMyOrderList(@AuthenticationPrincipal UserDetails userDetails, Model model,
                               @Validated  @ModelAttribute ProductSearchDTO productSearchDTO, BindingResult bindingResult) {
         //사용자 정보 조회
-        User user = userDAO.selectByeUserId(userDetails.getUsername());
+        User user = userDAO.selectUserById(userDetails.getUsername());
         Integer userNum = user.getUserNum();
         productSearchDTO.setUserNum(userNum);
 

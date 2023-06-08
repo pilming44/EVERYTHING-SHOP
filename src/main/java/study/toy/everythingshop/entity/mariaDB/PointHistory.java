@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class PointHistory {
     private Integer seq;            //순번
     private Integer userNum;        //사용자번호
-    private String pointChangeCd;   //표인트변동코드
+    private String pointChangeCd;   //표인트변동코드[COM1006]
     private Integer addPoint;       //추가포인트
     private Integer deductPoint;    //차감포인트
     private String registerDt;      //등록일자

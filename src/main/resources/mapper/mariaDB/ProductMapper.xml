@@ -148,4 +148,22 @@
         </where>
     </select>
 
+    <select id="selectRemainingQuantity" parameterType="ProductOrderDTO" resultType="Integer">
+        /* ProductDAO.selectOrderQuantity 상품 총 주문수량*/
+        SELECT T03.REGISTER_QUANTITY - SUM(T01.ORDER_QUANTITY) AS REMAINING_QUANTITY
+          FROM T_ORDERED_PRODUCT T01
+          JOIN T_ORDER T02
+            ON T01.ORDER_NUM = T02.ORDER_NUM
+           AND T02.ORDER_STATUS_CD IN ('01', '03')
+          JOIN T_PRODUCT T03
+            ON T01.PRODUCT_NUM = T03.PRODUCT_NUM
+         WHERE T01.PRODUCT_NUM = #{productNum}
+         GROUP BY T01.PRODUCT_NUM
+    </select>
+    <update id="updateProductSoldOut" parameterType="ProductOrderDTO">
+        UPDATE T_PRODUCT
+           SET PRODUCT_STATUS_CD = '03'
+             , CHANGE_DT = now()
+         WHERE PRODUCT_NUM = #{productNum}
+    </update>
 </mapper>

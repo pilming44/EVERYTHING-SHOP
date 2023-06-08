@@ -29,4 +29,8 @@ public interface ProductDAO {
     int updateQuantityStts(ProductMEntity productMEntity);
 
     List<ProductOrderDTO> selectMyOrderList(ProductSearchDTO productSearchDTO);
+
+    int selectRemainingQuantity(ProductOrderDTO productOrderDTO);
+
+    int updateProductSoldOut(ProductOrderDTO productOrderDTO);
 }

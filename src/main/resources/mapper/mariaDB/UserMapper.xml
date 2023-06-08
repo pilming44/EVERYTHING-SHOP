@@ -28,8 +28,10 @@
              , T01.USER_ID              /* 사용자ID*/
              , T01.USER_PW              /* 비밀번호*/
              , T01.ROLE_CD              /* 역할코드[COM1001]*/
-             , T01.ACCOUNT_STATUS_CD    /* 계정상태코드[]*/
+             , T01.ACCOUNT_STATUS_CD    /* 계정상태코드[COM1002]*/
              , T01.USER_NM              /* 이름*/
+             , T01.HOLDING_POINT        /* 보유포인트*/
+             , T01.GRADE_CD             /* 등급코드[COM1003]*/
              , T01.REGISTER_DT          /* 등록일자*/
              , T01.CHANGE_DT            /* 수정일자*/
           FROM T_USER T01
@@ -69,4 +71,32 @@
              , CHANGE_DT = SYSDATE()
          WHERE USER_ID = #{userId}
     </update>
+
+    <update id="updateHoldingPoint" parameterType="User">
+        /* UserDAO.updateHoldingPoint 사용자 보유보인트 업데이트*/
+        UPDATE T_USER
+        SET HOLDING_POINT = #{holdingPoint}
+          , CHANGE_DT = SYSDATE()
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <insert id="insertPointHistory" parameterType="PointHistory">
+        /* UserDAO.insertPointHistory 포인트 이력 추가*/
+        INSERT INTO T_POINT_HISTORY
+        (
+            USER_NUM            /* 사용자번호*/
+          , POINT_CHANGE_CD     /* 포인트변동코드[COM1006]*/
+          , ADD_POINT           /* 추가포인트*/
+          , DEDUCT_POINT        /* 차감포인트*/
+          , REGISTER_DT         /* 등록일자*/
+        )
+        VALUES
+        (
+            #{userNum}
+          , #{pointChangeCd}
+          , #{addPoint}
+          , #{deductPoint}
+          , SYSDATE()
+        )
+    </insert>
 </mapper>

@@ -9,5 +9,5 @@ public interface ProductService {
 
     int editProduct(ProductRegisterDTO productRegisterDTO);
 
-    int saveOrderProduct(ProductOrderDTO productOrderDTO, UserDetails userDetails);
+    int saveOrderProduct(ProductOrderDTO productOrderDTO, String userId);
 }

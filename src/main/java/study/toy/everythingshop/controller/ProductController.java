@@ -125,7 +125,7 @@ public class ProductController {
             return "redirect:/product/" + productOrderDTO.getProductNum() + "/order";
         }
         log.info("등록");
-        int result = productService.saveOrderProduct(productOrderDTO,userDetails);
+        int result = productService.saveOrderProduct(productOrderDTO,userDetails.getUsername());
         log.info("result"+result);
         if(result >= 3){
             String message = messageSource.getMessage("product.order.success", null, Locale.getDefault());
