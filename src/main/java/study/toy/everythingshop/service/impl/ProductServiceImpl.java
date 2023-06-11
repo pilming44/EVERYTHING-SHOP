@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
     public int saveNewProduct(ProductRegisterDTO productRegisterDTO, UserDetails userDetails){
         User user = userDAO.selectByeUserId(userDetails.getUsername());
         productRegisterDTO.setUserNum(user.getUserNum());
-        return productDAO.insertNewProduct(productRegisterDTO);
+        return productDAO.insertProduct(productRegisterDTO);
     };
 
 

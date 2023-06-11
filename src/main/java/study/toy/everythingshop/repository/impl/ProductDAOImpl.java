@@ -37,8 +37,8 @@ public class ProductDAOImpl implements ProductDAO {
         return sqlSession.selectOne("maria.ProductDAO.selectByProductNum", productNum);
     }
     @Override
-    public int insertNewProduct(ProductRegisterDTO productRegisterDTO){
-        return sqlSession.insert("maria.ProductDAO.insertNewProduct", productRegisterDTO);
+    public int insertProduct(ProductRegisterDTO productRegisterDTO){
+        return sqlSession.insert("maria.ProductDAO.insertProduct", productRegisterDTO);
     }
 
     @Override

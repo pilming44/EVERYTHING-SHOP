@@ -9,8 +9,6 @@ import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.UserDAO;
 
-import java.util.List;
-import java.util.Optional;
 
 /**
  * fileName : UserDAOImpl
@@ -29,8 +27,8 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public int insertNewUser(JoinDTO userMEntity) {
-        return sqlSession.insert("maria.UserDAO.inserNewUser", userMEntity);
+    public int insertUser(JoinDTO userMEntity) {
+        return sqlSession.insert("maria.UserDAO.inserUser", userMEntity);
     }
 
     @Override
