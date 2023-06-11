@@ -5,10 +5,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
+import study.toy.everythingshop.auth.UserDetailsImpl;
+import study.toy.everythingshop.controller.WithUser;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.mariaDB.Product;
+import study.toy.everythingshop.entity.mariaDB.User;
 
 import java.util.List;
 
