@@ -18,7 +18,7 @@ public interface ProductDAO {
 
     Product selectByProductNum(Integer productNum);
 
-    int insertNewProduct(ProductRegisterDTO productRegisterDTO);
+    int insertProduct(ProductRegisterDTO productRegisterDTO);
 
     int updateProduct(ProductRegisterDTO productRegisterDTO);
 

@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public int saveNewMember(JoinDTO joinDTO) {
         joinDTO.setUserPw(bCryptPasswordEncoder.encode(joinDTO.getUserPw()));
-        return userDAO.insertNewUser(joinDTO);
+        return userDAO.insertUser(joinDTO);
     }
     @Override
     public List<UserMEntity> findAllUser() {

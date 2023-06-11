@@ -44,7 +44,7 @@
          WHERE T01.PRODUCT_NUM = #{productNum}
     </select>
 
-    <insert id="insertNewProduct" parameterType="ProductRegisterDTO" useGeneratedKeys="true" keyProperty="productNum">
+    <insert id="insertProduct" parameterType="ProductRegisterDTO" useGeneratedKeys="true" keyProperty="productNum">
         INSERT INTO T_PRODUCT
         (
             USER_NUM

@@ -48,7 +48,7 @@ public class UserController {
                 log.info("Error: " + error.getDefaultMessage());
             }
             model.addAttribute("joinDTO", joinDTO);
-            return "redirect:/users/join";
+            return "/users/join";
         }
         int result = userService.saveNewMember(joinDTO);
         if(result > 0){
@@ -99,7 +99,7 @@ public class UserController {
         String rawPassword = joinDTO.getUserPw();
         String encPassword = bCryptPasswordEncoder.encode(rawPassword);
         joinDTO.setUserPw(encPassword);
-        userDAO.insertNewUser(joinDTO);
+        userDAO.insertUser(joinDTO);
         return "redirect:/";
     }
 }
