@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @Builder //상속받는 클래스가 없으므로 SuperBuilder가 아닌 builder사용
 @NoArgsConstructor
@@ -13,6 +15,7 @@ public class User {
     private Integer userNum;        //사용자번호
     private String userId;          //사용자ID
     private String userPw;          //비밀번호
+    @NotBlank
     private String userNm;          //이름
     private String roleCd;          //역할[COM1001]
     private Integer holdingPoint;   //보유포인트
