@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="maria.CommonDAO">
+    <select id="selectCommonCodeList" parameterType="CommonCodeDTO" resultType="CommonCodeDTO">
+        /*CommonDAO.selectCommonCodeList 공통코드 목록조회*/
+        SELECT TCC.CODE_NUM
+             , TCC.CODE_NM
+          FROM T_COMMON_CODE TCC
+         WHERE TCC.CODE_CLASS = #{codeClass}
+        <choose>
+            <when test="order == 'DESC'">
+                ORDER BY TCC.CODE_NUM DESC
+            </when>
+            <otherwise>
+                ORDER BY TCC.CODE_NUM ASC -- 기본 정렬 순서
+            </otherwise>
+        </choose>
+    </select>
+    <select id="selectCommonCodeNm" parameterType="CommonCodeDTO" resultType="CommonCodeDTO">
+        /*CommonDAO.selectCommonCodeNm 공통코드명 조회*/
+        SELECT TCC.CODE_NM
+          FROM EVERYTHINGSHOP.T_COMMON_CODE TCC
+         WHERE TCC.CODE_CLASS = #{codeClass}
+           AND TCC.CODE_NUM = #{codeNum}
+    </select>
+</mapper>
