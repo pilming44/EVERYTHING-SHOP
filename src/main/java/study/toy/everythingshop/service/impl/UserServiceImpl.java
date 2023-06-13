@@ -43,7 +43,4 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "user.alreadyExists");
         }
     }
-
-
-
 }

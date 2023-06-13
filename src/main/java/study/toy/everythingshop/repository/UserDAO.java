@@ -19,4 +19,6 @@ public interface UserDAO {
     int updateHoldingPoint(User user);
 
     int insertPointHistory(PointHistory pointHistory);
+
+    int selectUsedPoint(String userId);
 }

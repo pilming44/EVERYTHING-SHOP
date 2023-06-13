@@ -9,12 +9,29 @@
 <body>
 
 <div class="container justify-content-center">
-
   <div class="row mt-3">
     <div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.myPage}">마이페이지</h2></div>
   </div>
+  <div class="row mt-3 justify-content-center">
+    <label for="grade" class="col-sm-2 col-form-label-lg font-weight-bold">등급</label>
+    <div class="col-md-5">
+      <p id="grade" class="form-control-plaintext form-control-lg font-weight-bold" th:text="${myPageInfo.gradeNm}">등급</p>
+    </div>
+  </div>
+  <div class="row mt-3 justify-content-center">
+    <label for="holdingPoint" class="col-sm-2 col-form-label-lg font-weight-bold">보유포인트</label>
+    <div class="col-md-5">
+      <p id="holdingPoint" class="form-control-plaintext form-control-lg font-weight-bold" th:text="${myPageInfo.holdingPoint}">보유포인트</p>
+    </div>
+  </div>
+  <div class="row mt-3 justify-content-center">
+    <label for="usedPoint" class="col-sm-2 col-form-label-lg font-weight-bold">누적사용포인트</label>
+    <div class="col-md-5">
+      <p id="usedPoint" class="form-control-plaintext form-control-lg font-weight-bold" th:text="${myPageInfo.usedPoint}">누적사용포인트</p>
+    </div>
+  </div>
   <div class="row mt-3">
-    <div class="col-md-5 mx-auto">
+    <div class="col-md-7 mx-auto">
       <button class="w-100 btn btn-primary btn-lg"
               onclick="location.href='home.html'"
               th:onclick="|location.href='@{/myPage/myInfo}'|"
@@ -22,7 +39,7 @@
     </div>
   </div>
   <div class="row mt-3">
-    <div class="col-md-5 mx-auto">
+    <div class="col-md-7 mx-auto">
       <button class="w-100 btn btn-primary btn-lg"
               onclick="location.href='home.html'"
               th:onclick="|location.href='@{/myPage/myOrderList}'|"
@@ -30,7 +47,7 @@
     </div>
   </div>
   <div class="row mt-3">
-    <div class="col-md-5 mx-auto">
+    <div class="col-md-7 mx-auto">
       <button class="w-100 btn btn-secondary btn-lg"
               onclick="location.href='home.html'"
               th:onclick="|location.href='@{/home}'|"

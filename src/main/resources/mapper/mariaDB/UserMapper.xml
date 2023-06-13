@@ -22,8 +22,8 @@
         )
     </insert>
 
-    <select id="selectByUserId" parameterType="String" resultType="User">
-        /* UserDAO.selectByUserId USER_ID로 사용자 조회*/
+    <select id="selectUserById" parameterType="String" resultType="User">
+        /* UserDAO.selectUserById USER_ID로 사용자 조회*/
         SELECT T01.USER_NUM             /* 사용자번호*/
              , T01.USER_ID              /* 사용자ID*/
              , T01.USER_PW              /* 비밀번호*/
@@ -99,4 +99,20 @@
           , SYSDATE()
         )
     </insert>
+    <select id="selectUsedPoint" parameterType="String" resultType="Integer">
+        /* UserDAO.selectUsedPoint 누적포인트 조회*/
+        SELECT (T01.DEDUCT_POINT - T01.ADD_POINT) AS USED_POINT			/* 누적포인트*/
+          FROM (SELECT T01.USER_NUM
+                     , SUM(NVL(T02.ADD_POINT, 0)) AS ADD_POINT			/* 추가포인트*/
+                     , SUM(NVL(T02.DEDUCT_POINT, 0))  AS DEDUCT_POINT	/* 차감포인트*/
+                     , T02.POINT_CHANGE_CD 								/* 포인트변경코드*/
+                  FROM T_USER T01
+                  JOIN T_POINT_HISTORY T02
+                    ON T01.USER_NUM = T02.USER_NUM
+                 WHERE T01.USER_ID = #{userId}
+                 GROUP BY T01.USER_NUM, T02.POINT_CHANGE_CD
+                HAVING  T02.POINT_CHANGE_CD IN ('03', '04')             /* 03(상품주문), 04(주문취소)*/
+               ) T01
+        GROUP BY T01.USER_NUM
+    </select>
 </mapper>

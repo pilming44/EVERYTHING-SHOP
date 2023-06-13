@@ -4,14 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import study.toy.everythingshop.dto.JoinDTO;
-import study.toy.everythingshop.entity.h2.UserMEntity;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.UserDAO;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * fileName : UserDAOImpl
@@ -26,7 +22,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User selectUserById(String userId) {
-        return sqlSession.selectOne("maria.UserDAO.selectByUserId", userId);
+        return sqlSession.selectOne("maria.UserDAO.selectUserById", userId);
     }
 
     @Override
@@ -46,5 +42,10 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public int insertPointHistory(PointHistory pointHistory) {
         return sqlSession.insert("maria.UserDAO.insertPointHistory", pointHistory);
+    }
+
+    @Override
+    public int selectUsedPoint(String userId) {
+        return sqlSession.selectOne("maria.UserDAO.selectUsedPoint", userId);
     }
 }

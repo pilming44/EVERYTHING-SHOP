@@ -37,7 +37,9 @@ public class MyPageController {
     private final ProductDAO productDAO;
 
     @GetMapping("")
-    public String myPage() {
+    public String myPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        //모델 추가
+        model.addAttribute("myPageInfo", myPageService.findMyPageInfo(userDetails.getUsername()));
         return "myPage";
     }
 
