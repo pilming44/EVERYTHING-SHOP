@@ -4,12 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import study.toy.everythingshop.dto.CommonCodeDTO;
-import study.toy.everythingshop.dto.JoinDTO;
-import study.toy.everythingshop.entity.mariaDB.PointHistory;
-import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.CommonDAO;
-import study.toy.everythingshop.repository.UserDAO;
 
 import java.util.List;
 

@@ -1,9 +1,6 @@
 package study.toy.everythingshop.repository;
 
 import study.toy.everythingshop.dto.CommonCodeDTO;
-import study.toy.everythingshop.dto.JoinDTO;
-import study.toy.everythingshop.entity.mariaDB.PointHistory;
-import study.toy.everythingshop.entity.mariaDB.User;
 
 import java.util.List;
 

@@ -3,11 +3,8 @@ package study.toy.everythingshop.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import study.toy.everythingshop.dto.CommonCodeDTO;
-import study.toy.everythingshop.entity.h2.SampleEntity;
 import study.toy.everythingshop.repository.CommonDAO;
-import study.toy.everythingshop.repository.SampleDAO;
 import study.toy.everythingshop.service.CommonService;
-import study.toy.everythingshop.service.SampleService;
 
 import java.util.List;
 

@@ -1,7 +1,6 @@
 package study.toy.everythingshop.service;
 
 import study.toy.everythingshop.dto.CommonCodeDTO;
-import study.toy.everythingshop.entity.h2.SampleEntity;
 
 import java.util.List;
 
