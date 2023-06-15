@@ -2,6 +2,7 @@ package study.toy.everythingshop.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
+import study.toy.everythingshop.dto.UserInfoDTO;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.service.MyPageService;
 import study.toy.everythingshop.service.UserService;
@@ -21,7 +23,6 @@ import study.toy.everythingshop.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doNothing;
@@ -58,9 +59,15 @@ public class MyPageControllerTest {
     @DisplayName("로그인 사용자 마이페이지 접근")
     @WithMockUser
     void test_2() throws Exception {
-        mockMvc.perform(get("/myPage"))
-                .andExpect(status().isOk()) //상태코드가 OK(200)인지 체크
-                .andExpect(view().name("myPage")); //화면 이름 체크
+        // given
+        UserInfoDTO userInfoDTO = UserInfoDTO.builder().gradeNm("블랙홀").holdingPoint(1000000).usedPoint(99999999).build();
+
+        Mockito.when(myPageService.findMyPageInfo(Mockito.anyString())).thenReturn(userInfoDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/myPage"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("myPageInfo", userInfoDTO))
+                .andExpect(view().name("myPage"));
     }
 
     @Test
