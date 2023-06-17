@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public int saveNewMember(JoinDTO joinDTO) {
+    public int saveMember(JoinDTO joinDTO) {
         joinDTO.setUserPw(bCryptPasswordEncoder.encode(joinDTO.getUserPw()));
         return userDAO.insertUser(joinDTO);
     }

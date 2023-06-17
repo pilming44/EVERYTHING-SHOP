@@ -28,7 +28,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public int insertUser(JoinDTO userMEntity) {
-        return sqlSession.insert("maria.UserDAO.inserUser", userMEntity);
+        return sqlSession.insert("maria.UserDAO.insertUser", userMEntity);
     }
 
     @Override

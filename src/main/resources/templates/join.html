@@ -26,6 +26,7 @@
         //ID 중복처리버튼
         function checkDup(){
             event.preventDefault();
+            $("#errorMsgId span").text("");
             if(!isDupchecked){
                 var userId = $('#userId').val();
                 if($('#userId').val().trim() != ""){
@@ -72,6 +73,7 @@
         }
         function validatePassword() {
             $('#userPw, #userPwConfirm').on('change', function() {
+                $("#errorMsgPw span").text("");
                 if($("#userPw").val().trim() != ""){
                     const userPw = $('#userPw').val();
                     const userPwConfirm = $('#userPwConfirm').val();
@@ -125,18 +127,6 @@
         </div>
     </div>
     <form id="signInForm" th:action="@{/users/join}" th:object="${joinDTO}" method="post">
-
-<!--        <div class="row mt-3">-->
-<!--            <div class="col-md-5" style="margin-left:29%;">-->
-<!--                <div>*ID : </div>-->
-<!--                <input type="text" id="userId" th:field="*{userId}" class="form-control" placeholder="아이디" >-->
-<!--            </div>-->
-<!--            <div class="mt-auto">-->
-<!--                &lt;!&ndash; 아이디 중복확인 버튼 &ndash;&gt;-->
-<!--                <button class="btn btn-primary" th:onclick="checkDup()" th:text="#{button.dupCheck}">중복검사</button>-->
-<!--            </div>-->
-<!--        </div>-->
-
         <div class="mt-3 row justify-content-center">
             <label for="userId" class="col-sm-2 col-form-label font-weight-bold col-form-label-lg">*ID</label>
             <div class="col-md-5"><div class="input-group">
@@ -146,75 +136,32 @@
                 </div>
             </div>
                 <div class="d-flex flex-column">
-                    <small th:if="${#fields.hasErrors('userId')}" class="text-danger">ID오류ddddd testtest<span th:errors="*{userId}"></span></small>
+                    <small th:id="errorMsgId" th:if="${#fields.hasErrors('userId')}" class="text-danger"><span th:errors="*{userId}"></span></small>
                     <small  id="idMessage" style="display: none" ><span th:id="dupCheckMsg"></span></small>
                 </div>
 
             </div>
         </div>
-
-<!--        <div class="row mt-0" style="display: none" id="idMessage">-->
-<!--            <div class="col-md-5 mx-auto">-->
-<!--                <div th:if="${#fields.hasErrors('userId')}">-->
-<!--                    <span th:errors="*{userId}"></span>-->
-<!--                </div>-->
-<!--                <span th:id="dupCheckMsg" ></span>-->
-<!--            </div>-->
-<!--        </div>-->
-
         <div class="mt-3 row justify-content-center">
             <label for="userPw" class="col-sm-2 col-form-label font-weight-bold col-form-label-lg">*PW</label>
             <div class="col-md-5">
                 <input type="password" name="password" th:field="*{userPw}" id="userPw" class="form-control form-control-lg" placeholder="비밀번호를 4자이상 입력하세요." >
             </div>
         </div>
-
-<!--        <div class="row mt-3">-->
-<!--            <div class="col-md-5 mx-auto">-->
-<!--                <div>*PW : </div>-->
-<!--                <input type="password" name="password" th:field="*{userPw}" id="userPw" class="form-control" placeholder="비밀번호" >-->
-<!--            </div>-->
-<!--        </div>-->
-
         <div class="mt-3 row justify-content-center">
             <label for="userPwConfirm" class="col-sm-2 col-form-label font-weight-bold col-form-label-lg">*PW 확인</label>
             <div class="col-md-5">
                 <input type="password" class="form-control form-control-lg" th:field="*{userPwConfirm}" id="userPwConfirm" placeholder="비밀번호 재확인" >
-                <small  th:if="${#fields.hasErrors('userPw')}" class="text-danger"> <span th:errors="*{userPw}" ></span></small>
+                <small  th:id="errorMsgPw" th:if="${#fields.hasErrors('userPw')}" class="text-danger"> <span th:errors="*{userPw}" ></span></small>
                 <small  id="pwMessage" style="display: none" > <span th:id="userPwConfirmMsg"></span></small>
             </div>
         </div>
-
-<!--        <div class="row mt-3">-->
-<!--            <div class="col-md-5 mx-auto">-->
-<!--                <div>*PW 확인 : </div>-->
-<!--                <input type="password" class="form-control" th:field="*{userPwConfirm}" id="userPwConfirm" placeholder="비밀번호 확인" >-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        <div class="row mt-0" style="display: none" id="pwMessage">-->
-<!--            <div class="col-md-5 mx-auto">-->
-<!--                <div th:if="${#fields.hasErrors('userPw')}">-->
-<!--                    <span th:errors="*{userPw}"></span>-->
-<!--                </div>-->
-<!--                <span th:id="userPwConfirmMsg"></span>-->
-<!--            </div>-->
-<!--        </div>-->
-
         <div class="mt-3 row justify-content-center">
             <label for="userNm" class="col-sm-2 col-form-label font-weight-bold col-form-label-lg">*이름</label>
             <div class="col-md-5">
                 <input type="text" th:field="*{userNm}" id="userNm" class="form-control form-control-lg" placeholder="이름을 입력하세요." >
             </div>
         </div>
-
-<!--        <div class="row mt-3">-->
-<!--            <div class="col-md-5 mx-auto">-->
-<!--                <div>*이름 : </div>-->
-<!--                <input type="text" th:field="*{userNm}" id="userNm" class="form-control" placeholder="이름" >-->
-<!--            </div>-->
-<!--        </div>-->
-
         <!-- 버튼 -->
         <div class="row mt-3 justify-content-center">
             <div class="col-md-7 mx-auto" style="margin-top: 50px;">
@@ -234,17 +181,6 @@
                 <button class="btn btn-secondary btn-lg btn-block" onclick="location.href='/home'" type="button">홈으로</button>
             </div>
         </div>
-
-
-       <!-- <div class="row mt-3">
-            <div class="col">
-                <div class="text-center">
-                    <button type="button" id="signInBtn" class="btn btn-primary" th:href="@{/users/signIn}" onclick="location.href = this.getAttribute('href');"  th:text="#{button.singIn}">로그인</button>
-                    <button id="joinBtn" class="btn btn-primary" type="submit" th:text="#{button.join}">회원가입</button>
-                </div>
-            </div>
-        </div>-->
-
     </form>
 
 </div>
