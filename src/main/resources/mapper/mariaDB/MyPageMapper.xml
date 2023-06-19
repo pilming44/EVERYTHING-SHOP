@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="maria.MyPageDAO">
+    <insert id="insertSellerApply" parameterType="Integer">
+        INSERT INTO T_SELLER_APPLY
+        (
+            USER_NUM
+          , SELLER_APPLY_STATUS_CD
+          , REGISTER_DT
+          , CHANGE_DT
+        )
+        VALUES
+        (
+            #{userNum}
+          , '01'
+          , SYSDATE()
+          , SYSDATE()
+        )
+    </insert>
+
+    <select id="selectSellerApply" parameterType="Integer">
+    </select>
+</mapper>

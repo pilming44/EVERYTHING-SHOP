@@ -8,6 +8,7 @@ import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.dto.UserInfoDTO;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
+import study.toy.everythingshop.repository.MyPageDAO;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.CommonService;
@@ -28,6 +29,7 @@ public class MyPageServiceImpl implements MyPageService {
 
     private final UserDAO userDAO;
     private final ProductDAO productDAO;
+    private final MyPageDAO myPageDAO;
     private final CommonService commonService;
 
     @Override
@@ -54,5 +56,10 @@ public class MyPageServiceImpl implements MyPageService {
                 .build();
 
         return myPageDTO;
+    }
+
+    @Override
+    public void addSellerApply(int userNum) {
+        myPageDAO.insertSellerApply(userNum);
     }
 }

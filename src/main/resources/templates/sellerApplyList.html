@@ -12,6 +12,17 @@
 		<div class="row mt-3">
 			<div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.sellerApplyList}">판매자신청</h2></div>
 		</div>
+		<div class="row mt-3">
+			<div class="col-md-2">
+				<div class="text-left">
+					<form th:action="@{/myPage/sellerApply}" method="post">
+						<button type="submit" class="btn btn-primary btn-block"
+								th:text="#{button.seller.apply}">판매자 신청</button>
+					</form>
+
+				</div>
+			</div>
+		</div>
 		<!-- 신청내역 테이블 -->
 		<div class="row mt-3">
 			<div class="mt-3 col-md-12 table-responsive">

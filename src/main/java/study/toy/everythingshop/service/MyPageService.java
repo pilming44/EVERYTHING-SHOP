@@ -19,4 +19,6 @@ public interface MyPageService {
     List<ProductOrderDTO> findMyOrderList(ProductSearchDTO productSearchDTO);
 
     UserInfoDTO findMyPageInfo(String userId);
+
+    void addSellerApply(int userNum);
 }

@@ -133,4 +133,14 @@ public class MyPageController {
         log.debug(">>>>>>>>>>>>user : {}",user);
         return "sellerApplyList";
     }
+
+    @PostMapping("/sellerApply")
+    public String sellerApply(@AuthenticationPrincipal UserDetails userDetails) {
+        //사용자 정보 조회
+        User user = userDAO.selectUserById(userDetails.getUsername());
+        //디버깅
+        log.debug(">>>>>>>>>>>>user : {}",user);
+        myPageService.addSellerApply(user.getUserNum());
+        return "redirect:/myPage/sellerApplyList";
+    }
 }
