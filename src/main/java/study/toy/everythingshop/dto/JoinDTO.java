@@ -17,7 +17,7 @@ public class JoinDTO {
     private Integer userNum;
 
     @Size(min = 3, message = "{Size.joinDTO.userId}")
-    @Pattern(regexp = "^[a-zA-Z]*$", message = "{Pattern.joinDTO.userId}")
+    @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "{Pattern.joinDTO.userId}")
     private String userId;
 
     @Size(min = 4, message = "{Size.joinDTO.userPw}")

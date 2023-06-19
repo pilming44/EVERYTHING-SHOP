@@ -42,7 +42,7 @@ public class LoginProcTest {
         joinDTO.setUserId("testId");
         joinDTO.setUserPw("testPw");
         joinDTO.setUserNm("테스트계정");
-        userService.saveNewMember(joinDTO);
+        userService.saveMember(joinDTO);
     }
 
     @Test

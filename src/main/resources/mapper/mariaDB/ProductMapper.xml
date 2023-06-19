@@ -148,4 +148,14 @@
         </where>
     </select>
 
+    <select id="selectOrderedQty" parameterType="Integer" resultType="Integer">
+        /*productDAO.selectOrderedQty 판매된 수량 구하기 */
+        SELECT NVL(SUM(TORP.ORDER_QUANTITY),0) AS SALES_QUANTITY
+          FROM T_ORDERED_PRODUCT TORP
+          LEFT JOIN T_ORDER TOR
+            ON TORP.ORDER_NUM = TOR.ORDER_NUM
+         WHERE TORP.PRODUCT_NUM = #{productNum}
+           AND TOR.ORDER_STATUS_CD != '02'  /* 주문취소가 아닌상태*/
+    </select>
+
 </mapper>

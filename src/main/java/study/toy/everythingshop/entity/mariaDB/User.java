@@ -21,6 +21,7 @@ public class User {
     private Integer holdingPoint;   //보유포인트
     private String accountStatusCd; //계정상태코드[COM1002]
     private String gradeCd;         //등급코드[COM1003]
+    private String gradeNm;         //등급이름
     private String registerDt;      //등록일자
     private String changeDt;        //수정일자
 }

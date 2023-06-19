@@ -24,16 +24,19 @@
 
     <select id="selectByUserId" parameterType="String" resultType="User">
         /* UserDAO.selectByUserId USER_ID로 사용자 조회*/
-        SELECT T01.USER_NUM             /* 사용자번호*/
-             , T01.USER_ID              /* 사용자ID*/
-             , T01.USER_PW              /* 비밀번호*/
-             , T01.ROLE_CD              /* 역할코드[COM1001]*/
-             , T01.ACCOUNT_STATUS_CD    /* 계정상태코드[]*/
-             , T01.USER_NM              /* 이름*/
-             , T01.REGISTER_DT          /* 등록일자*/
-             , T01.CHANGE_DT            /* 수정일자*/
-          FROM T_USER T01
-         WHERE T01.USER_ID = #{userId}
+        SELECT TUS.USER_NUM             /* 사용자번호*/
+             , TUS.USER_ID              /* 사용자ID*/
+             , TUS.USER_PW              /* 비밀번호*/
+             , TUS.ROLE_CD              /* 역할코드[COM1001]*/
+             , TUS.ACCOUNT_STATUS_CD    /* 계정상태코드[]*/
+             , TUS.USER_NM              /* 이름*/
+             , TUS.GRADE_CD 			/* 등급코드*/
+             , GET_CODE_NM('COM1003',TUS.GRADE_CD) AS GRADE_NM /*등급이름*/
+             , TUS.REGISTER_DT          /* 등록일자*/
+             , TUS.CHANGE_DT            /* 수정일자*/
+          FROM T_USER TUS
+         WHERE TUS.USER_ID = #{userId}
+           AND TUS.ACCOUNT_STATUS_CD = '01'   /* 활성상태*/
     </select>
 
 <!-- TODO 중복 쿼리로 주석처리 사용중인 코드 수정 후 삭제-->
