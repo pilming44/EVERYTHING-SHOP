@@ -124,4 +124,13 @@ public class MyPageController {
         }
         return "myOrderList";
     }
+
+    @GetMapping("/sellerApplyList")
+    public String sellerApplyListView(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        //사용자 정보 조회
+        User user = userDAO.selectUserById(userDetails.getUsername());
+        //디버깅
+        log.debug(">>>>>>>>>>>>user : {}",user);
+        return "sellerApplyList";
+    }
 }

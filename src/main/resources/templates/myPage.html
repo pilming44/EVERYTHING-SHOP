@@ -48,6 +48,14 @@
   </div>
   <div class="row mt-3">
     <div class="col-md-7 mx-auto">
+      <button class="w-100 btn btn-primary btn-lg"
+              onclick="location.href='home.html'"
+              th:onclick="|location.href='@{/myPage/sellerApplyList}'|"
+              type="button" th:text="#{button.seller.apply}">판매자신청</button>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-7 mx-auto">
       <button class="w-100 btn btn-secondary btn-lg"
               onclick="location.href='home.html'"
               th:onclick="|location.href='@{/home}'|"
