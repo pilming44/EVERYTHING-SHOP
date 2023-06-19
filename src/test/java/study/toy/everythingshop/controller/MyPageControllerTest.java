@@ -47,6 +47,7 @@ public class MyPageControllerTest {
     @MockBean
     MyPageService myPageService;
 
+
     @Test
     @DisplayName("비로그인 마이페이지 접근시 리다이렉트")
     void test_1() throws Exception {
