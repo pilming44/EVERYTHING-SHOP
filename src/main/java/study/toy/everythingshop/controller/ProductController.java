@@ -12,11 +12,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import study.toy.everythingshop.auth.CustomUserDetails;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
+import study.toy.everythingshop.service.DiscountPolicyService;
 import study.toy.everythingshop.service.ProductService;
 import java.util.Locale;
 
@@ -35,6 +37,7 @@ public class ProductController {
     private final ProductDAO productDAO;
     private final ProductService productService;
     private final MessageSource messageSource;
+    private final DiscountPolicyService discountPolicyService;
 
     @GetMapping("/{productNum}")
     public String findProductDetail(@PathVariable Integer productNum, Model model) {
@@ -98,12 +101,9 @@ public class ProductController {
         return "redirect:/product/"+productNum;
     }
     @GetMapping("/{productNum}/order")
-    public String findProductOrderForm(@PathVariable Integer productNum, Model model ){
-            Product product = productDAO.selectByProductNum(productNum);
-            ModelMapper modelMapper = new ModelMapper();
-            ProductOrderDTO productOrderDTO = modelMapper.map(product, ProductOrderDTO.class);
-
-            log.info("product 객체 : {}", product);
+    public String findProductOrderForm(@PathVariable Integer productNum, Model model,@AuthenticationPrincipal CustomUserDetails userDetails ){
+            log.info("customUserDetails : {}",userDetails);
+            ProductOrderDTO productOrderDTO = productService.findOrderDetail(productNum,userDetails);
             model.addAttribute("productOrderDTO", productOrderDTO);
             return "productOrder";
     }

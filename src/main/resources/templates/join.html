@@ -160,17 +160,17 @@
             <label for="userNm" class="col-sm-2 col-form-label font-weight-bold col-form-label-lg">*이름</label>
             <div class="col-md-5">
                 <input type="text" th:field="*{userNm}" id="userNm" class="form-control form-control-lg" placeholder="이름을 입력하세요." >
-            </div>
+            </div>9
         </div>
         <!-- 버튼 -->
         <div class="row mt-3 justify-content-center">
             <div class="col-md-7 mx-auto" style="margin-top: 50px;">
                 <div class="row">
                     <div class="col">
-                        <button id="joinBtn" class="btn btn-primary btn-lg btn-block" type="submit" th:text="#{button.join}">회원가입</button>
+                        <button type="button" id="signInBtn" class="btn btn-primary btn-lg btn-block" th:href="@{/users/signIn}" onclick="location.href = this.getAttribute('href');"  th:text="#{button.singIn}">로그인</button>
                     </div>
                     <div class="col">
-                        <button type="button" id="signInBtn" class="btn btn-primary btn-lg btn-block" th:href="@{/users/signIn}" onclick="location.href = this.getAttribute('href');"  th:text="#{button.singIn}">로그인</button>
+                        <button id="joinBtn" class="btn btn-primary btn-lg btn-block" type="submit" th:text="#{button.join}">회원가입</button>
                     </div>
                 </div>
             </div>

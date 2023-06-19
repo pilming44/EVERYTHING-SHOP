@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiscountPolicy {
-    private String radeCd;          //등급코드[COM1003]
+    private String gradeCd;          //등급코드[COM1003]
     private Integer discountRate;    //할인율(%)
     private String startDate;       //적용시작일자
     private String endDate;         //적용종료일자

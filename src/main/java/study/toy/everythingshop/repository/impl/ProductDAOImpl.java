@@ -66,5 +66,10 @@ public class ProductDAOImpl implements ProductDAO {
         return sqlSession.selectList("h2.ProductDAO.selectMyOrderList", productSearchDTO);
     }
 
+    @Override
+    public Integer selectOrderedQty(Integer productNum) {
+        return sqlSession.selectOne("maria.ProductDAO.selectOrderedQty", productNum);
+    }
+
 
 }
