@@ -1,5 +1,9 @@
 package study.toy.everythingshop.repository;
 
+import study.toy.everythingshop.dto.SellerApplyDTO;
+
+import java.util.List;
+
 /**
  * fileName : MyPageDAO
  * author   : pilming
@@ -7,4 +11,6 @@ package study.toy.everythingshop.repository;
  */
 public interface MyPageDAO {
     int insertSellerApply(int userNum);
+
+    List<SellerApplyDTO> selectSellerApply(int userNum);
 }

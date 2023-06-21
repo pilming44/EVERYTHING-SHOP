@@ -2,6 +2,7 @@ package study.toy.everythingshop.service;
 
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
+import study.toy.everythingshop.dto.SellerApplyDTO;
 import study.toy.everythingshop.dto.UserInfoDTO;
 import study.toy.everythingshop.entity.mariaDB.User;
 
@@ -21,4 +22,6 @@ public interface MyPageService {
     UserInfoDTO findMyPageInfo(String userId);
 
     void addSellerApply(int userNum);
+
+    List<SellerApplyDTO> findSellerApplyList(int userNum);
 }

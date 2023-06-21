@@ -30,20 +30,14 @@
 					<thead>
 						<tr>
 							<th class="text-center" style="width: 5%" th:text="#{label.seller.apply.date}">날짜</th>
-							<th class="text-center" style="width: 25%" th:text="#{label.seller.apply.content}">내용</th>
 							<th class="text-center" style="width: 10%" th:text="#{label.seller.apply.result}">결과</th>
 						</tr>
 					</thead>
 					<tbody>
-						<th:block th:if="${products != null}">
-							<tr th:each="product : ${products}">
-								<td class="text-center" th:text="${product.orderNum}">주문번호</td>
-								<td><a href="/" th:href="@{|/product/${product.productNum}|}" th:text="${product.productNm}">상품명</a></td>
-								<td class="text-center" th:text="${product.productPrice}">상품가격</td>
-								<td class="text-center" th:text="${product.orderQuantity}">수량</td>
-								<td class="text-center" th:text="${product.finalPaymentPrice}">주문가격</td>
-							</tr>
-						</th:block>
+						<tr th:each="apply : ${applyList}">
+							<td class="text-center" th:text="${apply.registerDt}">날짜</td>
+							<td class="text-center" th:text="${apply.sellerApplyStatusNm}">결과</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
+import study.toy.everythingshop.dto.SellerApplyDTO;
 import study.toy.everythingshop.dto.UserInfoDTO;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
@@ -61,5 +62,10 @@ public class MyPageServiceImpl implements MyPageService {
     @Override
     public void addSellerApply(int userNum) {
         myPageDAO.insertSellerApply(userNum);
+    }
+
+    @Override
+    public List<SellerApplyDTO> findSellerApplyList(int userNum) {
+        return myPageDAO.selectSellerApply(userNum);
     }
 }

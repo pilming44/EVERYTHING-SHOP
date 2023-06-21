@@ -3,6 +3,7 @@
 
 <mapper namespace="maria.MyPageDAO">
     <insert id="insertSellerApply" parameterType="Integer">
+        /* MyPageDAO.insertSellerApply 판매자 신청*/
         INSERT INTO T_SELLER_APPLY
         (
             USER_NUM
@@ -19,6 +20,17 @@
         )
     </insert>
 
-    <select id="selectSellerApply" parameterType="Integer">
+    <select id="selectSellerApply" parameterType="Integer" resultType="SellerApplyDTO">
+        /*MyPageDAO.selectSellerApply 판매자신청내역 조회*/
+        SELECT TSA.APPLY_NUM                /* 신청번호*/
+             , TSA.USER_NUM                 /* 신청자*/
+             , TSA.SELLER_APPLY_STATUS_CD   /* 판매자신청상태코드[COM1007]*/
+             , EVERYTHINGSHOP.GET_CODE_NAME('COM1007', TSA.SELLER_APPLY_STATUS_CD) AS SELLER_APPLY_STATUS_NM /* 판매자신청상태코드명[COM1007]*/
+             , TSA.REJECT_REASON            /* 반려사유*/
+             , TSA.REGISTER_DT              /* 등록일자*/
+             , TSA.CHANGE_DT                /* 변경일자*/
+          FROM T_SELLER_APPLY TSA
+         WHERE TSA.USER_NUM = #{userNum}
+         ORDER BY TSA.REGISTER_DT DESC
     </select>
 </mapper>
