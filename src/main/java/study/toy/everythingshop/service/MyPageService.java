@@ -24,4 +24,6 @@ public interface MyPageService {
     void addSellerApply(int userNum);
 
     List<SellerApplyDTO> findSellerApplyList(int userNum);
+
+    int findApplyCount(int userNum);
 }

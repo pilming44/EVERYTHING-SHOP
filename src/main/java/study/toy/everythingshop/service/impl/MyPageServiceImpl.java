@@ -34,6 +34,11 @@ public class MyPageServiceImpl implements MyPageService {
     private final CommonService commonService;
 
     @Override
+    public int findApplyCount(int userNum) {
+        return myPageDAO.selectApplyCount(userNum);
+    }
+
+    @Override
     public void editUserInfo(User user) {
         userDAO.updateUserInfo(user);
     }

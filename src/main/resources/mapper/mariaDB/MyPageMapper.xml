@@ -33,4 +33,12 @@
          WHERE TSA.USER_NUM = #{userNum}
          ORDER BY TSA.REGISTER_DT DESC
     </select>
+    
+    <select id="selectApplyCount" parameterType="Integer" resultType="Integer">
+        /*MyPageDAO.selectApplyCount 신청완료상태인 지원 건수*/
+        SELECT COUNT(*)
+          FROM T_SELLER_APPLY TSA
+         WHERE USER_NUM = #{userNum}
+           AND SELLER_APPLY_STATUS_CD = '01'
+    </select>
 </mapper>

@@ -13,4 +13,6 @@ public interface MyPageDAO {
     int insertSellerApply(int userNum);
 
     List<SellerApplyDTO> selectSellerApply(int userNum);
+
+    int selectApplyCount(int userNum);
 }

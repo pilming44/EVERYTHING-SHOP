@@ -131,6 +131,7 @@ public class MyPageController {
         User user = userDAO.selectUserById(userDetails.getUsername());
         //디버깅
         log.debug(">>>>>>>>>>>>user : {}",user);
+        model.addAttribute("applyCount", myPageService.findApplyCount(user.getUserNum()));
         model.addAttribute("applyList", myPageService.findSellerApplyList(user.getUserNum()));
         return "sellerApplyList";
     }

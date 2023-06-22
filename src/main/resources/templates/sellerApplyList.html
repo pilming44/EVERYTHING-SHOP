@@ -14,12 +14,10 @@
 		</div>
 		<div class="row mt-3">
 			<div class="col-md-2">
-				<div class="text-left">
+				<div th:if="${applyCount < 1}">
 					<form th:action="@{/myPage/sellerApply}" method="post">
-						<button type="submit" class="btn btn-primary btn-block"
-								th:text="#{button.seller.apply}">판매자 신청</button>
+						<button type="submit" class="btn btn-primary btn-block" th:text="#{button.seller.apply}">판매자 신청</button>
 					</form>
-
 				</div>
 			</div>
 		</div>

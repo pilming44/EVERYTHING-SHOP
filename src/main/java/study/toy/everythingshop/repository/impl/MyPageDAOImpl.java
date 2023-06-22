@@ -29,4 +29,9 @@ public class MyPageDAOImpl implements MyPageDAO {
     public List<SellerApplyDTO> selectSellerApply(int userNum) {
         return sqlSession.selectList("maria.MyPageDAO.selectSellerApply", userNum);
     }
+
+    @Override
+    public int selectApplyCount(int userNum) {
+        return sqlSession.selectOne("maria.MyPageDAO.selectApplyCount", userNum);
+    }
 }
