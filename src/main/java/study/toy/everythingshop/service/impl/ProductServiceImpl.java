@@ -32,18 +32,18 @@ public class ProductServiceImpl implements ProductService {
     private final UserDAO userDAO;
     private final DiscountPolicyDAO discountPolicyDAO;
 
-    @Value("${defalut.recordCountPerPage}")
+    @Value("${default.recordCountPerPage}")
     private int defaultRecordCountPerPage;
 
-    @Value("${defalut.pageSize}")
-    private int defaltPageSize;
+    @Value("${default.pageSize}")
+    private int defaultPageSize;
 
     @Override
     public Map<String, Object> findProductList(ProductSearchDTO productSearchDTO) {
         //값 유효성 검사
         productSearchDTO.setCurrentPageNo(productSearchDTO.getCurrentPageNo() <= 0 ? 1 : productSearchDTO.getCurrentPageNo());
         productSearchDTO.setRecordCountPerPage(productSearchDTO.getRecordCountPerPage() <= 0 ? defaultRecordCountPerPage : productSearchDTO.getRecordCountPerPage());
-        int pageSize = productSearchDTO.getPageSize() <= 0 ? defaltPageSize : productSearchDTO.getPageSize();
+        int pageSize = productSearchDTO.getPageSize() <= 0 ? defaultPageSize : productSearchDTO.getPageSize();
 
         int totalRecordCount = productDAO.selectProductListTotalCount(productSearchDTO);
 
