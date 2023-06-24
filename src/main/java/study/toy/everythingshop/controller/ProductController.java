@@ -12,12 +12,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import study.toy.everythingshop.dto.ProductDTO;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.service.ProductService;
-import study.toy.everythingshop.vo.ProductVO;
 
 import java.util.Locale;
 
@@ -39,7 +39,7 @@ public class ProductController {
 
     @GetMapping("/{productNum}")
     public String findProductDetail(@PathVariable Integer productNum, Model model) {
-        ProductVO product = productDAO.selectByProductNum(productNum);
+        ProductDTO product = productDAO.selectByProductNum(productNum);
 
         log.info("Product 객체 : {}", product);
         model.addAttribute("product", product);
@@ -75,7 +75,7 @@ public class ProductController {
 
     @GetMapping("/{productNum}/edit")
     public String editProductView(@PathVariable Integer productNum, Model model) {
-        ProductVO product = productDAO.selectByProductNum(productNum);
+        ProductDTO product = productDAO.selectByProductNum(productNum);
 
         log.info("product 객체 : {}", product);
         model.addAttribute("product", product);
@@ -100,7 +100,7 @@ public class ProductController {
     }
     @GetMapping("/{productNum}/order")
     public String findProductOrderForm(@PathVariable Integer productNum, Model model ){
-            ProductVO product = productDAO.selectByProductNum(productNum);
+            ProductDTO product = productDAO.selectByProductNum(productNum);
             ModelMapper modelMapper = new ModelMapper();
             ProductOrderDTO productOrderDTO = modelMapper.map(product, ProductOrderDTO.class);
 

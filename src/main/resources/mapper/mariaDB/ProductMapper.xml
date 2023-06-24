@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="maria.ProductDAO">
-    <select id="selectProductList" parameterType="ProductSearchDTO" resultType="ProductVO">
+    <select id="selectProductList" parameterType="ProductSearchDTO" resultType="ProductDTO">
         /* ProductDAO.selectProductList 전체 PRODUCT LIST 조회*/
         <include refid="maria.CommonDAO.pagingTop"></include>
         SELECT ROW_NUMBER() OVER (ORDER BY T01.REGISTER_DT) AS ROW_NUM
@@ -63,7 +63,7 @@
         <include refid="maria.CommonDAO.countBottom"></include>
     </select>
 
-    <select id="selectByProductNum" parameterType="Integer" resultType="ProductVO">
+    <select id="selectByProductNum" parameterType="Integer" resultType="ProductDTO">
         SELECT T01.PRODUCT_NUM          /* 상품번호*/
              , T01.USER_NUM             /* 등록사용자번호*/
              , T01.PRODUCT_NM           /* 상품명*/

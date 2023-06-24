@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import study.toy.everythingshop.dto.ProductDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.repository.ProductDAO;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class RestHomeController {
     private final ProductDAO productDAO;
 
     @GetMapping("/home")
-    public List<Product> home(@Validated @ModelAttribute ProductSearchDTO productSearchDTO, BindingResult bindingResult) {
+    public List<ProductDTO> home(@Validated @ModelAttribute ProductSearchDTO productSearchDTO, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             throw new InvalidRequestException("Invalid Request");
         }
@@ -39,7 +39,7 @@ public class RestHomeController {
             productSearchDTO.setToPrice(tempPrice);
         }
 
-        List<Product> products = productDAO.selectProductList(productSearchDTO);
+        List<ProductDTO> products = productDAO.selectProductList(productSearchDTO);
 
         return products;
     }

@@ -3,14 +3,13 @@ package study.toy.everythingshop.repository.impl;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
+import study.toy.everythingshop.dto.ProductDTO;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.h2.ProductMEntity;
-import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
-import study.toy.everythingshop.vo.ProductVO;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class ProductDAOImpl implements ProductDAO {
     private final SqlSession sqlSession;
 
     @Override
-    public List<Product> selectProductList(ProductSearchDTO productSearchDTO) {
+    public List<ProductDTO> selectProductList(ProductSearchDTO productSearchDTO) {
 
         return sqlSession.selectList("maria.ProductDAO.selectProductList", productSearchDTO);
     }
@@ -39,7 +38,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public ProductVO selectByProductNum(Integer productNum) {
+    public ProductDTO selectByProductNum(Integer productNum) {
         return sqlSession.selectOne("maria.ProductDAO.selectByProductNum", productNum);
     }
     @Override

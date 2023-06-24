@@ -1,4 +1,4 @@
-package study.toy.everythingshop.vo;
+package study.toy.everythingshop.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder //상속받는 클래스가 있으므로 SuperBuilder 사용
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductVO extends BaseVO{
+public class ProductDTO extends SuperClass {
     private Integer productNum;         //상품번호
     private Integer userNum;            //사용자번호(판매자)
     private String productNm;           //상품명

@@ -1,4 +1,4 @@
-package study.toy.everythingshop.vo;
+package study.toy.everythingshop.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseVO {
+public class SuperClass {
+    private int rowNum;
+
     /*페이징용 변수들 시작*/
     private int recordCountPerPage; //한 페이지에 보여주는 데이터 건수
     private int pageSize;           //한번에 보여주는 페이지수
