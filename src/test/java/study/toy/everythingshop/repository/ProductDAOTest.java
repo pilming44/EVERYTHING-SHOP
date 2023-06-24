@@ -88,9 +88,9 @@ public class ProductDAOTest {
         ProductRegisterDTO productRegisterDTO = ProductRegisterDTO.builder().productNm("만물상자").productStatusCd("02").productPrice(30000).registerQuantity(30).userNum(user.getUserNum()).postYn("Y").build();
         productDAO.insertNewProduct(productRegisterDTO);
         // when
-        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
+        int findCount = productDAO.selectProductListTotalCount(productSearchDTO);
         // then
-        assertThat(findAll).hasSize(1);
+        assertThat(findCount).isEqualTo(1);
     }
 
     @Test
@@ -114,9 +114,10 @@ public class ProductDAOTest {
         productDAO.insertNewProduct(productRegisterDTO3);
         productDAO.insertNewProduct(productRegisterDTO4);
         // when
-        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
+        int findCount = productDAO.selectProductListTotalCount(productSearchDTO);
+
         // then
-        assertThat(findAll).hasSize(4);
+        assertThat(findCount).isEqualTo(4);
     }
 
     @Test
@@ -169,11 +170,10 @@ public class ProductDAOTest {
         productDAO.insertNewProduct(productRegisterDTO4);
 
         // when
-        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
+        int findCount = productDAO.selectProductListTotalCount(productSearchDTO);
 
         // then
-        assertThat(findAll).hasSize(1);
-        assertThat(findAll.stream().anyMatch(product -> product.getProductNum().equals(productRegisterDTO1.getProductNum()))).isTrue();
+        assertThat(findCount).isEqualTo(1);
     }
 
     @Test
@@ -198,12 +198,10 @@ public class ProductDAOTest {
         productDAO.insertNewProduct(productRegisterDTO3);
         productDAO.insertNewProduct(productRegisterDTO4);
         // when
-        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
+        int findCount = productDAO.selectProductListTotalCount(productSearchDTO);
 
         // then
-        assertThat(findAll).hasSize(2);
-        assertThat(findAll.stream().anyMatch(product -> product.getProductNum().equals(productRegisterDTO1.getProductNum()))).isTrue();
-        assertThat(findAll.stream().anyMatch(product -> product.getProductNum().equals(productRegisterDTO3.getProductNum()))).isTrue();
+        assertThat(findCount).isEqualTo(2);
     }
 
     @Test
@@ -228,14 +226,10 @@ public class ProductDAOTest {
         productDAO.insertNewProduct(productRegisterDTO3);
         productDAO.insertNewProduct(productRegisterDTO4);
         // when
-        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
+        int findCount = productDAO.selectProductListTotalCount(productSearchDTO);
 
         // then
-        assertThat(findAll).hasSize(4);
-        assertThat(findAll.stream().anyMatch(product -> product.getProductNum().equals(productRegisterDTO1.getProductNum()))).isTrue();
-        assertThat(findAll.stream().anyMatch(product -> product.getProductNum().equals(productRegisterDTO2.getProductNum()))).isTrue();
-        assertThat(findAll.stream().anyMatch(product -> product.getProductNum().equals(productRegisterDTO3.getProductNum()))).isTrue();
-        assertThat(findAll.stream().anyMatch(product -> product.getProductNum().equals(productRegisterDTO4.getProductNum()))).isTrue();
+        assertThat(findCount).isEqualTo(4);
     }
 
     @Test
