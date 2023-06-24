@@ -13,7 +13,6 @@ import study.toy.everythingshop.controller.WithUser;
 import study.toy.everythingshop.dto.ProductDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.entity.mariaDB.User;
 
 import java.util.List;
@@ -69,7 +68,7 @@ public class ProductDAOTest {
                 .fromPrice(null)
                 .toPrice(null).build();
         // when
-        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
+        List<ProductDTO> findAll = productDAO.selectProductList(productSearchDTO);
         // then
         assertThat(findAll).hasSize(0);
     }
@@ -142,7 +141,7 @@ public class ProductDAOTest {
         productDAO.insertNewProduct(productRegisterDTO3);
         productDAO.insertNewProduct(productRegisterDTO4);
         // when
-        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
+        List<ProductDTO> findAll = productDAO.selectProductList(productSearchDTO);
 
         // then
         assertThat(findAll).hasSize(0);
@@ -254,7 +253,7 @@ public class ProductDAOTest {
         productDAO.insertNewProduct(productRegisterDTO3);
         productDAO.insertNewProduct(productRegisterDTO4);
         // when
-        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
+        List<ProductDTO> findAll = productDAO.selectProductList(productSearchDTO);
 
         // then
         assertThat(findAll).hasSize(0);
@@ -282,7 +281,7 @@ public class ProductDAOTest {
         productDAO.insertNewProduct(productRegisterDTO3);
         productDAO.insertNewProduct(productRegisterDTO4);
         // when
-        List<Product> findAll = productDAO.selectProductList(productSearchDTO);
+        List<ProductDTO> findAll = productDAO.selectProductList(productSearchDTO);
 
         // then
         assertThat(findAll).hasSize(0);
