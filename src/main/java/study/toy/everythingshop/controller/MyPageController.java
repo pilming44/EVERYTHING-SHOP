@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
+import study.toy.everythingshop.dto.SellerApplyDTO;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
@@ -19,6 +20,7 @@ import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.MyPageService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * fileName : MypageController
@@ -126,13 +128,18 @@ public class MyPageController {
     }
 
     @GetMapping("/sellerApplyList")
-    public String sellerApplyListView(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String sellerApplyListView(SellerApplyDTO sellerApplyDTO, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         //사용자 정보 조회
         User user = userDAO.selectUserById(userDetails.getUsername());
+
+        sellerApplyDTO.setUserNum(user.getUserNum());
+
+        Map<String, Object> result = myPageService.findSellerApplyList(sellerApplyDTO);
         //디버깅
         log.debug(">>>>>>>>>>>>user : {}",user);
         model.addAttribute("applyCount", myPageService.findApplyCount(user.getUserNum()));
-        model.addAttribute("applyList", myPageService.findSellerApplyList(user.getUserNum()));
+        model.addAttribute("applyList", result.get("list"));
+        model.addAttribute("paginationInfo", result.get("paginationInfo"));
         return "sellerApplyList";
     }
 

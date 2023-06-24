@@ -20,9 +20,11 @@
         )
     </insert>
 
-    <select id="selectSellerApply" parameterType="Integer" resultType="SellerApplyDTO">
+    <select id="selectSellerApply" parameterType="SellerApplyDTO" resultType="SellerApplyDTO">
         /*MyPageDAO.selectSellerApply 판매자신청내역 조회*/
-        SELECT TSA.APPLY_NUM                /* 신청번호*/
+        <include refid="maria.CommonDAO.pagingTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY TSA.REGISTER_DT) AS ROW_NUM
+             , TSA.APPLY_NUM                /* 신청번호*/
              , TSA.USER_NUM                 /* 신청자*/
              , TSA.SELLER_APPLY_STATUS_CD   /* 판매자신청상태코드[COM1007]*/
              , EVERYTHINGSHOP.GET_CODE_NAME('COM1007', TSA.SELLER_APPLY_STATUS_CD) AS SELLER_APPLY_STATUS_NM /* 판매자신청상태코드명[COM1007]*/
@@ -31,7 +33,21 @@
              , TSA.CHANGE_DT                /* 변경일자*/
           FROM T_SELLER_APPLY TSA
          WHERE TSA.USER_NUM = #{userNum}
-         ORDER BY TSA.REGISTER_DT DESC
+        <include refid="maria.CommonDAO.pagingBottom"></include>
+    </select>
+    <select id="selectSellerApplyTotalCount" resultType="Integer">
+        <include refid="maria.CommonDAO.countTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY TSA.REGISTER_DT) AS ROW_NUM
+             , TSA.APPLY_NUM                /* 신청번호*/
+             , TSA.USER_NUM                 /* 신청자*/
+             , TSA.SELLER_APPLY_STATUS_CD   /* 판매자신청상태코드[COM1007]*/
+             , EVERYTHINGSHOP.GET_CODE_NAME('COM1007', TSA.SELLER_APPLY_STATUS_CD) AS SELLER_APPLY_STATUS_NM /* 판매자신청상태코드명[COM1007]*/
+             , TSA.REJECT_REASON            /* 반려사유*/
+             , TSA.REGISTER_DT              /* 등록일자*/
+             , TSA.CHANGE_DT                /* 변경일자*/
+          FROM T_SELLER_APPLY TSA
+         WHERE TSA.USER_NUM = #{userNum}
+        <include refid="maria.CommonDAO.countBottom"></include>
     </select>
     
     <select id="selectApplyCount" parameterType="Integer" resultType="Integer">

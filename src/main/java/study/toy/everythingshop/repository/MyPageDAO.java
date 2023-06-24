@@ -12,7 +12,9 @@ import java.util.List;
 public interface MyPageDAO {
     int insertSellerApply(int userNum);
 
-    List<SellerApplyDTO> selectSellerApply(int userNum);
+    List<SellerApplyDTO> selectSellerApply(SellerApplyDTO sellerApplyDTO);
+
+    int selectSellerApplyTotalCount(int userNum);
 
     int selectApplyCount(int userNum);
 }

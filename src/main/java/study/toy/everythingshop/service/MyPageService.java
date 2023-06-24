@@ -7,6 +7,7 @@ import study.toy.everythingshop.dto.UserInfoDTO;
 import study.toy.everythingshop.entity.mariaDB.User;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * fileName : MyPageService
@@ -23,7 +24,7 @@ public interface MyPageService {
 
     void addSellerApply(int userNum);
 
-    List<SellerApplyDTO> findSellerApplyList(int userNum);
+    Map<String, Object> findSellerApplyList(SellerApplyDTO sellerApplyDTO);
 
     int findApplyCount(int userNum);
 }
