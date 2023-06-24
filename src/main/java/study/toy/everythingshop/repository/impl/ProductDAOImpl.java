@@ -10,6 +10,7 @@ import study.toy.everythingshop.entity.h2.ProductMEntity;
 import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
+import study.toy.everythingshop.vo.ProductVO;
 
 import java.util.List;
 
@@ -33,7 +34,12 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public Product selectByProductNum(Integer productNum) {
+    public int selectProductListTotalCount(ProductSearchDTO productSearchDTO) {
+        return sqlSession.selectOne("maria.ProductDAO.selectProductListTotalCount", productSearchDTO);
+    }
+
+    @Override
+    public ProductVO selectByProductNum(Integer productNum) {
         return sqlSession.selectOne("maria.ProductDAO.selectByProductNum", productNum);
     }
     @Override

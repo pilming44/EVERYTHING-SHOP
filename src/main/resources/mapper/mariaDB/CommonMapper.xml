@@ -24,4 +24,21 @@
          WHERE TCC.CODE_CLASS = #{codeClass}
            AND TCC.CODE_NUM = #{codeNum}
     </select>
+
+    <sql id="pagingTop">
+        SELECT *
+          FROM (
+    </sql>
+    <sql id="pagingBottom">
+               ) DATA_SET
+         WHERE DATA_SET.ROW_NUM BETWEEN #{totalRecordCount} - (#{firstRecordIndex} + #{recordCountPerPage} - 1) AND #{totalRecordCount} - #{firstRecordIndex}
+         ORDER BY DATA_SET.ROW_NUM DESC
+    </sql>
+    <sql id="countTop">
+        SELECT COUNT(*)
+          FROM (
+    </sql>
+    <sql id="countBottom">
+                ) COUNT_T
+    </sql>
 </mapper>

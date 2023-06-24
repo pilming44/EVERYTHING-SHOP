@@ -2,11 +2,13 @@ package study.toy.everythingshop.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
+import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
@@ -14,6 +16,10 @@ import study.toy.everythingshop.repository.DiscountPolicyDAO;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.ProductService;
+import study.toy.everythingshop.util.PaginationInfo;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +32,39 @@ public class ProductServiceImpl implements ProductService {
     private final UserDAO userDAO;
     private final DiscountPolicyDAO discountPolicyDAO;
 
+    @Value("${defalut.recordCountPerPage}")
+    private int defaultRecordCountPerPage;
+
+    @Value("${defalut.pageSize}")
+    private int defaltPageSize;
+
+    @Override
+    public Map<String, Object> findProductList(ProductSearchDTO productSearchDTO) {
+        //값 유효성 검사
+        productSearchDTO.setCurrentPageNo(productSearchDTO.getCurrentPageNo() <= 0 ? 1 : productSearchDTO.getCurrentPageNo());
+        productSearchDTO.setRecordCountPerPage(productSearchDTO.getRecordCountPerPage() <= 0 ? defaultRecordCountPerPage : productSearchDTO.getRecordCountPerPage());
+        int pageSize = productSearchDTO.getPageSize() <= 0 ? defaltPageSize : productSearchDTO.getPageSize();
+
+        int totalRecordCount = productDAO.selectProductListTotalCount(productSearchDTO);
+
+        //페이징 하는데 필요한 값을 계산해주는 클래스 값 세팅
+        PaginationInfo paginationInfo = new PaginationInfo();
+        paginationInfo.setCurrentPageNo(productSearchDTO.getCurrentPageNo());
+        paginationInfo.setRecordCountPerPage(productSearchDTO.getRecordCountPerPage());
+        paginationInfo.setPageSize(pageSize);
+        paginationInfo.setTotalRecordCount(totalRecordCount);
+
+        //계산된 값 입력
+        productSearchDTO.setFirstRecordIndex(paginationInfo.getFirstRecordIndex());
+        productSearchDTO.setLastRecordIndex(paginationInfo.getLastRecordIndex());
+        productSearchDTO.setTotalPageCount(paginationInfo.getTotalPageCount());
+        productSearchDTO.setTotalRecordCount(totalRecordCount);
+
+        HashMap<String, Object> resultMap = new HashMap<>();
+        resultMap.put("list", productDAO.selectProductList(productSearchDTO));
+        resultMap.put("paginationInfo", paginationInfo);
+        return resultMap;
+    }
     @Override
     public int editProduct(ProductRegisterDTO productRegisterDTO) {
         return productDAO.updateProduct(productRegisterDTO);

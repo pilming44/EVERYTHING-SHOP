@@ -1,12 +1,11 @@
 package study.toy.everythingshop.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Range;
-
-import javax.validation.constraints.Min;
+import study.toy.everythingshop.vo.BaseVO;
 
 /**
  * fileName : ProductSearchDTO
@@ -14,10 +13,10 @@ import javax.validation.constraints.Min;
  * date     : 2023-03-01
  */
 @Data
-@Builder //상속받는 클래스가 없으므로 SuperBuilder가 아닌 builder사용
+@SuperBuilder //상속받는 클래스가 있으므로 SuperBuilder 사용
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductSearchDTO {
+public class ProductSearchDTO extends BaseVO {
     //maria DB용 필드 시작
     @Range(min = 0, max = 999999999)
     private Integer fromPrice;         //시작가격

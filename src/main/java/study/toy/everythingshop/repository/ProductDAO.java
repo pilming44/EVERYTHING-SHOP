@@ -5,6 +5,7 @@ import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.h2.ProductMEntity;
 import study.toy.everythingshop.entity.mariaDB.Product;
+import study.toy.everythingshop.vo.ProductVO;
 
 import java.util.List;
 
@@ -16,7 +17,9 @@ import java.util.List;
 public interface ProductDAO {
     List<Product> selectProductList(ProductSearchDTO productSearchDTO);
 
-    Product selectByProductNum(Integer productNum);
+    int selectProductListTotalCount(ProductSearchDTO productSearchDTO);
+
+    ProductVO selectByProductNum(Integer productNum);
 
     int insertNewProduct(ProductRegisterDTO productRegisterDTO);
 

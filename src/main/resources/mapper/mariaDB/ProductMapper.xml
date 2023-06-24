@@ -2,9 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="maria.ProductDAO">
-    <select id="selectProductList" parameterType="ProductSearchDTO" resultType="Product">
+    <select id="selectProductList" parameterType="ProductSearchDTO" resultType="ProductVO">
         /* ProductDAO.selectProductList 전체 PRODUCT LIST 조회*/
-        SELECT T01.PRODUCT_NUM          /* 상품번호*/
+        <include refid="maria.CommonDAO.pagingTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY T01.REGISTER_DT) AS ROW_NUM
+             , T01.PRODUCT_NUM          /* 상품번호*/
              , T01.USER_NUM             /* 등록사용자번호*/
              , T01.PRODUCT_NM           /* 상품명*/
              , T01.REGISTER_QUANTITY    /* 수량*/
@@ -28,9 +30,40 @@
                 and T01.PRODUCT_PRICE BETWEEN #{fromPrice} AND #{toPrice}
             </if>
         </where>
+        <include refid="maria.CommonDAO.pagingBottom"></include>
     </select>
 
-    <select id="selectByProductNum" parameterType="Integer" resultType="Product">
+    <select id="selectProductListTotalCount" resultType="Integer">
+        <include refid="maria.CommonDAO.countTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY T01.REGISTER_DT) AS ROW_NUM
+             , T01.PRODUCT_NUM          /* 상품번호*/
+             , T01.USER_NUM             /* 등록사용자번호*/
+             , T01.PRODUCT_NM           /* 상품명*/
+             , T01.REGISTER_QUANTITY    /* 수량*/
+             , T01.PRODUCT_PRICE        /* 가격*/
+             , T01.PRODUCT_STATUS_CD    /* 판매상태*/
+             , T01.POST_YN              /* 게시여부*/
+             , T01.REGISTER_DT          /* 등록일자*/
+             , T01.CHANGE_DT            /* 수정일자*/
+          FROM T_PRODUCT T01
+          <where>
+              <if test="productNm != null and productNm != ''">
+                  and T01.PRODUCT_NM LIKE CONCAT('%',#{productNm},'%')
+              </if>
+              <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice == null">
+                  and T01.PRODUCT_PRICE &gt;= #{fromPrice}  /* 시작가격만 있고 끝 가격은 없을경우*/
+              </if>
+              <if test="toPrice != null and toPrice &gt;= 0 and fromPrice == null">
+                  and T01.PRODUCT_PRICE &lt;= #{toPrice}  /* 끝 가격만 있고 시작가격은 없을경우*/
+              </if>
+              <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice != null and toPrice &gt;= 0">
+                  and T01.PRODUCT_PRICE BETWEEN #{fromPrice} AND #{toPrice}
+              </if>
+          </where>
+        <include refid="maria.CommonDAO.countBottom"></include>
+    </select>
+
+    <select id="selectByProductNum" parameterType="Integer" resultType="ProductVO">
         SELECT T01.PRODUCT_NUM          /* 상품번호*/
              , T01.USER_NUM             /* 등록사용자번호*/
              , T01.PRODUCT_NM           /* 상품명*/
