@@ -1,10 +1,7 @@
 package study.toy.everythingshop.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import study.toy.everythingshop.dto.ProductDTO;
-import study.toy.everythingshop.dto.ProductOrderDTO;
-import study.toy.everythingshop.dto.ProductRegisterDTO;
-import study.toy.everythingshop.dto.ProductSearchDTO;
+import study.toy.everythingshop.dto.*;
 
 import java.util.Map;
 
@@ -15,7 +12,7 @@ public interface ProductService {
 
     int saveNewProduct(ProductRegisterDTO productRegisterDTO, UserDetails userDetails);
 
-    int editProduct(ProductRegisterDTO productRegisterDTO);
+    int editProduct(ProductEditDTO productEditDTO);
 
     int saveOrderProduct(ProductOrderDTO productOrderDTO, String userId);
 }

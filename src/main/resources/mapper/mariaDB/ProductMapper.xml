@@ -69,6 +69,7 @@
              , TPR.PRODUCT_NM           /* 상품명*/
              , TPR.REGISTER_QUANTITY    /* 등록수량*/
              , TPR.REMAIN_QUANTITY      /* 잔여수량*/
+             , TPR.REGISTER_QUANTITY - TPR.REMAIN_QUANTITY AS SALES_QUANTITY
              , TPR.PRODUCT_PRICE        /* 상품가격*/
              , TPR.PRODUCT_STATUS_CD    /* 판매상태코드[COM1004]*/
              , GET_CODE_NAME('COM1004',TPR.PRODUCT_STATUS_CD) AS PRODUCT_STATUS_NM  /* 판매상태명[COM1004]*/
@@ -105,12 +106,13 @@
         )
     </insert>
 
-    <update id="updateProduct" parameterType="ProductRegisterDTO">
+    <update id="updateProduct" parameterType="ProductEditDTO">
         UPDATE T_PRODUCT
            SET PRODUCT_NM = #{productNm}
              , PRODUCT_PRICE = #{productPrice}
              , REGISTER_QUANTITY = #{registerQuantity}
              , PRODUCT_STATUS_CD = #{productStatusCd}
+             , POST_YN = #{postYn}
              , CHANGE_DT = now()
          WHERE PRODUCT_NUM = #{productNum}
     </update>

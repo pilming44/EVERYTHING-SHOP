@@ -3,10 +3,7 @@ package study.toy.everythingshop.repository.impl;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
-import study.toy.everythingshop.dto.ProductDTO;
-import study.toy.everythingshop.dto.ProductOrderDTO;
-import study.toy.everythingshop.dto.ProductRegisterDTO;
-import study.toy.everythingshop.dto.ProductSearchDTO;
+import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.h2.ProductMEntity;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
@@ -47,8 +44,8 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public int updateProduct(ProductRegisterDTO productRegisterDTO) {
-        return sqlSession.update("maria.ProductDAO.updateProduct", productRegisterDTO);
+    public int updateProduct(ProductEditDTO productEditDTO) {
+        return sqlSession.update("maria.ProductDAO.updateProduct", productEditDTO);
     }
 
     @Override

@@ -8,21 +8,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.auth.UserDetailsImpl;
+import study.toy.everythingshop.dto.ProductEditDTO;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.service.ProductService;
-import static org.mockito.Mockito.*;
+
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -133,7 +134,7 @@ public class ProductControllerTest {
         productDAO.insertNewProduct(productRegisterDTO);
 
         //서비스에서 업데이트 성공 리턴하는 mock객체
-        doReturn(1).when(productService).editProduct(any(ProductRegisterDTO.class));
+        doReturn(1).when(productService).editProduct(any(ProductEditDTO.class));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/product/{productNum}/edit", productRegisterDTO.getProductNum())
                         .param("productNm", "수정테스트물품")

@@ -1,9 +1,6 @@
 package study.toy.everythingshop.repository;
 
-import study.toy.everythingshop.dto.ProductDTO;
-import study.toy.everythingshop.dto.ProductOrderDTO;
-import study.toy.everythingshop.dto.ProductRegisterDTO;
-import study.toy.everythingshop.dto.ProductSearchDTO;
+import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.h2.ProductMEntity;
 
 import java.util.List;
@@ -22,7 +19,7 @@ public interface ProductDAO {
 
     int insertNewProduct(ProductRegisterDTO productRegisterDTO);
 
-    int updateProduct(ProductRegisterDTO productRegisterDTO);
+    int updateProduct(ProductEditDTO productEditDTO);
 
     int insertOrder(ProductOrderDTO productOrderDTO);
 

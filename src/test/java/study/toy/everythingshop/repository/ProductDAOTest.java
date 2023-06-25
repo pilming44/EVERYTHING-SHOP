@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.auth.UserDetailsImpl;
 import study.toy.everythingshop.controller.WithUser;
 import study.toy.everythingshop.dto.ProductDTO;
+import study.toy.everythingshop.dto.ProductEditDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.entity.mariaDB.User;
@@ -305,16 +306,23 @@ public class ProductDAOTest {
         productDAO.insertNewProduct(productRegisterDTO);
 
         // when
-        productRegisterDTO.setProductNm("물품수정");
-        productRegisterDTO.setRegisterQuantity(100);
-        productRegisterDTO.setProductPrice(10000);
+        ProductEditDTO productEditDTO = ProductEditDTO.builder()
+                .productNum(productRegisterDTO.getProductNum())
+                .productNm("물품수정")
+                .productPrice(10000)
+                .userNum(user.getUserNum())
+                .registerQuantity(3000)
+                .productStatusCd("01")
+                .postYn("Y")
+                .build();
 
-        productDAO.updateProduct(productRegisterDTO);
+        productDAO.updateProduct(productEditDTO);
 
         // then
-        ProductDTO editedProduct = productDAO.selectByProductNum(productRegisterDTO.getProductNum());
+        ProductDTO editedProduct = productDAO.selectByProductNum(productEditDTO.getProductNum());
+        log.debug("editedProduct : {}",editedProduct);
         assertThat(editedProduct.getProductNm()).isEqualTo("물품수정");
-        assertThat(editedProduct.getRegisterQuantity()).isEqualTo(100);
+        assertThat(editedProduct.getRegisterQuantity()).isEqualTo(3000);
         assertThat(editedProduct.getProductPrice()).isEqualTo(10000);
     }
 }

@@ -15,6 +15,7 @@ public class ProductDTO extends SuperClass {
     private String productNm;           //상품명
     private Integer registerQuantity;   //등록수량
     private Integer remainQuantity;     //잔여수량
+    private Integer salesQuantity;      //판매수량
     private Integer productPrice;       //상품가격
     private String productStatusCd;     //판매상태코드[COM1004]
     private String productStatusNm;     //판매상태명[COM1004]

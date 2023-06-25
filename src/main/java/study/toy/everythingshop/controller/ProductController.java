@@ -13,10 +13,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.toy.everythingshop.dto.ProductDTO;
+import study.toy.everythingshop.dto.ProductEditDTO;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
+import study.toy.everythingshop.service.CommonService;
 import study.toy.everythingshop.service.ProductService;
 
 import java.util.Locale;
@@ -36,6 +38,7 @@ public class ProductController {
     private final ProductDAO productDAO;
     private final ProductService productService;
     private final MessageSource messageSource;
+    private final CommonService commonService;
 
     @GetMapping("/{productNum}")
     public String findProductDetail(@PathVariable Integer productNum, @AuthenticationPrincipal UserDetails userDetails, Model model) {
@@ -80,20 +83,27 @@ public class ProductController {
 
         log.info("product 객체 : {}", product);
         model.addAttribute("product", product);
+        model.addAttribute("productStatusCdList", commonService.selectCommonCodeList("COM1004"));  //판매상태 코드리스트
         return "productEdit";
     }
 
     @PostMapping("/{productNum}/edit")
-    public String editProduct(@PathVariable Integer productNum, @Validated @ModelAttribute("product") ProductRegisterDTO productRegisterDTO,
-                              BindingResult bindingResult) {
+    public String editProduct(@PathVariable Integer productNum, @Validated @ModelAttribute("product") ProductEditDTO productEditDTO,
+                              BindingResult bindingResult, Model model) {
         //todo 추후 role을 적용할때 작성자 또는 권한을 가진사람이 productNum에 대해 수정권한이 있는지 체크 할것.
+        if(productEditDTO.getRegisterQuantity() != null && productEditDTO.getSalesQuantity() != null) {
+            if (productEditDTO.getRegisterQuantity() < productEditDTO.getSalesQuantity()) {
+                bindingResult.rejectValue("registerQuantity","Min.registerQuantity");
+            }
+        }
 
         if(bindingResult.hasErrors()) {
             log.info("bindingResult: {}", bindingResult);
+            model.addAttribute("productStatusCdList", commonService.selectCommonCodeList("COM1004"));  //판매상태 코드리스트
             return "productEdit";
         }
-        log.info("productRegisterDTO : {}", productRegisterDTO);
-        int updateResult = productService.editProduct(productRegisterDTO);
+        log.info("productRegisterDTO : {}", productEditDTO);
+        int updateResult = productService.editProduct(productEditDTO);
 
         //todo updateResult가 0일경우 예외처리 방법 필요
         log.info("updateResult : {}", updateResult);

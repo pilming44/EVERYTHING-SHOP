@@ -1,9 +1,9 @@
 package study.toy.everythingshop.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
@@ -15,10 +15,10 @@ import javax.validation.constraints.NotNull;
  * date     : 2023-03-30
  */
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductRegisterDTO {
+public class ProductEditDTO extends SuperClass{
     //maria DB용 필드 시작
     private Integer productNum;             //상품번호
 
@@ -28,10 +28,13 @@ public class ProductRegisterDTO {
     private String productNm;               //상품명
 
     @Range(min = 1, max = 999999999)
-    @NotNull(message = "{NotNull.product.registerQuantity}")
+    @NotNull(message = "{NotNull.product.edit.registerQuantity}")
     private Integer registerQuantity;       //등록수량
 
-    private Integer remainQuantity;     //잔여수량
+    private Integer remainQuantity;         //잔여수량
+
+    @NotNull(message = "{NotNull.product.edit.salesQuantity}")  //수정시 판매수량 null체크
+    private Integer salesQuantity;         //판매수량
 
     @Range(min = 0, max = 999999999)
     @NotNull(message = "{NotNull.product.productPrice}")

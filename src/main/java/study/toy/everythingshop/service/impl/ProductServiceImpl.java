@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.toy.everythingshop.dto.ProductDTO;
-import study.toy.everythingshop.dto.ProductOrderDTO;
-import study.toy.everythingshop.dto.ProductRegisterDTO;
-import study.toy.everythingshop.dto.ProductSearchDTO;
+import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
@@ -85,8 +82,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int editProduct(ProductRegisterDTO productRegisterDTO) {
-        return productDAO.updateProduct(productRegisterDTO);
+    public int editProduct(ProductEditDTO productEditDTO) {
+        return productDAO.updateProduct(productEditDTO);
     }
 
     @Override
