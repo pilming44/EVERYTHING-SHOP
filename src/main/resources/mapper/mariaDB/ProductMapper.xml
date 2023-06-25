@@ -64,17 +64,22 @@
     </select>
 
     <select id="selectByProductNum" parameterType="Integer" resultType="ProductDTO">
-        SELECT T01.PRODUCT_NUM          /* 상품번호*/
-             , T01.USER_NUM             /* 등록사용자번호*/
-             , T01.PRODUCT_NM           /* 상품명*/
-             , T01.REGISTER_QUANTITY    /* 등록수량*/
-             , T01.PRODUCT_PRICE        /* 상품가격*/
-             , T01.PRODUCT_STATUS_CD    /* 판매상태*/
-             , T01.POST_YN              /* 게시여부*/
-             , T01.REGISTER_DT          /* 등록일자*/
-             , T01.CHANGE_DT            /* 수정일자*/
-          FROM T_PRODUCT T01
-         WHERE T01.PRODUCT_NUM = #{productNum}
+        SELECT TPR.PRODUCT_NUM          /* 상품번호*/
+             , TPR.USER_NUM             /* 등록사용자번호*/
+             , TPR.PRODUCT_NM           /* 상품명*/
+             , TPR.REGISTER_QUANTITY    /* 등록수량*/
+             , TPR.REMAIN_QUANTITY      /* 잔여수량*/
+             , TPR.PRODUCT_PRICE        /* 상품가격*/
+             , TPR.PRODUCT_STATUS_CD    /* 판매상태코드[COM1004]*/
+             , GET_CODE_NAME('COM1004',TPR.PRODUCT_STATUS_CD) AS PRODUCT_STATUS_NM  /* 판매상태명[COM1004]*/
+             , TPR.POST_YN              /* 게시여부*/
+             , TPRV.VIEWS 				/* 조회수*/
+             , TPR.REGISTER_DT          /* 등록일자*/
+             , TPR.CHANGE_DT            /* 수정일자*/
+          FROM T_PRODUCT TPR
+          JOIN T_PRODUCT_VIEWS TPRV
+            ON TPR.PRODUCT_NUM = TPRV.PRODUCT_NUM
+        WHERE TPR.PRODUCT_NUM = #{productNum}
     </select>
 
     <insert id="insertNewProduct" parameterType="ProductRegisterDTO" useGeneratedKeys="true" keyProperty="productNum">

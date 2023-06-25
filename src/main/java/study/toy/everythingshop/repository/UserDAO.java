@@ -21,4 +21,6 @@ public interface UserDAO {
     int insertPointHistory(PointHistory pointHistory);
 
     int selectUsedPoint(String userId);
+
+    int selectUserDiscountRate(int userNum);
 }

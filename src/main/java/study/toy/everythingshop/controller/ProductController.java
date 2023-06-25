@@ -38,8 +38,9 @@ public class ProductController {
     private final MessageSource messageSource;
 
     @GetMapping("/{productNum}")
-    public String findProductDetail(@PathVariable Integer productNum, Model model) {
-        ProductDTO product = productDAO.selectByProductNum(productNum);
+    public String findProductDetail(@PathVariable Integer productNum, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+        log.info("userDetails 객체 : {}", userDetails);
+        ProductDTO product = productService.findProductDetail(productNum, userDetails);
 
         log.info("Product 객체 : {}", product);
         model.addAttribute("product", product);

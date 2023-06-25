@@ -48,4 +48,9 @@ public class UserDAOImpl implements UserDAO {
     public int selectUsedPoint(String userId) {
         return sqlSession.selectOne("maria.UserDAO.selectUsedPoint", userId);
     }
+
+    @Override
+    public int selectUserDiscountRate(int userNum) {
+        return sqlSession.selectOne("maria.UserDAO.selectUserDiscountRate", userNum);
+    }
 }

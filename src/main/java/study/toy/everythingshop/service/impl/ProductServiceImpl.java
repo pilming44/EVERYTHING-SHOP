@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.toy.everythingshop.dto.ProductDTO;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
@@ -65,6 +66,24 @@ public class ProductServiceImpl implements ProductService {
         resultMap.put("paginationInfo", paginationInfo);
         return resultMap;
     }
+
+    @Override
+    public ProductDTO findProductDetail(Integer productNum, UserDetails userDetails) {
+        ProductDTO product = productDAO.selectByProductNum(productNum);
+
+        if(userDetails != null) {
+            User user = userDAO.selectUserById(userDetails.getUsername());
+            int discountRate = userDAO.selectUserDiscountRate(user.getUserNum());
+            int discountPrice = (int) Math.round(product.getProductPrice() * (discountRate / 100.0)) ;
+            discountPrice = (int) Math.ceil(discountPrice / 10.0) * 10; //1원단위 반올림
+            product.setDiscountPrice(discountPrice);
+        } else {
+            product.setDiscountPrice(0);
+        }
+
+        return product;
+    }
+
     @Override
     public int editProduct(ProductRegisterDTO productRegisterDTO) {
         return productDAO.updateProduct(productRegisterDTO);

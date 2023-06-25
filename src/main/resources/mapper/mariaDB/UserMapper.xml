@@ -115,4 +115,14 @@
                ) T01
         GROUP BY T01.USER_NUM
     </select>
+
+    <select id="selectUserDiscountRate" parameterType="Integer" resultType="Integer">
+        /* UserDAO.selectUserDiscountRate 사용자 등급에 해당하는 할인율 조회*/
+        SELECT TDIP.DISCOUNT_RATE
+          FROM T_USER TUS
+          JOIN T_DISCOUNT_POLICY TDIP
+            ON TUS.GRADE_CD = TDIP.GRADE_CD
+           AND SYSDATE() BETWEEN  TDIP.START_DATE AND TDIP.END_DATE
+         WHERE USER_NUM = 1
+    </select>
 </mapper>
