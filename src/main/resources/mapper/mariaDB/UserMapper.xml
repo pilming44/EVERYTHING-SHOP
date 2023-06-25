@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="maria.UserDAO">
-    <insert id="inserNewUser" parameterType="JoinDTO">
-        /* UserDAO.inserNewUser 사용자추가*/
+    <insert id="insertUser" parameterType="JoinDTO">
+        /* UserDAO.insertUser 사용자추가*/
         INSERT INTO T_USER
         (
             USER_ID
@@ -24,18 +24,20 @@
 
     <select id="selectUserById" parameterType="String" resultType="User">
         /* UserDAO.selectUserById USER_ID로 사용자 조회*/
-        SELECT T01.USER_NUM             /* 사용자번호*/
-             , T01.USER_ID              /* 사용자ID*/
-             , T01.USER_PW              /* 비밀번호*/
-             , T01.ROLE_CD              /* 역할코드[COM1001]*/
-             , T01.ACCOUNT_STATUS_CD    /* 계정상태코드[COM1002]*/
-             , T01.USER_NM              /* 이름*/
-             , T01.HOLDING_POINT        /* 보유포인트*/
-             , T01.GRADE_CD             /* 등급코드[COM1003]*/
-             , T01.REGISTER_DT          /* 등록일자*/
-             , T01.CHANGE_DT            /* 수정일자*/
-          FROM T_USER T01
-         WHERE T01.USER_ID = #{userId}
+        SELECT TUS.USER_NUM             /* 사용자번호*/
+             , TUS.USER_ID              /* 사용자ID*/
+             , TUS.USER_PW              /* 비밀번호*/
+             , TUS.ROLE_CD              /* 역할코드[COM1001]*/
+             , TUS.ACCOUNT_STATUS_CD    /* 계정상태코드[COM1002]*/
+             , TUS.USER_NM              /* 이름*/
+             , TUS.HOLDING_POINT        /* 보유포인트*/
+             , TUS.GRADE_CD             /* 등급코드[COM1003]*/
+             , GET_CODE_NAME('COM1003',TUS.GRADE_CD) AS GRADE_NM /*등급이름*/
+             , TUS.REGISTER_DT          /* 등록일자*/
+             , TUS.CHANGE_DT            /* 수정일자*/
+          FROM T_USER TUS
+         WHERE TUS.USER_ID = #{userId}
+           AND TUS.ACCOUNT_STATUS_CD = '01'   /* 활성상태*/
     </select>
 
 <!-- TODO 중복 쿼리로 주석처리 사용중인 코드 수정 후 삭제-->

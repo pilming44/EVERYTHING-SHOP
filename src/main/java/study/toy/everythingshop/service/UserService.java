@@ -6,7 +6,7 @@ import study.toy.everythingshop.entity.h2.UserMEntity;
 import java.util.List;
 public interface UserService {
 
-    int saveNewMember(JoinDTO joinDTO);
+    int saveMember(JoinDTO joinDTO);
     List<UserMEntity> findAllUser();
 
 

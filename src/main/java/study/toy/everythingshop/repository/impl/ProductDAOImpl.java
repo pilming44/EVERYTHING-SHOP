@@ -39,8 +39,8 @@ public class ProductDAOImpl implements ProductDAO {
         return sqlSession.selectOne("maria.ProductDAO.selectByProductNum", productNum);
     }
     @Override
-    public int insertNewProduct(ProductRegisterDTO productRegisterDTO){
-        return sqlSession.insert("maria.ProductDAO.insertNewProduct", productRegisterDTO);
+    public int insertProduct(ProductRegisterDTO productRegisterDTO){
+        return sqlSession.insert("maria.ProductDAO.insertProduct", productRegisterDTO);
     }
 
     @Override
@@ -72,6 +72,11 @@ public class ProductDAOImpl implements ProductDAO {
     public int selectRemainingQuantity(ProductOrderDTO productOrderDTO) {
         return sqlSession.selectOne("maria.ProductDAO.selectRemainingQuantity", productOrderDTO);
     }
+    @Override
+    public Integer selectOrderedQty(Integer productNum) {
+        return sqlSession.selectOne("maria.ProductDAO.selectOrderedQty", productNum);
+    }
+
 
     @Override
     public int updateProductSoldOut(ProductOrderDTO productOrderDTO) {

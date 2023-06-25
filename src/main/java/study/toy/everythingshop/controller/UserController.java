@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -42,15 +41,10 @@ public class UserController {
     @PostMapping("/join")
     public String saveJoin(@Validated @ModelAttribute JoinDTO joinDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes,Model model){
         if (bindingResult.hasErrors()) {
-            log.info("오류남");
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                log.info("Field: " + error.getField());
-                log.info("Error: " + error.getDefaultMessage());
-            }
             model.addAttribute("joinDTO", joinDTO);
-            return "redirect:/users/join";
+            return "/join";
         }
-        int result = userService.saveNewMember(joinDTO);
+        int result = userService.saveMember(joinDTO);
         if(result > 0){
             String message = messageSource.getMessage("id.joinSuccess", null, Locale.getDefault());
             redirectAttributes.addFlashAttribute("successMessage", message);
@@ -99,7 +93,7 @@ public class UserController {
         String rawPassword = joinDTO.getUserPw();
         String encPassword = bCryptPasswordEncoder.encode(rawPassword);
         joinDTO.setUserPw(encPassword);
-        userDAO.insertNewUser(joinDTO);
+        userDAO.insertUser(joinDTO);
         return "redirect:/";
     }
 }

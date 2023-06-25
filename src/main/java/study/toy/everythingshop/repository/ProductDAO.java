@@ -17,7 +17,7 @@ public interface ProductDAO {
 
     ProductDTO selectByProductNum(Integer productNum);
 
-    int insertNewProduct(ProductRegisterDTO productRegisterDTO);
+    int insertProduct(ProductRegisterDTO productRegisterDTO);
 
     int updateProduct(ProductEditDTO productEditDTO);
 
@@ -32,4 +32,6 @@ public interface ProductDAO {
     int selectRemainingQuantity(ProductOrderDTO productOrderDTO);
 
     int updateProductSoldOut(ProductOrderDTO productOrderDTO);
+
+    Integer selectOrderedQty(Integer productNum);
 }

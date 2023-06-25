@@ -4,8 +4,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import study.toy.everythingshop.entity.h2.UserMEntity;
 import study.toy.everythingshop.entity.mariaDB.User;
 
 import java.util.ArrayList;
@@ -19,7 +17,7 @@ import java.util.List;
  */
 @Data
 @Slf4j
-public class UserDetailsImpl implements UserDetails {
+public class UserDetailsImpl implements CustomUserDetails {
     private User user;
 
     public UserDetailsImpl(User user) {
@@ -46,6 +44,9 @@ public class UserDetailsImpl implements UserDetails {
     public String getUsername() {
         return user.getUserId();
     }
+
+    @Override
+    public String getUserGradeCd(){ return user.getGradeCd(); }
 
     @Override
     public boolean isAccountNonExpired() {

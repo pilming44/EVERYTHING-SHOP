@@ -3,11 +3,16 @@ package study.toy.everythingshop.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
+import study.toy.everythingshop.auth.CustomUserDetails;
+import study.toy.everythingshop.dto.ProductOrderDTO;
+import study.toy.everythingshop.dto.ProductRegisterDTO;
+import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.DiscountPolicyDAO;
@@ -136,11 +141,31 @@ public class ProductServiceImpl implements ProductService {
         return result;
     }
 
+    @Override
     public int saveNewProduct(ProductRegisterDTO productRegisterDTO, UserDetails userDetails){
         User user = userDAO.selectUserById(userDetails.getUsername());
         productRegisterDTO.setUserNum(user.getUserNum());
-        return productDAO.insertNewProduct(productRegisterDTO);
+        return productDAO.insertProduct(productRegisterDTO);
     };
+
+    @Override
+    public ProductOrderDTO findOrderDetail(Integer productNum, CustomUserDetails userDetails){
+        //product의 정보 가져오기
+        Product product = productDAO.selectByProductNum(productNum);
+        ModelMapper modelMapper = new ModelMapper();
+        ProductOrderDTO productOrderDTO = modelMapper.map(product, ProductOrderDTO.class);
+        //User의 등급으로 현재 적용된 할인율 가져오기
+        Integer discountRate = discountPolicyDAO.selectDiscountRateByGrade(userDetails.getUserGradeCd());
+        //현재 product 금액에서 할인율 적용하여 할인금액, 현재금액 구하기.
+        Integer discountPrice  = product.getProductPrice() * discountRate / 100;
+        Integer currentPrice = product.getProductPrice() - discountPrice;
+        productOrderDTO.setDiscountPrice(discountPrice);
+        productOrderDTO.setCurrentPrice(currentPrice);
+        //판매수량 구해서 남은수량 구하기
+        Integer leftQuantity = productOrderDTO.getRegisterQuantity() - productDAO.selectOrderedQty(productNum);
+        productOrderDTO.setLeftQuantity(leftQuantity);
+        return productOrderDTO;
+    }
 
 
 
