@@ -1,9 +1,6 @@
 package study.toy.everythingshop.service;
 
-import study.toy.everythingshop.dto.ProductOrderDTO;
-import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.dto.SellerApplyDTO;
-import study.toy.everythingshop.dto.UserInfoDTO;
+import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.User;
 
 import java.util.List;
@@ -27,4 +24,8 @@ public interface MyPageService {
     Map<String, Object> findSellerApplyList(SellerApplyDTO sellerApplyDTO);
 
     int findApplyCount(int userNum);
+
+    List<DiscountPolicyDTO> findDiscountPolicy();
+
+    void editDiscountPolicy(List<DiscountPolicyDTO> discountPolicyDTO);
 }

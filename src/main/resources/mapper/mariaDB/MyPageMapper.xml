@@ -23,38 +23,81 @@
     <select id="selectSellerApply" parameterType="SellerApplyDTO" resultType="SellerApplyDTO">
         /*MyPageDAO.selectSellerApply 판매자신청내역 조회*/
         <include refid="maria.CommonDAO.pagingTop"></include>
-        SELECT ROW_NUMBER() OVER (ORDER BY TSA.REGISTER_DT) AS ROW_NUM
-             , TSA.APPLY_NUM                /* 신청번호*/
-             , TSA.USER_NUM                 /* 신청자*/
-             , TSA.SELLER_APPLY_STATUS_CD   /* 판매자신청상태코드[COM1007]*/
-             , EVERYTHINGSHOP.GET_CODE_NAME('COM1007', TSA.SELLER_APPLY_STATUS_CD) AS SELLER_APPLY_STATUS_NM /* 판매자신청상태코드명[COM1007]*/
-             , TSA.REJECT_REASON            /* 반려사유*/
-             , TSA.REGISTER_DT              /* 등록일자*/
-             , TSA.CHANGE_DT                /* 변경일자*/
-          FROM T_SELLER_APPLY TSA
-         WHERE TSA.USER_NUM = #{userNum}
+        SELECT ROW_NUMBER() OVER (ORDER BY TSEA.REGISTER_DT) AS ROW_NUM
+             , TSEA.APPLY_NUM                /* 신청번호*/
+             , TSEA.USER_NUM                 /* 신청자*/
+             , TSEA.SELLER_APPLY_STATUS_CD   /* 판매자신청상태코드[COM1007]*/
+             , EVERYTHINGSHOP.GET_CODE_NAME('COM1007', TSEA.SELLER_APPLY_STATUS_CD) AS SELLER_APPLY_STATUS_NM /* 판매자신청상태코드명[COM1007]*/
+             , TSEA.REJECT_REASON            /* 반려사유*/
+             , TSEA.REGISTER_DT              /* 등록일자*/
+             , TSEA.CHANGE_DT                /* 변경일자*/
+          FROM T_SELLER_APPLY TSEA
+         WHERE TSEA.USER_NUM = #{userNum}
         <include refid="maria.CommonDAO.pagingBottom"></include>
     </select>
     <select id="selectSellerApplyTotalCount" resultType="Integer">
         <include refid="maria.CommonDAO.countTop"></include>
-        SELECT ROW_NUMBER() OVER (ORDER BY TSA.REGISTER_DT) AS ROW_NUM
-             , TSA.APPLY_NUM                /* 신청번호*/
-             , TSA.USER_NUM                 /* 신청자*/
-             , TSA.SELLER_APPLY_STATUS_CD   /* 판매자신청상태코드[COM1007]*/
-             , EVERYTHINGSHOP.GET_CODE_NAME('COM1007', TSA.SELLER_APPLY_STATUS_CD) AS SELLER_APPLY_STATUS_NM /* 판매자신청상태코드명[COM1007]*/
-             , TSA.REJECT_REASON            /* 반려사유*/
-             , TSA.REGISTER_DT              /* 등록일자*/
-             , TSA.CHANGE_DT                /* 변경일자*/
-          FROM T_SELLER_APPLY TSA
-         WHERE TSA.USER_NUM = #{userNum}
+        SELECT ROW_NUMBER() OVER (ORDER BY TSEA.REGISTER_DT) AS ROW_NUM
+             , TSEA.APPLY_NUM                /* 신청번호*/
+             , TSEA.USER_NUM                 /* 신청자*/
+             , TSEA.SELLER_APPLY_STATUS_CD   /* 판매자신청상태코드[COM1007]*/
+             , EVERYTHINGSHOP.GET_CODE_NAME('COM1007', TSEA.SELLER_APPLY_STATUS_CD) AS SELLER_APPLY_STATUS_NM /* 판매자신청상태코드명[COM1007]*/
+             , TSEA.REJECT_REASON            /* 반려사유*/
+             , TSEA.REGISTER_DT              /* 등록일자*/
+             , TSEA.CHANGE_DT                /* 변경일자*/
+          FROM T_SELLER_APPLY TSEA
+         WHERE TSEA.USER_NUM = #{userNum}
         <include refid="maria.CommonDAO.countBottom"></include>
     </select>
     
     <select id="selectApplyCount" parameterType="Integer" resultType="Integer">
         /*MyPageDAO.selectApplyCount 신청완료상태인 지원 건수*/
         SELECT COUNT(*)
-          FROM T_SELLER_APPLY TSA
+          FROM T_SELLER_APPLY TSEA
          WHERE USER_NUM = #{userNum}
            AND SELLER_APPLY_STATUS_CD = '01'
     </select>
+
+    <select id="selectDiscountPolicy" resultType="DiscountPolicyDTO">
+        /*MyPageDAO.selectDiscountPolicy 할인정책 조회*/
+        SELECT TDIP.GRADE_CD
+             , GET_CODE_NAME('COM1003', TDIP.GRADE_CD) AS GRADE_NM
+             , GRADE_STANDARD
+             , TDIP.DISCOUNT_RATE
+          FROM T_DISCOUNT_POLICY TDIP
+         WHERE SYSDATE() BETWEEN TDIP.START_DATE AND TDIP.END_DATE
+         ORDER BY TDIP.GRADE_CD DESC
+    </select>
+
+    <update id="updateDiscountPolicyEndDate" parameterType="DiscountPolicyDTO">
+        /*MyPageDAO.updateDiscountPolicyEndDate 기존 할인정책 종료일자 설정*/
+        UPDATE T_DISCOUNT_POLICY
+           SET END_DATE = SYSDATE()- INTERVAL 1 SECOND /*update와 insert가 같은 트랜젝션으로 처리되니 종료일자를 1초 이전으로 설정*/
+             , CHANGE_DT = SYSDATE()
+         WHERE GRADE_CD = #{gradeCd}
+           AND SYSDATE() BETWEEN START_DATE AND END_DATE
+    </update>
+    <insert id="insertDiscountPolicy" parameterType="DiscountPolicyDTO">
+        /*MyPageDAO.insertDiscountPolicy 새로운 할인정책 설정*/
+        INSERT INTO T_DISCOUNT_POLICY
+        (
+            GRADE_CD
+          , GRADE_STANDARD
+          , DISCOUNT_RATE
+          , START_DATE
+          , END_DATE
+          , REGISTER_DT
+          , CHANGE_DT
+        )
+        VALUES
+        (
+            #{gradeCd}
+          , #{gradeStandard}
+          , #{discountRate}
+          , SYSDATE()
+          , '9999-12-31 23:59:59'
+          , SYSDATE()
+          , SYSDATE()
+        )
+    </insert>
 </mapper>

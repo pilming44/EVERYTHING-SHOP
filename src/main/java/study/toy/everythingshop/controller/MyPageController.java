@@ -1,6 +1,8 @@
 package study.toy.everythingshop.controller;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import study.toy.everythingshop.dto.DiscountPolicyDTO;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductSearchDTO;
 import study.toy.everythingshop.dto.SellerApplyDTO;
@@ -19,6 +22,8 @@ import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.MyPageService;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -151,5 +156,47 @@ public class MyPageController {
         log.debug(">>>>>>>>>>>>user : {}",user);
         myPageService.addSellerApply(user.getUserNum());
         return "redirect:/myPage/sellerApplyList";
+    }
+
+    @GetMapping("/discountPolicy")
+    public String discountPolicyView(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        //TODO 사용자 정보 검증
+        User user = userDAO.selectUserById(userDetails.getUsername());
+
+        //타임리프에서 리스트데이터를 받기위한 Wrapper.
+        DiscountPolicyWrapper discountPolicyWrapper = new DiscountPolicyWrapper();
+        discountPolicyWrapper.setDiscountPolicy(myPageService.findDiscountPolicy());
+
+        model.addAttribute("discountPolicyWrapper", discountPolicyWrapper);
+        return "discountPolicy";
+    }
+
+    @PostMapping("/discountPolicy")
+    public String editDiscountPolicy(@Validated @ModelAttribute DiscountPolicyWrapper discountPolicyWrapper, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails) {
+        if(bindingResult.hasErrors()) {
+            log.info("바인딩오류발생");
+            log.info("종료시 bindingResult : {}", bindingResult);
+            return "discountPolicy";
+        }
+
+        //사용자 정보 조회
+        User user = userDAO.selectUserById(userDetails.getUsername());
+        //디버깅
+        log.debug(">>>>>>>>>>>>discountPolicyWrapper : {}",discountPolicyWrapper.getDiscountPolicy());
+
+        myPageService.editDiscountPolicy(discountPolicyWrapper.getDiscountPolicy());
+
+        return "redirect:/myPage/discountPolicy";
+    }
+
+    /**
+     * 타임리프에서 리스트데이터를 받기위한 Wrapper.
+     * Wrapper사용해서 view로 전달하고 view에서 Wrapper를 submit해야 list로 바인딩이 가능함
+     */
+    @Getter
+    @Setter
+    class DiscountPolicyWrapper {
+        @Valid
+        private List<DiscountPolicyDTO> discountPolicy = new ArrayList<>();
     }
 }

@@ -3,6 +3,7 @@ package study.toy.everythingshop.repository.impl;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
+import study.toy.everythingshop.dto.DiscountPolicyDTO;
 import study.toy.everythingshop.dto.SellerApplyDTO;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.MyPageDAO;
@@ -38,5 +39,20 @@ public class MyPageDAOImpl implements MyPageDAO {
     @Override
     public int selectApplyCount(int userNum) {
         return sqlSession.selectOne("maria.MyPageDAO.selectApplyCount", userNum);
+    }
+
+    @Override
+    public List<DiscountPolicyDTO> selectDiscountPolicy() {
+        return sqlSession.selectList("maria.MyPageDAO.selectDiscountPolicy");
+    }
+
+    @Override
+    public int updateDiscountPolicyEndDate(DiscountPolicyDTO discountPolicyDTO) {
+        return sqlSession.update("maria.MyPageDAO.updateDiscountPolicyEndDate", discountPolicyDTO);
+    }
+
+    @Override
+    public int insertDiscountPolicy(DiscountPolicyDTO discountPolicyDTO) {
+        return sqlSession.insert("maria.MyPageDAO.insertDiscountPolicy", discountPolicyDTO);
     }
 }

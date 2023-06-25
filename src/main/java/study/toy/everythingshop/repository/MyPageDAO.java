@@ -1,5 +1,6 @@
 package study.toy.everythingshop.repository;
 
+import study.toy.everythingshop.dto.DiscountPolicyDTO;
 import study.toy.everythingshop.dto.SellerApplyDTO;
 
 import java.util.List;
@@ -17,4 +18,10 @@ public interface MyPageDAO {
     int selectSellerApplyTotalCount(int userNum);
 
     int selectApplyCount(int userNum);
+
+    List<DiscountPolicyDTO> selectDiscountPolicy();
+
+    int updateDiscountPolicyEndDate(DiscountPolicyDTO discountPolicyDTO);
+
+    int insertDiscountPolicy(DiscountPolicyDTO discountPolicyDTO);
 }

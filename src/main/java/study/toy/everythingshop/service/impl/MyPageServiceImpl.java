@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import study.toy.everythingshop.dto.ProductOrderDTO;
-import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.dto.SellerApplyDTO;
-import study.toy.everythingshop.dto.UserInfoDTO;
+import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.MyPageDAO;
@@ -105,5 +102,27 @@ public class MyPageServiceImpl implements MyPageService {
         resultMap.put("list", myPageDAO.selectSellerApply(sellerApplyDTO));
         resultMap.put("paginationInfo", paginationInfo);
         return resultMap;
+    }
+
+    @Override
+    public List<DiscountPolicyDTO> findDiscountPolicy() {
+        return myPageDAO.selectDiscountPolicy();
+    }
+
+    @Override
+    public void editDiscountPolicy(List<DiscountPolicyDTO> discountPolicyDTO) {
+        //기존 할일정책 조회
+        List<DiscountPolicyDTO> oldDiscountPolicy = myPageDAO.selectDiscountPolicy();
+
+        for(DiscountPolicyDTO newPolicy : discountPolicyDTO) {
+            for(DiscountPolicyDTO oldPolicy : oldDiscountPolicy) {
+                if(newPolicy.getGradeCd().equals(oldPolicy.getGradeCd())
+                        && (!newPolicy.getGradeStandard().equals(oldPolicy.getGradeStandard()) || !newPolicy.getDiscountRate().equals(oldPolicy.getDiscountRate()))) {
+                    //기존 정책과 다른부분이 있다면 해당 정책 갱신
+                    myPageDAO.updateDiscountPolicyEndDate(oldPolicy); //기존 정책 종료일자 설정
+                    myPageDAO.insertDiscountPolicy(newPolicy);  //새로운 정책정보 등록
+                }
+            }
+        }
     }
 }
