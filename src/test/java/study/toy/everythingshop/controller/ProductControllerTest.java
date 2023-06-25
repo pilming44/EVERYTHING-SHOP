@@ -140,6 +140,7 @@ public class ProductControllerTest {
                         .param("productNm", "수정테스트물품")
                         .param("productPrice", "20000")
                         .param("registerQuantity", "100")
+                        .param("salesQuantity", "20")
                         .param("productStatusCd","01"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/product/"+productRegisterDTO.getProductNum()));

@@ -2,7 +2,6 @@ package study.toy.everythingshop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,15 +11,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import study.toy.everythingshop.auth.CustomUserDetails;
 import study.toy.everythingshop.dto.ProductDTO;
 import study.toy.everythingshop.dto.ProductEditDTO;
-import study.toy.everythingshop.auth.CustomUserDetails;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
-import study.toy.everythingshop.service.DiscountPolicyService;
 import study.toy.everythingshop.service.CommonService;
+import study.toy.everythingshop.service.DiscountPolicyService;
 import study.toy.everythingshop.service.ProductService;
 
 import java.util.Locale;
@@ -113,23 +112,17 @@ public class ProductController {
         return "redirect:/product/"+productNum;
     }
     @GetMapping("/{productNum}/order")
-    public String findProductOrderForm(@PathVariable Integer productNum, Model model ){
-            ProductDTO product = productDAO.selectByProductNum(productNum);
-            ModelMapper modelMapper = new ModelMapper();
-            ProductOrderDTO productOrderDTO = modelMapper.map(product, ProductOrderDTO.class);
-
-            log.info("product 객체 : {}", product);
     public String findProductOrderForm(@PathVariable Integer productNum, Model model,@AuthenticationPrincipal CustomUserDetails userDetails ){
-            log.info("customUserDetails : {}",userDetails);
-            ProductOrderDTO productOrderDTO = productService.findOrderDetail(productNum,userDetails);
-            model.addAttribute("productOrderDTO", productOrderDTO);
-            return "productOrder";
+        log.info("customUserDetails : {}",userDetails);
+        ProductOrderDTO productOrderDTO = productService.findOrderDetail(productNum,userDetails);
+        model.addAttribute("productOrderDTO", productOrderDTO);
+        return "productOrder";
     }
 
     @PostMapping("/{productNum}/order")
     public String saveProductOrder(@Validated @ModelAttribute ProductOrderDTO productOrderDTO,
-                               BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes,
-                               @AuthenticationPrincipal UserDetails userDetails){
+                                   BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes,
+                                   @AuthenticationPrincipal UserDetails userDetails){
         if(bindingResult.hasErrors()) {
             model.addAttribute("productOrderDTO",productOrderDTO);
             log.info("바인딩오류발생");

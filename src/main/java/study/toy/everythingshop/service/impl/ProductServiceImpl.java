@@ -2,17 +2,14 @@ package study.toy.everythingshop.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.toy.everythingshop.auth.CustomUserDetails;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
-import study.toy.everythingshop.auth.CustomUserDetails;
-import study.toy.everythingshop.dto.ProductOrderDTO;
-import study.toy.everythingshop.dto.ProductRegisterDTO;
-import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.DiscountPolicyDAO;
@@ -102,7 +99,7 @@ public class ProductServiceImpl implements ProductService {
         int orderedPrice = productOrderDTO.getOrderQuantity() * productOrderDTO.getProductPrice(); //주문수량 * 주문한 상품의 가격
 
         //사용자 등급별 할인 적용
-        int discountRate = discountPolicyDAO.selectDiscountRate(user.getGradeCd()); //할인율(%)
+        int discountRate = discountPolicyDAO.selectDiscountRateByGrade(user.getGradeCd()); //할인율(%)
         int discountPrice = (int)(orderedPrice * (discountRate / 100.0));    //할인가격
         int finalPaymentPrice = orderedPrice - discountPrice;   //최종 결제금액
 
@@ -151,7 +148,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductOrderDTO findOrderDetail(Integer productNum, CustomUserDetails userDetails){
         //product의 정보 가져오기
-        Product product = productDAO.selectByProductNum(productNum);
+        ProductDTO product = productDAO.selectByProductNum(productNum);
         ModelMapper modelMapper = new ModelMapper();
         ProductOrderDTO productOrderDTO = modelMapper.map(product, ProductOrderDTO.class);
         //User의 등급으로 현재 적용된 할인율 가져오기
@@ -162,12 +159,8 @@ public class ProductServiceImpl implements ProductService {
         productOrderDTO.setDiscountPrice(discountPrice);
         productOrderDTO.setCurrentPrice(currentPrice);
         //판매수량 구해서 남은수량 구하기
-        Integer leftQuantity = productOrderDTO.getRegisterQuantity() - productDAO.selectOrderedQty(productNum);
-        productOrderDTO.setLeftQuantity(leftQuantity);
+        Integer remainQuantity = productOrderDTO.getRegisterQuantity() - productDAO.selectOrderedQty(productNum);
+        productOrderDTO.setRemainQuantity(remainQuantity);
         return productOrderDTO;
     }
-
-
-
-
 }
