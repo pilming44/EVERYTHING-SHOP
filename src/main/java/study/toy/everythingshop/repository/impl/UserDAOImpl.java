@@ -53,4 +53,14 @@ public class UserDAOImpl implements UserDAO {
     public int selectUserDiscountRate(int userNum) {
         return sqlSession.selectOne("maria.UserDAO.selectUserDiscountRate", userNum);
     }
+
+    @Override
+    public int insertLoginHistory(User user) {
+        return sqlSession.insert("maria.UserDAO.insertLoginHistory", user);
+    }
+
+    @Override
+    public int selectTodayLoginCount(User user) {
+        return sqlSession.selectOne("maria.UserDAO.selectTodayLoginCount", user);
+    }
 }

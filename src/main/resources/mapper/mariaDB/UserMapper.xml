@@ -125,4 +125,21 @@
            AND SYSDATE() BETWEEN  TDIP.START_DATE AND TDIP.END_DATE
          WHERE USER_NUM = 1
     </select>
+
+    <insert id="insertLoginHistory" parameterType="User">
+        /* UserDAO.insertLoginHistory 사용자 로그인 이력 추가*/
+        INSERT INTO T_LOGIN_HISTORY
+        (USER_NUM, REGISTER_DT, CHANGE_DT)
+        VALUES
+        (#{userNum}, SYSDATE(), SYSDATE())
+    </insert>
+
+    <select id="selectTodayLoginCount" parameterType="User" resultType="Integer">
+        /* UserDAO.selectTodayLoginCount 오늘 로그인 횟수 카운트*/
+        SELECT COUNT(*)
+          FROM T_LOGIN_HISTORY
+         WHERE USER_NUM = #{userNum}
+           AND DATE(REGISTER_DT) = CURDATE();
+    </select>
+
 </mapper>

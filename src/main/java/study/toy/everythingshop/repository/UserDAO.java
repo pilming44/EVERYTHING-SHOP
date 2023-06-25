@@ -23,4 +23,8 @@ public interface UserDAO {
     int selectUsedPoint(String userId);
 
     int selectUserDiscountRate(int userNum);
+
+    int insertLoginHistory(User user);
+
+    int selectTodayLoginCount(User user);
 }
