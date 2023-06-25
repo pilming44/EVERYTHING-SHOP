@@ -19,51 +19,51 @@
     </div>
   </div>
   <div class="row justify-content-center mt-3">
-    <label for="productNm" class="col-sm-2 col-form-label-lg font-weight-bold" th:text="#{label.product.productName}">상품명</label>
+    <label for="productNm" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.productName}">상품명</label>
     <div class="col-md-5">
-      <input type="text" id="productNm" th:field="*{product.productNm}" class="form-control" value="상품A" readonly>
+      <input type="text" id="productNm" th:field="*{product.productNm}" class="form-control form-control-lg" value="상품A" readonly>
     </div>
   </div>
   <div class="row justify-content-center mt-3">
-    <label for="productPrice" class="col-sm-2 col-form-label-lg font-weight-bold" th:text="#{label.product.price}">상품 가격</label>
+    <label for="productPrice" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.price}">상품 가격</label>
     <div class="col-md-5">
-      <input type="text" id="productPrice" th:field="*{product.productPrice}" class="form-control" value="10000" readonly>
+      <input type="text" id="productPrice" th:field="*{product.productPrice}" class="form-control form-control-lg" value="10000" readonly>
     </div>
   </div>
   <div class="row justify-content-center mt-3">
-    <label for="discountPrice" class="col-sm-2 col-form-label-lg font-weight-bold" th:text="#{label.product.discountPrice}">할인가격</label>
+    <label for="discountPrice" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.discountPrice}">할인가격</label>
     <div class="col-md-5">
-      <input type="text" id="discountPrice" th:field="*{product.discountPrice}" class="form-control" value="0" readonly>
+      <input type="text" id="discountPrice" th:field="*{product.discountPrice}" class="form-control form-control-lg" value="0" readonly>
     </div>
   </div>
   <div class="row justify-content-center mt-3">
-    <label for="currentPrice" class="col-sm-2 col-form-label-lg font-weight-bold" th:text="#{label.product.currentPrice}">현재 가격</label>
+    <label for="currentPrice" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.currentPrice}">현재 가격</label>
     <div class="col-md-5">
-      <input type="text" id="currentPrice" th:value="${product.productPrice - product.discountPrice}" class="form-control" value="0" readonly>
+      <input type="text" id="currentPrice" th:value="${product.productPrice - product.discountPrice}" class="form-control form-control-lg" value="0" readonly>
     </div>
   </div>
   <div class="row justify-content-center mt-3">
-    <label for="remainQuantity" class="col-sm-2 col-form-label-lg font-weight-bold" th:text="#{label.product.remainQuantity}">남은 수량</label>
+    <label for="remainQuantity" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.remainQuantity}">남은 수량</label>
     <div class="col-md-5">
-      <input type="text" id="remainQuantity" th:field="*{product.remainQuantity}" class="form-control" value="10" readonly>
+      <input type="text" id="remainQuantity" th:field="*{product.remainQuantity}" class="form-control form-control-lg" value="10" readonly>
     </div>
   </div>
   <div class="row justify-content-center mt-3">
-    <label for="salesQuantity" class="col-sm-2 col-form-label-lg font-weight-bold" th:text="#{label.product.salesQuantity}">판매 수량</label>
+    <label for="salesQuantity" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.salesQuantity}">판매 수량</label>
     <div class="col-md-5">
-      <input type="text" id="salesQuantity" th:value="${product.registerQuantity - product.remainQuantity}" class="form-control" value="10" readonly>
+      <input type="text" id="salesQuantity" th:value="${product.registerQuantity - product.remainQuantity}" class="form-control form-control-lg" value="10" readonly>
     </div>
   </div>
   <div class="row justify-content-center mt-3">
-    <label for="views" class="col-sm-2 col-form-label-lg font-weight-bold" th:text="#{label.product.views}">조회수</label>
+    <label for="views" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.views}">조회수</label>
     <div class="col-md-5">
-      <input type="text" id="views" th:value="${product.views}" class="form-control" value="10" readonly>
+      <input type="text" id="views" th:value="${product.views}" class="form-control form-control-lg" value="10" readonly>
     </div>
   </div>
   <div class="row justify-content-center mt-3">
-    <label for="productStatusNm" class="col-sm-2 col-form-label-lg font-weight-bold" th:text="#{label.product.productStts}">상품 상태</label>
+    <label for="productStatusNm" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.productStts}">상품 상태</label>
     <div class="col-md-5">
-      <input type="text" id="productStatusNm" class="form-control" th:value="*{product.productStatusNm}" th:readonly="true" readonly>
+      <input type="text" id="productStatusNm" class="form-control form-control-lg" th:value="*{product.productStatusNm}" th:readonly="true" readonly>
     </div>
   </div>
 
