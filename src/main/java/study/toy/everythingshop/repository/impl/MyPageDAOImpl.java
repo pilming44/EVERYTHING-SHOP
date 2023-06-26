@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import study.toy.everythingshop.dto.DiscountPolicyDTO;
+import study.toy.everythingshop.dto.PointHistoryDTO;
 import study.toy.everythingshop.dto.SellerApplyDTO;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.MyPageDAO;
@@ -54,5 +55,15 @@ public class MyPageDAOImpl implements MyPageDAO {
     @Override
     public int insertDiscountPolicy(DiscountPolicyDTO discountPolicyDTO) {
         return sqlSession.insert("maria.MyPageDAO.insertDiscountPolicy", discountPolicyDTO);
+    }
+
+    @Override
+    public List<PointHistoryDTO> selectPointHistory(PointHistoryDTO pointHistoryDTO) {
+        return sqlSession.selectList("maria.MyPageDAO.selectPointHistory", pointHistoryDTO);
+    }
+
+    @Override
+    public int selectPointHistoryTotalCount(int userNum) {
+        return sqlSession.selectOne("maria.MyPageDAO.selectPointHistoryTotalCount", userNum);
     }
 }

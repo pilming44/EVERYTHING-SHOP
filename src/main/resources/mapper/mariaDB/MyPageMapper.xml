@@ -100,4 +100,44 @@
           , SYSDATE()
         )
     </insert>
+
+    <select id="selectPointHistory" parameterType="PointHistoryDTO" resultType="PointHistoryDTO">
+        /*MyPageDAO.selectPointHistory 포인트 변동 이력 조회*/
+        <include refid="maria.CommonDAO.pagingTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY TPOH.REGISTER_DT) AS ROW_NUM
+             , TPOH.USER_NUM
+             , GET_CODE_NAME('COM1006', TPOH.POINT_CHANGE_CD) AS POINT_CHANGE_NM
+             , TPOH.ADD_POINT
+             , TPOH.DEDUCT_POINT
+             , COALESCE(SUM(TPOH2.ADD_POINT), 0) - COALESCE(SUM(TPOH2.DEDUCT_POINT), 0) AS REMAIN_POINT
+             , TPOH.REGISTER_DT
+             , TPOH.CHANGE_DT
+          FROM T_POINT_HISTORY TPOH
+          LEFT JOIN T_POINT_HISTORY TPOH2
+            ON TPOH.USER_NUM = TPOH2.USER_NUM
+           AND TPOH2.SEQ <![CDATA[<=]]> TPOH.SEQ
+         WHERE TPOH.USER_NUM = #{userNum}
+         GROUP BY TPOH.USER_NUM, TPOH.POINT_CHANGE_CD, TPOH.ADD_POINT, TPOH.DEDUCT_POINT, TPOH.REGISTER_DT, TPOH.CHANGE_DT
+        <include refid="maria.CommonDAO.pagingBottom"></include>
+    </select>
+
+    <select id="selectPointHistoryTotalCount" parameterType="Integer" resultType="Integer">
+        /*MyPageDAO.selectPointHistoryTotalCount 포인트 변동 이력 총 건수*/
+        <include refid="maria.CommonDAO.countTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY TPOH.REGISTER_DT) AS ROW_NUM
+             , TPOH.USER_NUM
+             , GET_CODE_NAME('COM1006', TPOH.POINT_CHANGE_CD) AS POINT_CHANGE_NM
+             , TPOH.ADD_POINT
+             , TPOH.DEDUCT_POINT
+             , COALESCE(SUM(TPOH2.ADD_POINT), 0) - COALESCE(SUM(TPOH2.DEDUCT_POINT), 0) AS REMAINING_POINT
+             , TPOH.REGISTER_DT
+             , TPOH.CHANGE_DT
+          FROM T_POINT_HISTORY TPOH
+          LEFT JOIN T_POINT_HISTORY TPOH2
+            ON TPOH.USER_NUM = TPOH2.USER_NUM
+           AND TPOH2.SEQ <![CDATA[<=]]> TPOH.SEQ
+         WHERE TPOH.USER_NUM = #{userNum}
+         GROUP BY TPOH.USER_NUM, TPOH.POINT_CHANGE_CD, TPOH.ADD_POINT, TPOH.DEDUCT_POINT, TPOH.REGISTER_DT, TPOH.CHANGE_DT
+        <include refid="maria.CommonDAO.countBottom"></include>
+    </select>
 </mapper>

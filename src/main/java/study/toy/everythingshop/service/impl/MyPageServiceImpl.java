@@ -125,4 +125,33 @@ public class MyPageServiceImpl implements MyPageService {
             }
         }
     }
+
+    @Override
+    public Map<String, Object> findPointHistory(PointHistoryDTO pointHistoryDTO) {
+        //값 유효성 검사
+        pointHistoryDTO.setCurrentPageNo(pointHistoryDTO.getCurrentPageNo() <= 0 ? 1 : pointHistoryDTO.getCurrentPageNo());
+        pointHistoryDTO.setRecordCountPerPage(pointHistoryDTO.getRecordCountPerPage() <= 0 ? defaultRecordCountPerPage : pointHistoryDTO.getRecordCountPerPage());
+        int pageSize = pointHistoryDTO.getPageSize() <= 0 ? defaultPageSize : pointHistoryDTO.getPageSize();
+
+        int totalRecordCount = myPageDAO.selectPointHistoryTotalCount(pointHistoryDTO.getUserNum());
+
+        //페이징 하는데 필요한 값을 계산해주는 클래스 값 세팅
+        PaginationInfo paginationInfo = new PaginationInfo();
+        paginationInfo.setCurrentPageNo(pointHistoryDTO.getCurrentPageNo());
+        paginationInfo.setRecordCountPerPage(pointHistoryDTO.getRecordCountPerPage());
+        paginationInfo.setPageSize(pageSize);
+        paginationInfo.setTotalRecordCount(totalRecordCount);
+
+        //계산된 값 입력
+        pointHistoryDTO.setFirstRecordIndex(paginationInfo.getFirstRecordIndex());
+        pointHistoryDTO.setLastRecordIndex(paginationInfo.getLastRecordIndex());
+        pointHistoryDTO.setTotalPageCount(paginationInfo.getTotalPageCount());
+        pointHistoryDTO.setTotalRecordCount(totalRecordCount);
+
+        HashMap<String, Object> resultMap = new HashMap<>();
+        resultMap.put("list", myPageDAO.selectPointHistory(pointHistoryDTO));
+        resultMap.put("paginationInfo", paginationInfo);
+
+        return resultMap;
+    }
 }

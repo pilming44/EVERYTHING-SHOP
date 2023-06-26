@@ -12,10 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import study.toy.everythingshop.dto.DiscountPolicyDTO;
-import study.toy.everythingshop.dto.ProductOrderDTO;
-import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.dto.SellerApplyDTO;
+import study.toy.everythingshop.auth.CustomUserDetails;
+import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
@@ -187,6 +185,21 @@ public class MyPageController {
         myPageService.editDiscountPolicy(discountPolicyWrapper.getDiscountPolicy());
 
         return "redirect:/myPage/discountPolicy";
+    }
+
+    @GetMapping("/pointHistory")
+    public String pointHistoryView(@ModelAttribute PointHistoryDTO pointHistoryDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
+        //사용자 정보 조회
+        User user = userDAO.selectUserById(customUserDetails.getUsername());
+
+        pointHistoryDTO.setUserNum(user.getUserNum());
+
+        Map<String, Object> result = myPageService.findPointHistory(pointHistoryDTO);
+        //디버깅
+        log.debug(">>>>>>>>>>>>user : {}",user);
+        model.addAttribute("pointHistory", result.get("list"));
+        model.addAttribute("paginationInfo", result.get("paginationInfo"));
+        return "pointHistory";
     }
 
     /**
