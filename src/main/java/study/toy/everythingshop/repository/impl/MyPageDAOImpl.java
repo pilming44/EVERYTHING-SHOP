@@ -63,7 +63,7 @@ public class MyPageDAOImpl implements MyPageDAO {
     }
 
     @Override
-    public int selectPointHistoryTotalCount(int userNum) {
-        return sqlSession.selectOne("maria.MyPageDAO.selectPointHistoryTotalCount", userNum);
+    public int selectPointHistoryTotalCount(PointHistoryDTO pointHistoryDTO) {
+        return sqlSession.selectOne("maria.MyPageDAO.selectPointHistoryTotalCount", pointHistoryDTO);
     }
 }

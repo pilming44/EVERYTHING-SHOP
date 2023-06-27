@@ -110,18 +110,29 @@
              , TPOH.ADD_POINT
              , TPOH.DEDUCT_POINT
              , COALESCE(SUM(TPOH2.ADD_POINT), 0) - COALESCE(SUM(TPOH2.DEDUCT_POINT), 0) AS REMAIN_POINT
-             , TPOH.REGISTER_DT
+             , DATE_FORMAT(TPOH.REGISTER_DT, '%Y.%m.%d %H:%i') REGISTER_DT
              , TPOH.CHANGE_DT
           FROM T_POINT_HISTORY TPOH
           LEFT JOIN T_POINT_HISTORY TPOH2
             ON TPOH.USER_NUM = TPOH2.USER_NUM
            AND TPOH2.SEQ <![CDATA[<=]]> TPOH.SEQ
-         WHERE TPOH.USER_NUM = #{userNum}
+        <where>
+            AND TPOH.USER_NUM = #{userNum}
+            <if test="fromDate != null and fromDate !='' and (endDate == null or endDate == '')">
+                AND TPOH.REGISTER_DT &gt;= STR_TO_DATE(#{fromDate}, '%Y-%m-%d')  /* 시작날짜만 있고 종료날짜는 없는경우*/
+            </if>
+            <if test="endDate != null and endDate !='' and (fromDate == null or fromDate == '')">
+                AND TPOH.REGISTER_DT &lt;= STR_TO_DATE(CONCAT(#{endDate},' 23:59:59'), '%Y-%m-%d %H:%i:%s')  /* 종료날짜만 있고 시작날짜는 없을경우*/
+            </if>
+            <if test="fromDate != null and fromDate !='' and endDate != null and endDate !=''">
+                AND TPOH.REGISTER_DT BETWEEN STR_TO_DATE(#{fromDate}, '%Y-%m-%d') AND STR_TO_DATE(CONCAT(#{endDate},' 23:59:59'), '%Y-%m-%d %H:%i:%s')
+            </if>
+        </where>
          GROUP BY TPOH.USER_NUM, TPOH.POINT_CHANGE_CD, TPOH.ADD_POINT, TPOH.DEDUCT_POINT, TPOH.REGISTER_DT, TPOH.CHANGE_DT
         <include refid="maria.CommonDAO.pagingBottom"></include>
     </select>
 
-    <select id="selectPointHistoryTotalCount" parameterType="Integer" resultType="Integer">
+    <select id="selectPointHistoryTotalCount" parameterType="PointHistoryDTO" resultType="Integer">
         /*MyPageDAO.selectPointHistoryTotalCount 포인트 변동 이력 총 건수*/
         <include refid="maria.CommonDAO.countTop"></include>
         SELECT ROW_NUMBER() OVER (ORDER BY TPOH.REGISTER_DT) AS ROW_NUM
@@ -130,13 +141,24 @@
              , TPOH.ADD_POINT
              , TPOH.DEDUCT_POINT
              , COALESCE(SUM(TPOH2.ADD_POINT), 0) - COALESCE(SUM(TPOH2.DEDUCT_POINT), 0) AS REMAINING_POINT
-             , TPOH.REGISTER_DT
+             , DATE_FORMAT(TPOH.REGISTER_DT, '%Y.%m.%d %H:%i') REGISTER_DT
              , TPOH.CHANGE_DT
           FROM T_POINT_HISTORY TPOH
           LEFT JOIN T_POINT_HISTORY TPOH2
             ON TPOH.USER_NUM = TPOH2.USER_NUM
            AND TPOH2.SEQ <![CDATA[<=]]> TPOH.SEQ
-         WHERE TPOH.USER_NUM = #{userNum}
+        <where>
+            AND TPOH.USER_NUM = #{userNum}
+            <if test="fromDate != null and fromDate !='' and (endDate == null or endDate == '')">
+                AND TPOH.REGISTER_DT &gt;= STR_TO_DATE(#{fromDate}, '%Y-%m-%d')  /* 시작날짜만 있고 종료날짜는 없는경우*/
+            </if>
+            <if test="endDate != null and endDate !='' and (fromDate == null or fromDate == '')">
+                AND TPOH.REGISTER_DT &lt;= STR_TO_DATE(CONCAT(#{endDate},' 23:59:59'), '%Y-%m-%d %H:%i:%s')  /* 종료날짜만 있고 시작날짜는 없을경우*/
+            </if>
+            <if test="fromDate != null and fromDate !='' and endDate != null and endDate !=''">
+                AND TPOH.REGISTER_DT BETWEEN STR_TO_DATE(#{fromDate}, '%Y-%m-%d') AND STR_TO_DATE(CONCAT(#{endDate},' 23:59:59'), '%Y-%m-%d %H:%i:%s')
+            </if>
+        </where>
          GROUP BY TPOH.USER_NUM, TPOH.POINT_CHANGE_CD, TPOH.ADD_POINT, TPOH.DEDUCT_POINT, TPOH.REGISTER_DT, TPOH.CHANGE_DT
         <include refid="maria.CommonDAO.countBottom"></include>
     </select>

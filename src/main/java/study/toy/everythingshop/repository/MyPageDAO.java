@@ -28,5 +28,5 @@ public interface MyPageDAO {
 
     List<PointHistoryDTO> selectPointHistory(PointHistoryDTO pointHistoryDTO);
 
-    int selectPointHistoryTotalCount(int userNum);
+    int selectPointHistoryTotalCount(PointHistoryDTO pointHistoryDTO);
 }

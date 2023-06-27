@@ -191,6 +191,8 @@ public class MyPageController {
     public String pointHistoryView(@ModelAttribute PointHistoryDTO pointHistoryDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
         //사용자 정보 조회
         User user = userDAO.selectUserById(customUserDetails.getUsername());
+        log.debug(">>>>>>>>>>>>getFromDate : {}",pointHistoryDTO.getFromDate());
+        log.debug(">>>>>>>>>>>>getEndDate : {}",pointHistoryDTO.getEndDate());
 
         pointHistoryDTO.setUserNum(user.getUserNum());
 

@@ -12,8 +12,10 @@ import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.CommonService;
 import study.toy.everythingshop.service.MyPageService;
+import study.toy.everythingshop.util.CommonUtil;
 import study.toy.everythingshop.util.PaginationInfo;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,7 +135,19 @@ public class MyPageServiceImpl implements MyPageService {
         pointHistoryDTO.setRecordCountPerPage(pointHistoryDTO.getRecordCountPerPage() <= 0 ? defaultRecordCountPerPage : pointHistoryDTO.getRecordCountPerPage());
         int pageSize = pointHistoryDTO.getPageSize() <= 0 ? defaultPageSize : pointHistoryDTO.getPageSize();
 
-        int totalRecordCount = myPageDAO.selectPointHistoryTotalCount(pointHistoryDTO.getUserNum());
+        //날짜 유효성 검사
+        if(CommonUtil.strIsNotEmpty(pointHistoryDTO.getFromDate()) && CommonUtil.strIsNotEmpty(pointHistoryDTO.getEndDate())) {
+            LocalDate fromLocalDate = LocalDate.parse(pointHistoryDTO.getFromDate());
+            LocalDate endLocalDate = LocalDate.parse(pointHistoryDTO.getEndDate());
+            //종료날짜가 시작날짜보다 빠르다면 두 값 스왑
+            if (endLocalDate.isBefore(fromLocalDate)) {
+                String temp = pointHistoryDTO.getFromDate();
+                pointHistoryDTO.setFromDate(pointHistoryDTO.getEndDate());
+                pointHistoryDTO.setEndDate(temp);
+            }
+        }
+
+        int totalRecordCount = myPageDAO.selectPointHistoryTotalCount(pointHistoryDTO);
 
         //페이징 하는데 필요한 값을 계산해주는 클래스 값 세팅
         PaginationInfo paginationInfo = new PaginationInfo();

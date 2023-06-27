@@ -17,4 +17,7 @@ public class PointHistoryDTO extends SuperClass {
     private Integer addPoint;       //추가포인트
     private Integer deductPoint;    //차감포인트
     private Integer remainPoint;    //잔여포인트
+
+    private String fromDate;        //시작일자
+    private String endDate;         //종료일자
 }

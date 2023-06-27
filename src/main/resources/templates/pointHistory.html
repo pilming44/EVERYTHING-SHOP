@@ -18,34 +18,34 @@
 		<div class="row mt-3">
 			<div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.point.history}">포인트내역</h2></div>
 		</div>
-<!--		<form action="/home" th:action th:object="${productSearchDTO}" method="get">-->
-<!--			&lt;!&ndash; 검색창 &ndash;&gt;-->
-<!--			<div class="row mt-3">-->
-<!--				<div class="col-md-5  mb-3">-->
-<!--					<div class="row">-->
-<!--						<div class="col">-->
-<!--							&lt;!&ndash; 최소 가격 input &ndash;&gt;-->
-<!--							<input type="text" class="form-control" th:field="*{fromPrice}" th:errorclass="field-error" placeholder="최소 가격" maxlength="9">-->
-<!--						</div>-->
-<!--						<div class="col-auto align-self-center">-->
-<!--							&lt;!&ndash; "~" 기호 &ndash;&gt;-->
-<!--							<span class="font-weight-bold">~</span>-->
-<!--						</div>-->
-<!--						<div class="col">-->
-<!--							&lt;!&ndash; 최대 가격 input &ndash;&gt;-->
-<!--							<input type="text" class="form-control" th:field="*{toPrice}" th:errorclass="field-error" placeholder="최대 가격" maxlength="9">-->
-<!--						</div>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--				<div class="col-md-2">-->
-<!--					<div class="d-flex justify-content-between">-->
-<!--						&lt;!&ndash; 검색 버튼 &ndash;&gt;-->
-<!--						<button class="btn btn-secondary btn-block" type="submit" th:text="#{button.search}">검색</button>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-<!--		</form>-->
-<!--		&lt;!&ndash; 검색창 &ndash;&gt;-->
+		<form action="/home" th:action="@{/myPage/pointHistory}" th:object="${pointHistoryDTO}" method="get">
+			<!-- 검색창 -->
+			<div class="row mt-5">
+				<div class="col-md-5">
+					<div class="row">
+						<div class="col">
+							<!-- 최소 가격 input -->
+							<input type="date" class="form-control" th:field="*{fromDate}" th:errorclass="field-error">
+						</div>
+						<div class="col-auto align-self-center">
+							<!-- "~" 기호 -->
+							<span class="font-weight-bold">~</span>
+						</div>
+						<div class="col">
+							<!-- 최대 가격 input -->
+							<input type="date" class="form-control" th:field="*{endDate}" th:errorclass="field-error">
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<div class="d-flex justify-content-between">
+						<!-- 검색 버튼 -->
+						<button class="btn btn-secondary btn-block" type="submit" th:text="#{button.search}">검색</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!-- 검색창 -->
 <!--		<div th:object="${productSearchDTO}">-->
 <!--			<div class="row mt-3" th:if="${#fields.hasErrors('fromPrice') or #fields.hasErrors('toPrice')}">-->
 <!--				<div class="col-md-5 mb-3">-->
@@ -84,8 +84,11 @@
 						<tr th:each="history : ${pointHistory}">
 							<td class="text-center" th:text="${history.registerDt}">날짜</td>
 							<td class="text-center" th:text="${history.pointChangeNm}">내용</a></td>
-							<td class="text-center" th:text="${history.deductPoint}">변동금액</td>
-							<td class="text-center" th:text="${history.remainPoint}">잔여포인트</td>
+							<td class="text-center">
+								<span class="text-danger" th:if="${history.addPoint != null}" th:text="|+${#numbers.formatInteger(history.addPoint, 0, 'COMMA')}|">변동금액</span>
+								<span class="text-primary" th:if="${history.deductPoint != null}" th:text="|-${#numbers.formatInteger(history.deductPoint, 0, 'COMMA')}|">변동금액</span>
+							</td>
+							<td class="text-center" th:text="${#numbers.formatInteger(history.remainPoint, 0, 'COMMA')}">잔여포인트</td>
 						</tr>
 					</tbody>
 				</table>
@@ -121,6 +124,14 @@
 <!--				</li>-->
 <!--			</ul>-->
 <!--		</nav>-->
+		<div class="row mt-3">
+			<div class="col-md-7 mx-auto">
+				<button class="w-100 btn btn-secondary btn-lg"
+						onclick="location.href='home.html'"
+						th:onclick="|location.href='@{/myPage}'|"
+						type="button" th:text="#{button.previous}">이전</button>
+			</div>
+		</div>
 	</div>
 </body>
 </html>
