@@ -45,29 +45,7 @@
 				</div>
 			</div>
 		</form>
-		<!-- 검색창 -->
-<!--		<div th:object="${productSearchDTO}">-->
-<!--			<div class="row mt-3" th:if="${#fields.hasErrors('fromPrice') or #fields.hasErrors('toPrice')}">-->
-<!--				<div class="col-md-5 mb-3">-->
-<!--					<div class="row">-->
-<!--						<div class="col">-->
-<!--							&lt;!&ndash; 최소 가격 에러 &ndash;&gt;-->
-<!--							<div class="field-error" th:errors="*{fromPrice}">-->
-<!--								최소가격 오류-->
-<!--							</div>-->
-<!--						</div>-->
-<!--						<div class="col-auto align-self-center">-->
-<!--						</div>-->
-<!--						<div class="col">-->
-<!--							&lt;!&ndash; 최대 가격 에러 &ndash;&gt;-->
-<!--							<div class="field-error" th:errors="*{toPrice}">-->
-<!--								최대가격 오류-->
-<!--							</div>-->
-<!--						</div>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-<!--		</div>-->
+
 		<!-- 상품 목록 테이블 -->
 		<div class="row mt-3">
 			<div class="mt-3 col-md-12 table-responsive">
@@ -95,35 +73,32 @@
 			</div>
 		</div>
 		<!-- 페이징 -->
-<!--		<nav class="mt-3" aria-label="page navigation">-->
-<!--			<ul class="pagination justify-content-center">-->
-<!--				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == 1} ? disabled">-->
-<!--					<a class="page-link" th:href="@{/home(currentPageNo=${paginationInfo.currentPageNo - 1}-->
-<!--																		, productNm=${productSearchDTO.productNm}-->
-<!--																		, fromPrice=${productSearchDTO.fromPrice}-->
-<!--																		, toPrice=${productSearchDTO.toPrice})}"-->
-<!--					   th:text="#{button.previous}">-->
-<!--						이전-->
-<!--					</a>-->
-<!--				</li>-->
-<!--				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == pageNo} ? active"  th:each="pageNo : ${#numbers.sequence(paginationInfo.firstPageNoOnPageList, paginationInfo.lastPageNoOnPageList)}">-->
-<!--					<a class="page-link" th:href="@{/home(currentPageNo=${pageNo}-->
-<!--														, productNm=${productSearchDTO.productNm}-->
-<!--														, fromPrice=${productSearchDTO.fromPrice}-->
-<!--														, toPrice=${productSearchDTO.toPrice})}"-->
-<!--					   th:text="${pageNo}"></a>-->
-<!--				</li>-->
-<!--				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == paginationInfo.totalPageCount} ? disabled">-->
-<!--					<a class="page-link" th:href="@{/home(currentPageNo=${paginationInfo.currentPageNo + 1}-->
-<!--																		, productNm=${productSearchDTO.productNm}-->
-<!--																		, fromPrice=${productSearchDTO.fromPrice}-->
-<!--																		, toPrice=${productSearchDTO.toPrice})}"-->
-<!--					   th:text="#{button.next}">-->
-<!--						다음-->
-<!--					</a>-->
-<!--				</li>-->
-<!--			</ul>-->
-<!--		</nav>-->
+		<nav class="mt-3" aria-label="page navigation">
+			<ul class="pagination justify-content-center">
+				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == 1} ? disabled">
+					<a class="page-link" th:href="@{/myPage/pointHistory(currentPageNo=${paginationInfo.currentPageNo - 1}
+																		, fromDate=${pointHistoryDTO.fromDate}
+																		, endDate=${pointHistoryDTO.endDate})}"
+					   th:text="#{button.previous}">
+						이전
+					</a>
+				</li>
+				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == pageNo} ? active"  th:each="pageNo : ${#numbers.sequence(paginationInfo.firstPageNoOnPageList, paginationInfo.lastPageNoOnPageList)}">
+					<a class="page-link" th:href="@{/myPage/pointHistory(currentPageNo=${pageNo}
+														, fromDate=${pointHistoryDTO.fromDate}
+														, endDate=${pointHistoryDTO.endDate})}"
+					   th:text="${pageNo}"></a>
+				</li>
+				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == paginationInfo.totalPageCount} ? disabled">
+					<a class="page-link" th:href="@{/myPage/pointHistory(currentPageNo=${paginationInfo.currentPageNo + 1}
+																		, fromDate=${pointHistoryDTO.fromDate}
+																		, endDate=${pointHistoryDTO.endDate})}"
+					   th:text="#{button.next}">
+						다음
+					</a>
+				</li>
+			</ul>
+		</nav>
 		<div class="row mt-3">
 			<div class="col-md-7 mx-auto">
 				<button class="w-100 btn btn-secondary btn-lg"

@@ -13,19 +13,22 @@
     <div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.myPage}">마이페이지</h2></div>
   </div>
   <div class="row mt-3 justify-content-center">
-    <label for="grade" class="col-sm-2 col-form-label-lg font-weight-bold">등급</label>
+    <label for="grade" class="col-sm-2 col-form-label-lg font-weight-bold" th:text="#{label.grade}">등급</label>
     <div class="col-md-5">
       <p id="grade" class="form-control-plaintext form-control-lg font-weight-bold" th:text="${myPageInfo.gradeNm}">등급</p>
     </div>
   </div>
   <div class="row mt-3 justify-content-center">
-    <label for="holdingPoint" class="col-sm-2 col-form-label-lg font-weight-bold">보유포인트</label>
+    <label for="holdingPoint" class="col-sm-2 col-form-label-lg font-weight-bold">
+      <a href="/" style="text-decoration: underline" th:href="@{/myPage/pointHistory}" th:text="#{label.remain.point}">보유포인트</a>
+    </label>
     <div class="col-md-5">
+
       <p id="holdingPoint" class="form-control-plaintext form-control-lg font-weight-bold" th:text="${#numbers.formatInteger(myPageInfo.holdingPoint, 0, 'COMMA')}">보유포인트</p>
     </div>
   </div>
   <div class="row mt-3 justify-content-center">
-    <label for="usedPoint" class="col-sm-2 col-form-label-lg font-weight-bold">누적사용포인트</label>
+    <label for="usedPoint" class="col-sm-2 col-form-label-lg font-weight-bold" th:text="#{label.used.point}">누적사용포인트</label>
     <div class="col-md-5">
       <p id="usedPoint" class="form-control-plaintext form-control-lg font-weight-bold" th:text="${#numbers.formatInteger(myPageInfo.usedPoint, 0, 'COMMA')}">누적사용포인트</p>
     </div>
