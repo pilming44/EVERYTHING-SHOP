@@ -1,10 +1,7 @@
 package study.toy.everythingshop.repository;
 
-import study.toy.everythingshop.dto.ProductOrderDTO;
-import study.toy.everythingshop.dto.ProductRegisterDTO;
-import study.toy.everythingshop.dto.ProductSearchDTO;
+import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.h2.ProductMEntity;
-import study.toy.everythingshop.entity.mariaDB.Product;
 
 import java.util.List;
 
@@ -14,13 +11,15 @@ import java.util.List;
  * date     : 2023-03-01
  */
 public interface ProductDAO {
-    List<Product> selectProductList(ProductSearchDTO productSearchDTO);
+    List<ProductDTO> selectProductList(ProductSearchDTO productSearchDTO);
 
-    Product selectByProductNum(Integer productNum);
+    int selectProductListTotalCount(ProductSearchDTO productSearchDTO);
+
+    ProductDTO selectByProductNum(Integer productNum);
 
     int insertProduct(ProductRegisterDTO productRegisterDTO);
 
-    int updateProduct(ProductRegisterDTO productRegisterDTO);
+    int updateProduct(ProductEditDTO productEditDTO);
 
     int insertOrder(ProductOrderDTO productOrderDTO);
 
@@ -29,6 +28,10 @@ public interface ProductDAO {
     int updateQuantityStts(ProductMEntity productMEntity);
 
     List<ProductOrderDTO> selectMyOrderList(ProductSearchDTO productSearchDTO);
+
+    int selectRemainingQuantity(ProductOrderDTO productOrderDTO);
+
+    int updateProductSoldOut(ProductOrderDTO productOrderDTO);
 
     Integer selectOrderedQty(Integer productNum);
 }

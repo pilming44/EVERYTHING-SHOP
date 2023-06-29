@@ -38,12 +38,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void findDupId(String userId){
-        User user = userDAO.selectByeUserId(userId);
+        User user = userDAO.selectUserById(userId);
         if (user != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "user.alreadyExists");
         }
     }
-
-
-
 }

@@ -3,11 +3,8 @@ package study.toy.everythingshop.repository.impl;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
-import study.toy.everythingshop.dto.ProductOrderDTO;
-import study.toy.everythingshop.dto.ProductRegisterDTO;
-import study.toy.everythingshop.dto.ProductSearchDTO;
+import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.h2.ProductMEntity;
-import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 
@@ -27,13 +24,18 @@ public class ProductDAOImpl implements ProductDAO {
     private final SqlSession sqlSession;
 
     @Override
-    public List<Product> selectProductList(ProductSearchDTO productSearchDTO) {
+    public List<ProductDTO> selectProductList(ProductSearchDTO productSearchDTO) {
 
         return sqlSession.selectList("maria.ProductDAO.selectProductList", productSearchDTO);
     }
 
     @Override
-    public Product selectByProductNum(Integer productNum) {
+    public int selectProductListTotalCount(ProductSearchDTO productSearchDTO) {
+        return sqlSession.selectOne("maria.ProductDAO.selectProductListTotalCount", productSearchDTO);
+    }
+
+    @Override
+    public ProductDTO selectByProductNum(Integer productNum) {
         return sqlSession.selectOne("maria.ProductDAO.selectByProductNum", productNum);
     }
     @Override
@@ -42,8 +44,8 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public int updateProduct(ProductRegisterDTO productRegisterDTO) {
-        return sqlSession.update("maria.ProductDAO.updateProduct", productRegisterDTO);
+    public int updateProduct(ProductEditDTO productEditDTO) {
+        return sqlSession.update("maria.ProductDAO.updateProduct", productEditDTO);
     }
 
     @Override
@@ -67,9 +69,17 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
+    public int selectRemainingQuantity(ProductOrderDTO productOrderDTO) {
+        return sqlSession.selectOne("maria.ProductDAO.selectRemainingQuantity", productOrderDTO);
+    }
+    @Override
     public Integer selectOrderedQty(Integer productNum) {
         return sqlSession.selectOne("maria.ProductDAO.selectOrderedQty", productNum);
     }
 
 
+    @Override
+    public int updateProductSoldOut(ProductOrderDTO productOrderDTO) {
+        return sqlSession.update("maria.ProductDAO.updateProductSoldOut", productOrderDTO);
+    }
 }

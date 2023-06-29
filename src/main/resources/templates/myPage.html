@@ -2,19 +2,39 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
-  <title>마이페이지</title>
+  <title th:text="#{page.title.myPage}">마이페이지</title>
   <!-- 부트스트랩 CSS 파일 불러오기 -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
 
 <div class="container justify-content-center">
-
   <div class="row mt-3">
     <div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.myPage}">마이페이지</h2></div>
   </div>
+  <div class="row mt-3 justify-content-center">
+    <label for="grade" class="col-sm-2 col-form-label-lg font-weight-bold" th:text="#{label.grade}">등급</label>
+    <div class="col-md-5">
+      <p id="grade" class="form-control-plaintext form-control-lg font-weight-bold" th:text="${myPageInfo.gradeNm}">등급</p>
+    </div>
+  </div>
+  <div class="row mt-3 justify-content-center">
+    <label for="holdingPoint" class="col-sm-2 col-form-label-lg font-weight-bold">
+      <a href="/" style="text-decoration: underline" th:href="@{/myPage/pointHistory}" th:text="#{label.remain.point}">보유포인트</a>
+    </label>
+    <div class="col-md-5">
+
+      <p id="holdingPoint" class="form-control-plaintext form-control-lg font-weight-bold" th:text="${#numbers.formatInteger(myPageInfo.holdingPoint, 0, 'COMMA')}">보유포인트</p>
+    </div>
+  </div>
+  <div class="row mt-3 justify-content-center">
+    <label for="usedPoint" class="col-sm-2 col-form-label-lg font-weight-bold" th:text="#{label.used.point}">누적사용포인트</label>
+    <div class="col-md-5">
+      <p id="usedPoint" class="form-control-plaintext form-control-lg font-weight-bold" th:text="${#numbers.formatInteger(myPageInfo.usedPoint, 0, 'COMMA')}">누적사용포인트</p>
+    </div>
+  </div>
   <div class="row mt-3">
-    <div class="col-md-5 mx-auto">
+    <div class="col-md-7 mx-auto">
       <button class="w-100 btn btn-primary btn-lg"
               onclick="location.href='home.html'"
               th:onclick="|location.href='@{/myPage/myInfo}'|"
@@ -22,7 +42,15 @@
     </div>
   </div>
   <div class="row mt-3">
-    <div class="col-md-5 mx-auto">
+    <div class="col-md-7 mx-auto">
+      <button class="w-100 btn btn-primary btn-lg"
+              onclick="location.href='home.html'"
+              th:onclick="|location.href='@{/myPage/discountPolicy}'|"
+              type="button" th:text="#{button.discount.policy}">등급별할인정책</button>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-7 mx-auto">
       <button class="w-100 btn btn-primary btn-lg"
               onclick="location.href='home.html'"
               th:onclick="|location.href='@{/myPage/myOrderList}'|"
@@ -30,7 +58,23 @@
     </div>
   </div>
   <div class="row mt-3">
-    <div class="col-md-5 mx-auto">
+    <div class="col-md-7 mx-auto">
+      <button class="w-100 btn btn-primary btn-lg"
+              onclick="location.href='home.html'"
+              th:onclick="|location.href='@{/myPage/pointHistory}'|"
+              type="button" th:text="#{button.point.history}">포인트 내역</button>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-7 mx-auto">
+      <button class="w-100 btn btn-primary btn-lg"
+              onclick="location.href='home.html'"
+              th:onclick="|location.href='@{/myPage/sellerApplyList}'|"
+              type="button" th:text="#{button.seller.apply}">판매자신청</button>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-7 mx-auto">
       <button class="w-100 btn btn-secondary btn-lg"
               onclick="location.href='home.html'"
               th:onclick="|location.href='@{/home}'|"

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<title th:text="#{page.title.point.history}">포인트 내역</title>
+	<!-- 부트스트랩 CSS 파일 불러오기 -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<style>
+		.field-error {
+			border-color: #dc3545;
+			color: #dc3545;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<!-- 상품 목록 제목 -->
+		<div class="row mt-3">
+			<div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.point.history}">포인트내역</h2></div>
+		</div>
+		<form action="/home" th:action="@{/myPage/pointHistory}" th:object="${pointHistoryDTO}" method="get">
+			<!-- 검색창 -->
+			<div class="row mt-5">
+				<div class="col-md-5">
+					<div class="row">
+						<div class="col">
+							<!-- 최소 가격 input -->
+							<input type="date" class="form-control" th:field="*{fromDate}" th:errorclass="field-error">
+						</div>
+						<div class="col-auto align-self-center">
+							<!-- "~" 기호 -->
+							<span class="font-weight-bold">~</span>
+						</div>
+						<div class="col">
+							<!-- 최대 가격 input -->
+							<input type="date" class="form-control" th:field="*{endDate}" th:errorclass="field-error">
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<div class="d-flex justify-content-between">
+						<!-- 검색 버튼 -->
+						<button class="btn btn-secondary btn-block" type="submit" th:text="#{button.search}">검색</button>
+					</div>
+				</div>
+			</div>
+		</form>
+
+		<!-- 상품 목록 테이블 -->
+		<div class="row mt-3">
+			<div class="mt-3 col-md-12 table-responsive">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="text-center" style="width: 10%" th:text="#{label.date}">날짜</th>
+							<th class="text-center" style="width: 20%" th:text="#{label.content}">내용</th>
+							<th class="text-center" style="width: 10%" th:text="#{label.change.point}">변동금액</th>
+							<th class="text-center" style="width: 10%" th:text="#{label.remain.point}">잔여포인트</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="history : ${pointHistory}">
+							<td class="text-center" th:text="${history.registerDt}">날짜</td>
+							<td class="text-center" th:text="${history.pointChangeNm}">내용</a></td>
+							<td class="text-center">
+								<span class="text-danger" th:if="${history.addPoint != null}" th:text="|+${#numbers.formatInteger(history.addPoint, 0, 'COMMA')}|">변동금액</span>
+								<span class="text-primary" th:if="${history.deductPoint != null}" th:text="|-${#numbers.formatInteger(history.deductPoint, 0, 'COMMA')}|">변동금액</span>
+							</td>
+							<td class="text-center" th:text="${#numbers.formatInteger(history.remainPoint, 0, 'COMMA')}">잔여포인트</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- 페이징 -->
+		<nav class="mt-3" aria-label="page navigation">
+			<ul class="pagination justify-content-center">
+				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == 1} ? disabled">
+					<a class="page-link" th:href="@{/myPage/pointHistory(currentPageNo=${paginationInfo.currentPageNo - 1}
+																		, fromDate=${pointHistoryDTO.fromDate}
+																		, endDate=${pointHistoryDTO.endDate})}"
+					   th:text="#{button.previous}">
+						이전
+					</a>
+				</li>
+				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == pageNo} ? active"  th:each="pageNo : ${#numbers.sequence(paginationInfo.firstPageNoOnPageList, paginationInfo.lastPageNoOnPageList)}">
+					<a class="page-link" th:href="@{/myPage/pointHistory(currentPageNo=${pageNo}
+														, fromDate=${pointHistoryDTO.fromDate}
+														, endDate=${pointHistoryDTO.endDate})}"
+					   th:text="${pageNo}"></a>
+				</li>
+				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == paginationInfo.totalPageCount} ? disabled">
+					<a class="page-link" th:href="@{/myPage/pointHistory(currentPageNo=${paginationInfo.currentPageNo + 1}
+																		, fromDate=${pointHistoryDTO.fromDate}
+																		, endDate=${pointHistoryDTO.endDate})}"
+					   th:text="#{button.next}">
+						다음
+					</a>
+				</li>
+			</ul>
+		</nav>
+		<div class="row mt-3">
+			<div class="col-md-7 mx-auto">
+				<button class="w-100 btn btn-secondary btn-lg"
+						onclick="location.href='home.html'"
+						th:onclick="|location.href='@{/myPage}'|"
+						type="button" th:text="#{button.previous}">이전</button>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

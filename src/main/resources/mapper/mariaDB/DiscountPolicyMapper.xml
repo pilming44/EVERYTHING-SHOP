@@ -8,6 +8,7 @@
     SELECT DISCOUNT_RATE
       FROM T_DISCOUNT_POLICY TDIP
      WHERE GRADE_CD =  #{gradeCd}
+       AND SYSDATE() BETWEEN TDIP.START_DATE AND TDIP.END_DATE
     </select>
 
 </mapper>

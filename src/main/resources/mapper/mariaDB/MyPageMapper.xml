@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="maria.MyPageDAO">
+    <insert id="insertSellerApply" parameterType="Integer">
+        /* MyPageDAO.insertSellerApply 판매자 신청*/
+        INSERT INTO T_SELLER_APPLY
+        (
+            USER_NUM
+          , SELLER_APPLY_STATUS_CD
+          , REGISTER_DT
+          , CHANGE_DT
+        )
+        VALUES
+        (
+            #{userNum}
+          , '01'
+          , SYSDATE()
+          , SYSDATE()
+        )
+    </insert>
+
+    <select id="selectSellerApply" parameterType="SellerApplyDTO" resultType="SellerApplyDTO">
+        /*MyPageDAO.selectSellerApply 판매자신청내역 조회*/
+        <include refid="maria.CommonDAO.pagingTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY TSEA.REGISTER_DT) AS ROW_NUM
+             , TSEA.APPLY_NUM                /* 신청번호*/
+             , TSEA.USER_NUM                 /* 신청자*/
+             , TSEA.SELLER_APPLY_STATUS_CD   /* 판매자신청상태코드[COM1007]*/
+             , EVERYTHINGSHOP.GET_CODE_NAME('COM1007', TSEA.SELLER_APPLY_STATUS_CD) AS SELLER_APPLY_STATUS_NM /* 판매자신청상태코드명[COM1007]*/
+             , TSEA.REJECT_REASON            /* 반려사유*/
+             , TSEA.REGISTER_DT              /* 등록일자*/
+             , TSEA.CHANGE_DT                /* 변경일자*/
+          FROM T_SELLER_APPLY TSEA
+         WHERE TSEA.USER_NUM = #{userNum}
+        <include refid="maria.CommonDAO.pagingBottom"></include>
+    </select>
+    <select id="selectSellerApplyTotalCount" resultType="Integer">
+        <include refid="maria.CommonDAO.countTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY TSEA.REGISTER_DT) AS ROW_NUM
+             , TSEA.APPLY_NUM                /* 신청번호*/
+             , TSEA.USER_NUM                 /* 신청자*/
+             , TSEA.SELLER_APPLY_STATUS_CD   /* 판매자신청상태코드[COM1007]*/
+             , EVERYTHINGSHOP.GET_CODE_NAME('COM1007', TSEA.SELLER_APPLY_STATUS_CD) AS SELLER_APPLY_STATUS_NM /* 판매자신청상태코드명[COM1007]*/
+             , TSEA.REJECT_REASON            /* 반려사유*/
+             , TSEA.REGISTER_DT              /* 등록일자*/
+             , TSEA.CHANGE_DT                /* 변경일자*/
+          FROM T_SELLER_APPLY TSEA
+         WHERE TSEA.USER_NUM = #{userNum}
+        <include refid="maria.CommonDAO.countBottom"></include>
+    </select>
+    
+    <select id="selectApplyCount" parameterType="Integer" resultType="Integer">
+        /*MyPageDAO.selectApplyCount 신청완료상태인 지원 건수*/
+        SELECT COUNT(*)
+          FROM T_SELLER_APPLY TSEA
+         WHERE USER_NUM = #{userNum}
+           AND SELLER_APPLY_STATUS_CD = '01'
+    </select>
+
+    <select id="selectDiscountPolicy" resultType="DiscountPolicyDTO">
+        /*MyPageDAO.selectDiscountPolicy 할인정책 조회*/
+        SELECT TDIP.GRADE_CD
+             , GET_CODE_NAME('COM1003', TDIP.GRADE_CD) AS GRADE_NM
+             , GRADE_STANDARD
+             , TDIP.DISCOUNT_RATE
+          FROM T_DISCOUNT_POLICY TDIP
+         WHERE SYSDATE() BETWEEN TDIP.START_DATE AND TDIP.END_DATE
+         ORDER BY TDIP.GRADE_CD DESC
+    </select>
+
+    <update id="updateDiscountPolicyEndDate" parameterType="DiscountPolicyDTO">
+        /*MyPageDAO.updateDiscountPolicyEndDate 기존 할인정책 종료일자 설정*/
+        UPDATE T_DISCOUNT_POLICY
+           SET END_DATE = SYSDATE()- INTERVAL 1 SECOND /*update와 insert가 같은 트랜젝션으로 처리되니 종료일자를 1초 이전으로 설정*/
+             , CHANGE_DT = SYSDATE()
+         WHERE GRADE_CD = #{gradeCd}
+           AND SYSDATE() BETWEEN START_DATE AND END_DATE
+    </update>
+    <insert id="insertDiscountPolicy" parameterType="DiscountPolicyDTO">
+        /*MyPageDAO.insertDiscountPolicy 새로운 할인정책 설정*/
+        INSERT INTO T_DISCOUNT_POLICY
+        (
+            GRADE_CD
+          , GRADE_STANDARD
+          , DISCOUNT_RATE
+          , START_DATE
+          , END_DATE
+          , REGISTER_DT
+          , CHANGE_DT
+        )
+        VALUES
+        (
+            #{gradeCd}
+          , #{gradeStandard}
+          , #{discountRate}
+          , SYSDATE()
+          , '9999-12-31 23:59:59'
+          , SYSDATE()
+          , SYSDATE()
+        )
+    </insert>
+
+    <select id="selectPointHistory" parameterType="PointHistoryDTO" resultType="PointHistoryDTO">
+        /*MyPageDAO.selectPointHistory 포인트 변동 이력 조회*/
+        <include refid="maria.CommonDAO.pagingTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY TPOH.REGISTER_DT) AS ROW_NUM
+             , TPOH.USER_NUM
+             , GET_CODE_NAME('COM1006', TPOH.POINT_CHANGE_CD) AS POINT_CHANGE_NM
+             , TPOH.ADD_POINT
+             , TPOH.DEDUCT_POINT
+             , COALESCE(SUM(TPOH2.ADD_POINT), 0) - COALESCE(SUM(TPOH2.DEDUCT_POINT), 0) AS REMAIN_POINT
+             , DATE_FORMAT(TPOH.REGISTER_DT, '%Y.%m.%d %H:%i') REGISTER_DT
+             , TPOH.CHANGE_DT
+          FROM T_POINT_HISTORY TPOH
+          LEFT JOIN T_POINT_HISTORY TPOH2
+            ON TPOH.USER_NUM = TPOH2.USER_NUM
+           AND TPOH2.SEQ <![CDATA[<=]]> TPOH.SEQ
+        <where>
+            AND TPOH.USER_NUM = #{userNum}
+            <if test="fromDate != null and fromDate !='' and (endDate == null or endDate == '')">
+                AND TPOH.REGISTER_DT &gt;= STR_TO_DATE(#{fromDate}, '%Y-%m-%d')  /* 시작날짜만 있고 종료날짜는 없는경우*/
+            </if>
+            <if test="endDate != null and endDate !='' and (fromDate == null or fromDate == '')">
+                AND TPOH.REGISTER_DT &lt;= STR_TO_DATE(CONCAT(#{endDate},' 23:59:59'), '%Y-%m-%d %H:%i:%s')  /* 종료날짜만 있고 시작날짜는 없을경우*/
+            </if>
+            <if test="fromDate != null and fromDate !='' and endDate != null and endDate !=''">
+                AND TPOH.REGISTER_DT BETWEEN STR_TO_DATE(#{fromDate}, '%Y-%m-%d') AND STR_TO_DATE(CONCAT(#{endDate},' 23:59:59'), '%Y-%m-%d %H:%i:%s')
+            </if>
+        </where>
+         GROUP BY TPOH.USER_NUM, TPOH.POINT_CHANGE_CD, TPOH.ADD_POINT, TPOH.DEDUCT_POINT, TPOH.REGISTER_DT, TPOH.CHANGE_DT
+        <include refid="maria.CommonDAO.pagingBottom"></include>
+    </select>
+
+    <select id="selectPointHistoryTotalCount" parameterType="PointHistoryDTO" resultType="Integer">
+        /*MyPageDAO.selectPointHistoryTotalCount 포인트 변동 이력 총 건수*/
+        <include refid="maria.CommonDAO.countTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY TPOH.REGISTER_DT) AS ROW_NUM
+             , TPOH.USER_NUM
+             , GET_CODE_NAME('COM1006', TPOH.POINT_CHANGE_CD) AS POINT_CHANGE_NM
+             , TPOH.ADD_POINT
+             , TPOH.DEDUCT_POINT
+             , COALESCE(SUM(TPOH2.ADD_POINT), 0) - COALESCE(SUM(TPOH2.DEDUCT_POINT), 0) AS REMAINING_POINT
+             , DATE_FORMAT(TPOH.REGISTER_DT, '%Y.%m.%d %H:%i') REGISTER_DT
+             , TPOH.CHANGE_DT
+          FROM T_POINT_HISTORY TPOH
+          LEFT JOIN T_POINT_HISTORY TPOH2
+            ON TPOH.USER_NUM = TPOH2.USER_NUM
+           AND TPOH2.SEQ <![CDATA[<=]]> TPOH.SEQ
+        <where>
+            AND TPOH.USER_NUM = #{userNum}
+            <if test="fromDate != null and fromDate !='' and (endDate == null or endDate == '')">
+                AND TPOH.REGISTER_DT &gt;= STR_TO_DATE(#{fromDate}, '%Y-%m-%d')  /* 시작날짜만 있고 종료날짜는 없는경우*/
+            </if>
+            <if test="endDate != null and endDate !='' and (fromDate == null or fromDate == '')">
+                AND TPOH.REGISTER_DT &lt;= STR_TO_DATE(CONCAT(#{endDate},' 23:59:59'), '%Y-%m-%d %H:%i:%s')  /* 종료날짜만 있고 시작날짜는 없을경우*/
+            </if>
+            <if test="fromDate != null and fromDate !='' and endDate != null and endDate !=''">
+                AND TPOH.REGISTER_DT BETWEEN STR_TO_DATE(#{fromDate}, '%Y-%m-%d') AND STR_TO_DATE(CONCAT(#{endDate},' 23:59:59'), '%Y-%m-%d %H:%i:%s')
+            </if>
+        </where>
+         GROUP BY TPOH.USER_NUM, TPOH.POINT_CHANGE_CD, TPOH.ADD_POINT, TPOH.DEDUCT_POINT, TPOH.REGISTER_DT, TPOH.CHANGE_DT
+        <include refid="maria.CommonDAO.countBottom"></include>
+    </select>
+</mapper>

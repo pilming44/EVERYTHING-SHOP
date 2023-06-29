@@ -9,11 +9,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import study.toy.everythingshop.dto.ProductSearchDTO;
-import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
+import study.toy.everythingshop.service.ProductService;
 
-import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,6 +21,7 @@ import java.util.List;
 @Trace
 public class HomeController {
 
+    private final ProductService productService;
     private final ProductDAO productDAO;
 
     @GetMapping("/")
@@ -45,8 +46,10 @@ public class HomeController {
             productSearchDTO.setToPrice(tempPrice);
         }
 
-        List<Product> products = productDAO.selectProductList(productSearchDTO);
-        model.addAttribute("products", products);
+        Map<String, Object> result = productService.findProductList(productSearchDTO);
+        log.debug(" result : {}", result);
+        model.addAttribute("products", result.get("list"));
+        model.addAttribute("paginationInfo", result.get("paginationInfo"));
         if(!bindingResult.hasErrors()) {
             model.addAttribute("productSearchDTO", productSearchDTO);
         }

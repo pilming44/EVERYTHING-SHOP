@@ -15,22 +15,22 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class ProductOrderDTO {
     //maria DB용 필드 시작
-    private Integer productNum;    //상품번호
-    private Integer orderNum;      //주문번호
-    private String productNm;       //상품명
-    private Integer productPrice;  //상품가격
+    private Integer productNum;         //상품번호
+    private Integer orderNum;           //주문번호
+    private String productNm;           //상품명
+    private Integer productPrice;       //상품가격
     private Integer registerQuantity;   //등록수량
-    private Integer leftQuantity; //남은수량
     private Integer salesQuantity; //판매수량
 
     @NotNull(message = "{NotNull.product.orderQuantity}")
     @Range(min = 1, max = 999999999)
-    private Integer orderQuantity; //주문수량(개)
+    private Integer orderQuantity;      //주문수량(개)
 
-    private Integer discountPrice;  //할인금액(계정등급에따른 할인)
+    private Integer discountPrice;      //할인금액(계정등급에따른 할인)
+    private Integer finalPaymentPrice;  //최종결제금액(총금액 - 할인금액)
     private Integer currentPrice; //현재 금액(상품가격 - 할인금액)
-    private Integer finalPaymentPrice;  //최종결제금액(총금액 - 할인금액) x 수량
-    private Integer userNum;        //사용자번호(구매자)
+    private Integer userNum;            //사용자번호(구매자)
+    private Integer remainQuantity;  //잔여수량(개)
     //maria DB용 필드 끝
 
     //h2 DB용 필드 시작

@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
-  <title>상품수정</title>
+  <title th:text="#{page.title.product.edit}">상품수정</title>
   <!-- 부트스트랩 CSS 파일 불러오기 -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <style>
@@ -18,73 +18,73 @@
     <div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.product.edit}">상품 수정</h2></div>
   </div>
   <form id="editForm" th:object="${product}" th:action="@{/product/{productNum}/edit(productNum=${product.productNum})}" method="POST">
-  <div class="row mt-3">
-    <div class="col-md-5 mx-auto">
-      <label for="productNm" th:text="#{label.product.productName}">상품명</label>
-      <input type="text" id="productNm" th:errorclass="field-error" th:field="*{productNm}" class="form-control" value="상품A">
-    </div>
-  </div>
-  <div th:if="${#fields.hasErrors('productNm')}">
-    <div class="row mt-0" >
-      <div class="col-md-5 mx-auto">
-        <span th:errors="*{productNm}" class="field-error">상품명 오류</span>
+  <div class="row justify-content-center mt-3">
+    <label for="productNm" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.productName}">상품명</label>
+    <div class="col-md-5">
+      <input type="text" id="productNm" th:errorclass="field-error" th:field="*{productNm}" class="form-control form-control-lg" value="상품A">
+      <div th:if="${#fields.hasErrors('productNm')}">
+        <span th:errors="*{productNm}" class="field-error">상품명 binding 오류</span>
       </div>
     </div>
   </div>
-  <div class="row mt-3">
-    <div class="col-md-5 mx-auto">
-      <label for="productPrice" th:text="#{label.product.price}">가격</label>
-      <input type="text" id="productPrice" th:errorclass="field-error" th:field="*{productPrice}" class="form-control" value="10000">
-    </div>
-  </div>
-  <div th:if="${#fields.hasErrors('productPrice')}">
-    <div class="row mt-0" >
-      <div class="col-md-5 mx-auto">
-        <span th:errors="*{productPrice}" class="field-error">가격 오류</span>
+
+  <div class="row justify-content-center mt-3">
+    <label for="productPrice" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.price}">가격</label>
+    <div class="col-md-5">
+      <input type="text" id="productPrice" th:errorclass="field-error" th:field="*{productPrice}" class="form-control form-control-lg" value="10000">
+      <div th:if="${#fields.hasErrors('productPrice')}">
+          <span th:errors="*{productPrice}" class="field-error">가격 binding 오류</span>
       </div>
     </div>
   </div>
-  <div class="row mt-3">
-    <div class="col-md-5 mx-auto">
-      <label for="registerQuantity" th:text="#{label.product.quantity}">수량</label>
-      <input type="text" id="registerQuantity" th:errorclass="field-error" th:field="*{registerQuantity}" class="form-control" value="10">
-    </div>
-  </div>
-  <div th:if="${#fields.hasErrors('registerQuantity')}">
-    <div class="row mt-0" id="quantityError">
-      <div class="col-md-5 mx-auto">
-        <span th:errors="*{registerQuantity}" class="text-danger"></span>
+  <div class="row justify-content-center mt-3">
+    <label for="registerQuantity" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.registerQuantity}">등록수량</label>
+    <div class="col-md-5">
+      <input type="text" id="registerQuantity" th:errorclass="field-error" th:field="*{registerQuantity}" class="form-control form-control-lg" value="상품A">
+      <div th:if="${#fields.hasErrors('registerQuantity')}">
+        <span th:errors="*{registerQuantity}" class="field-error">등록수량 binding 오류</span>
       </div>
     </div>
   </div>
-  <div class="row mt-3">
-    <div class="col-md-5 mx-auto">
-      <label for="productStatusCd" th:text="#{label.product.productStts}">상품 상태</label>
-      <select class="custom-select" id="productStatusCd" th:field="*{productStatusCd}">
-        <option value="01" th:selected="${productStts == '01'}">판매준비(01)</option>
-        <option value="02" th:selected="${productStts == '02'}">판매중(02)</option>
+  <div class="row justify-content-center mt-3">
+    <label for="salesQuantity" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.salesQuantity}">판매수량</label>
+    <div class="col-md-5">
+      <input type="text" id="salesQuantity" name="salesQuantity" th:value="*{salesQuantity}" class="form-control form-control-lg" value="10" readonly>
+      <div th:if="${#fields.hasErrors('salesQuantity')}">
+        <span th:errors="*{salesQuantity}" class="field-error">판매수량 binding 오류</span>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-3">
+    <label for="productStatusCd" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.productStts}">판매 상태</label>
+    <div class="col-md-5">
+      <select class="custom-select custom-select-lg" id="productStatusCd" th:field="*{productStatusCd}">
+        <option th:each="status : ${productStatusCdList}" th:value="${status.codeNum}" th:text="${status.codeNm}" th:selected="${status.codeNum == productStatusCd}">판매상태</option>
       </select>
     </div>
   </div>
-  <div  class="row mt-3">
-    <div class="col-md-5 mx-auto">
-      <hr class="my-4">
+  <div class="row justify-content-center mt-3">
+    <label for="postYn" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.postYn}">게시여부</label>
+    <div class="col-md-5">
+      <select class="custom-select custom-select-lg" id="postYn" th:field="*{postYn}">
+        <option value="Y" th:selected="${postYn == 'Y'}">게시</option>
+        <option value="N" th:selected="${postYn == 'N'}">미게시</option>
+      </select>
+    </div>
+  </div>
+  <div  class="row justify-content-center mt-3">
+    <div class="col-md-7">
+      <hr class="my-3">
     </div>
   </div>
   <div  class="row mt-3">
-    <div class="col-md-5 mx-auto">
-      <div class="row">
-        <div class="col">
-          <button class="btn btn-primary btn-lg btn-block"
-                  type="submit" th:text="#{button.complete}">완료</button>
-        </div>
-        <div class="col">
-          <button class="btn btn-primary btn-lg btn-block"
-                  onclick="location.href='/'"
-                  th:onclick="|location.href='@{/product/{productNum}(productNum=${product.productNum})}'|"
-                  type="button" th:text="#{button.cancel}">취소</button>
-        </div>
-      </div>
+    <div class="col-md-7 mx-auto d-flex justify-content-between">
+      <button class="btn btn-primary btn-lg flex-grow-1 mr-2" onclick="location.href='/'"
+              type="submit" th:text="#{button.complete}">완료</button>
+      <button class="btn btn-secondary btn-lg flex-grow-1"
+              onclick="location.href='/'"
+              th:onclick="|location.href='@{/product/{productNum}(productNum=${product.productNum})}'|"
+              type="button" th:text="#{button.cancel}">취소</button>
     </div>
   </div>
   </form>

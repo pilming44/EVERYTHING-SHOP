@@ -1,6 +1,7 @@
 package study.toy.everythingshop.repository;
 
 import study.toy.everythingshop.dto.JoinDTO;
+import study.toy.everythingshop.entity.mariaDB.PointHistory;
 import study.toy.everythingshop.entity.mariaDB.User;
 
 /**
@@ -11,7 +12,19 @@ import study.toy.everythingshop.entity.mariaDB.User;
 public interface UserDAO {
     int insertUser(JoinDTO userMEntity);
 
-    User selectByeUserId(String userId);
+    User selectUserById(String userId);
 
-    int updateUserInfo(User userMEntity);
+    int updateUserInfo(User user);
+
+    int updateHoldingPoint(User user);
+
+    int insertPointHistory(PointHistory pointHistory);
+
+    int selectUsedPoint(String userId);
+
+    int selectUserDiscountRate(int userNum);
+
+    int insertLoginHistory(User user);
+
+    int selectTodayLoginCount(User user);
 }

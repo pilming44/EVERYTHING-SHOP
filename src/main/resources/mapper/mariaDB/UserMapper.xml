@@ -22,16 +22,17 @@
         )
     </insert>
 
-    <select id="selectByUserId" parameterType="String" resultType="User">
-        /* UserDAO.selectByUserId USER_ID로 사용자 조회*/
+    <select id="selectUserById" parameterType="String" resultType="User">
+        /* UserDAO.selectUserById USER_ID로 사용자 조회*/
         SELECT TUS.USER_NUM             /* 사용자번호*/
              , TUS.USER_ID              /* 사용자ID*/
              , TUS.USER_PW              /* 비밀번호*/
              , TUS.ROLE_CD              /* 역할코드[COM1001]*/
-             , TUS.ACCOUNT_STATUS_CD    /* 계정상태코드[]*/
+             , TUS.ACCOUNT_STATUS_CD    /* 계정상태코드[COM1002]*/
              , TUS.USER_NM              /* 이름*/
-             , TUS.GRADE_CD 			/* 등급코드*/
-             , GET_CODE_NM('COM1003',TUS.GRADE_CD) AS GRADE_NM /*등급이름*/
+             , TUS.HOLDING_POINT        /* 보유포인트*/
+             , TUS.GRADE_CD             /* 등급코드[COM1003]*/
+             , GET_CODE_NAME('COM1003',TUS.GRADE_CD) AS GRADE_NM /*등급이름*/
              , TUS.REGISTER_DT          /* 등록일자*/
              , TUS.CHANGE_DT            /* 수정일자*/
           FROM T_USER TUS
@@ -72,4 +73,75 @@
              , CHANGE_DT = SYSDATE()
          WHERE USER_ID = #{userId}
     </update>
+
+    <update id="updateHoldingPoint" parameterType="User">
+        /* UserDAO.updateHoldingPoint 사용자 보유보인트 업데이트*/
+        UPDATE T_USER
+        SET HOLDING_POINT = #{holdingPoint}
+          , CHANGE_DT = SYSDATE()
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <insert id="insertPointHistory" parameterType="PointHistory">
+        /* UserDAO.insertPointHistory 포인트 이력 추가*/
+        INSERT INTO T_POINT_HISTORY
+        (
+            USER_NUM            /* 사용자번호*/
+          , POINT_CHANGE_CD     /* 포인트변동코드[COM1006]*/
+          , ADD_POINT           /* 추가포인트*/
+          , DEDUCT_POINT        /* 차감포인트*/
+          , REGISTER_DT         /* 등록일자*/
+        )
+        VALUES
+        (
+            #{userNum}
+          , #{pointChangeCd}
+          , #{addPoint}
+          , #{deductPoint}
+          , SYSDATE()
+        )
+    </insert>
+    <select id="selectUsedPoint" parameterType="String" resultType="Integer">
+        /* UserDAO.selectUsedPoint 누적포인트 조회*/
+        SELECT (T01.DEDUCT_POINT - T01.ADD_POINT) AS USED_POINT			/* 누적포인트*/
+          FROM (SELECT T01.USER_NUM
+                     , SUM(NVL(T02.ADD_POINT, 0)) AS ADD_POINT			/* 추가포인트*/
+                     , SUM(NVL(T02.DEDUCT_POINT, 0))  AS DEDUCT_POINT	/* 차감포인트*/
+                     , T02.POINT_CHANGE_CD 								/* 포인트변경코드*/
+                  FROM T_USER T01
+                  JOIN T_POINT_HISTORY T02
+                    ON T01.USER_NUM = T02.USER_NUM
+                 WHERE T01.USER_ID = #{userId}
+                 GROUP BY T01.USER_NUM, T02.POINT_CHANGE_CD
+                HAVING  T02.POINT_CHANGE_CD IN ('03', '04')             /* 03(상품주문), 04(주문취소)*/
+               ) T01
+        GROUP BY T01.USER_NUM
+    </select>
+
+    <select id="selectUserDiscountRate" parameterType="Integer" resultType="Integer">
+        /* UserDAO.selectUserDiscountRate 사용자 등급에 해당하는 할인율 조회*/
+        SELECT TDIP.DISCOUNT_RATE
+          FROM T_USER TUS
+          JOIN T_DISCOUNT_POLICY TDIP
+            ON TUS.GRADE_CD = TDIP.GRADE_CD
+           AND SYSDATE() BETWEEN  TDIP.START_DATE AND TDIP.END_DATE
+         WHERE USER_NUM = 1
+    </select>
+
+    <insert id="insertLoginHistory" parameterType="User">
+        /* UserDAO.insertLoginHistory 사용자 로그인 이력 추가*/
+        INSERT INTO T_LOGIN_HISTORY
+        (USER_NUM, REGISTER_DT, CHANGE_DT)
+        VALUES
+        (#{userNum}, SYSDATE(), SYSDATE())
+    </insert>
+
+    <select id="selectTodayLoginCount" parameterType="User" resultType="Integer">
+        /* UserDAO.selectTodayLoginCount 오늘 로그인 횟수 카운트*/
+        SELECT COUNT(*)
+          FROM T_LOGIN_HISTORY
+         WHERE USER_NUM = #{userNum}
+           AND DATE(REGISTER_DT) = CURDATE();
+    </select>
+
 </mapper>
