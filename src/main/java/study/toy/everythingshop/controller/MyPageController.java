@@ -16,7 +16,7 @@ import study.toy.everythingshop.auth.CustomUserDetails;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
-import study.toy.everythingshop.repository.ProductDAO;
+import study.toy.everythingshop.repository.MyPageDAO;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.MyPageService;
 
@@ -39,7 +39,7 @@ public class MyPageController {
 
     private final UserDAO userDAO;
     private final MyPageService myPageService;
-    private final ProductDAO productDAO;
+    private final MyPageDAO myPageDAO;
 
     @GetMapping("")
     public String myPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
@@ -202,6 +202,22 @@ public class MyPageController {
         model.addAttribute("pointHistory", result.get("list"));
         model.addAttribute("paginationInfo", result.get("paginationInfo"));
         return "pointHistory";
+    }
+
+    @GetMapping("/salesSummary")
+    public String salesSummaryView(@ModelAttribute SalesSummaryDTO salesSummaryDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
+        //사용자 정보 조회
+        User user = userDAO.selectUserById(customUserDetails.getUsername());
+        log.debug(">>>>>>>>>>>>getFromDate : {}",salesSummaryDTO.getFromDate());
+        log.debug(">>>>>>>>>>>>getEndDate : {}",salesSummaryDTO.getEndDate());
+
+        Map<String, Object> result = myPageService.findSalesSummary(salesSummaryDTO);
+        //디버깅
+        log.debug(">>>>>>>>>>>>user : {}",user);
+        model.addAttribute("salesSummary", result.get("list"));
+        model.addAttribute("totalSalesPrice", myPageDAO.selectTotalSalesPrice());
+        model.addAttribute("paginationInfo", result.get("paginationInfo"));
+        return "salesSummary";
     }
 
     /**

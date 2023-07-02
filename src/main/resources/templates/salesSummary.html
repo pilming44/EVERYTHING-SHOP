@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<title th:text="#{page.title.sales.summary}">판매현황</title>
+	<!-- 부트스트랩 CSS 파일 불러오기 -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<style>
+		.field-error {
+			border-color: #dc3545;
+			color: #dc3545;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<!-- 상품 목록 제목 -->
+		<div class="row mt-3">
+			<div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.sales.summary}">판매현황</h2></div>
+		</div>
+		<form action="/home" th:action="@{/myPage/salesSummary}" th:object="${salesSummaryDTO}" method="get">
+			<!-- 검색창 -->
+			<div class="row mt-5">
+				<div class="col-md-5">
+					<div class="row">
+						<div class="col">
+							<!-- 최소 가격 input -->
+							<input type="date" class="form-control" th:field="*{fromDate}" th:errorclass="field-error">
+						</div>
+						<div class="col-auto align-self-center">
+							<!-- "~" 기호 -->
+							<span class="font-weight-bold">~</span>
+						</div>
+						<div class="col">
+							<!-- 최대 가격 input -->
+							<input type="date" class="form-control" th:field="*{endDate}" th:errorclass="field-error">
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<div class="d-flex justify-content-between">
+						<!-- 검색 버튼 -->
+						<button class="btn btn-secondary btn-block" type="submit" th:text="#{button.search}">검색</button>
+					</div>
+				</div>
+				<div class="col-md-3 offset-md-2">
+					<div class="d-flex justify-content-between">
+						<label for="totalSalesPrice" class="col-sm-4 col-form-label font-weight-bold" th:text="#{label.total}">Total</label>
+						<input type="text" id="totalSalesPrice" class="form-control text-right" th:value="${#numbers.formatInteger(totalSalesPrice, 0, 'COMMA')}"  value="10000" readonly>
+					</div>
+				</div>
+			</div>
+		</form>
+
+		<!-- 상품 목록 테이블 -->
+		<div class="row mt-3">
+			<div class="mt-3 col-md-12 table-responsive">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="text-center" style="width: 30%" th:text="#{label.product.productName}">상품명</th>
+							<th class="text-center" style="width: 10%" th:text="#{label.product.registerQuantity}">등록수량</th>
+							<th class="text-center" style="width: 10%" th:text="#{label.product.remainQuantity}">남은수량</th>
+							<th class="text-center" style="width: 10%" th:text="#{label.product.salesQuantity}">판매수량</th>
+							<th class="text-center" style="width: 10%" th:text="#{label.product.productStts}">판매상태</th>
+							<th class="text-center" style="width: 10%" th:text="#{label.sales.rate}">판매율</th>
+							<th class="text-center" style="width: 30%" th:text="#{label.sales.price}">누적판매금액</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="summary : ${salesSummary}">
+							<td class="text-center" th:text="${summary.productNm}">상품명</td>
+							<td class="text-center" th:text="${summary.registerQuantity}">등록수량</a></td>
+							<td class="text-center" th:text="${summary.remainQuantity}">남은수량</a></td>
+							<td class="text-center" th:text="${#numbers.formatInteger(summary.orderQuantity, 0, 'COMMA')}">판매수량</td>
+							<td class="text-center" th:text="${summary.productStatusNm}">판매상태</td>
+							<td class="text-center" th:text="|${summary.salesRate}%|">판매율</td>
+							<td class="text-center" th:text="${#numbers.formatInteger(summary.sumPrice, 0, 'COMMA')}">누적판매금액</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- 페이징 -->
+		<nav class="mt-3" aria-label="page navigation">
+			<ul class="pagination justify-content-center">
+				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == 1} ? disabled">
+					<a class="page-link" th:href="@{/myPage/salesSummary(currentPageNo=${paginationInfo.currentPageNo - 1}
+																		, fromDate=${salesSummaryDTO.fromDate}
+																		, endDate=${salesSummaryDTO.endDate})}"
+					   th:text="#{button.previous}">
+						이전
+					</a>
+				</li>
+				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == pageNo} ? active"  th:each="pageNo : ${#numbers.sequence(paginationInfo.firstPageNoOnPageList, paginationInfo.lastPageNoOnPageList)}">
+					<a class="page-link" th:href="@{/myPage/salesSummary(currentPageNo=${pageNo}
+														, fromDate=${salesSummaryDTO.fromDate}
+														, endDate=${salesSummaryDTO.endDate})}"
+					   th:text="${pageNo}"></a>
+				</li>
+				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == paginationInfo.totalPageCount} ? disabled">
+					<a class="page-link" th:href="@{/myPage/salesSummary(currentPageNo=${paginationInfo.currentPageNo + 1}
+																		, fromDate=${salesSummaryDTO.fromDate}
+																		, endDate=${salesSummaryDTO.endDate})}"
+					   th:text="#{button.next}">
+						다음
+					</a>
+				</li>
+			</ul>
+		</nav>
+		<div class="row mt-3">
+			<div class="col-md-7 mx-auto">
+				<button class="w-100 btn btn-secondary btn-lg"
+						onclick="location.href='home.html'"
+						th:onclick="|location.href='@{/myPage}'|"
+						type="button" th:text="#{button.previous}">이전</button>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

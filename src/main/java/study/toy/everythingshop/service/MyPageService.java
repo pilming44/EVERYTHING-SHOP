@@ -30,4 +30,6 @@ public interface MyPageService {
     void editDiscountPolicy(List<DiscountPolicyDTO> discountPolicyDTO);
 
     Map<String, Object> findPointHistory(PointHistoryDTO pointHistoryDTO);
+
+    Map<String, Object> findSalesSummary(SalesSummaryDTO param);
 }
