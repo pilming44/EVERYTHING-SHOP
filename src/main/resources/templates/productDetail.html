@@ -13,11 +13,7 @@
   <div class="row mt-3">
     <div class="col text-center"><h2 class="font-weight-bold" th:text="#{page.title.product.detail}">상품 상세</h2></div>
   </div>
-  <div class="row mt-3"th:if="${productOrdr_success}">
-    <div class="col-md-5 mx-auto">
-      <div class="alert alert-danger" role="alert" th:text="${productOrdr_success}"></div>
-    </div>
-  </div>
+
   <div class="row justify-content-center mt-3">
     <label for="productNm" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.productName}">상품명</label>
     <div class="col-md-5">
@@ -89,6 +85,13 @@
               onclick="location.href='home.html'"
               th:onclick="|location.href='@{/home}'|"
               type="button" th:text="#{button.home}">목록으로</button>
+    </div>
+  </div>
+
+  <!-- 성공메세지 -->
+  <div class="row mt-3"th:if="${productOrdr_success}">
+    <div class="col-md-7 mx-auto d-flex justify-content-between">
+      <div class="alert alert-danger flex-grow-1 text-center" role="alert" th:text="${productOrdr_success}"></div>
     </div>
   </div>
 

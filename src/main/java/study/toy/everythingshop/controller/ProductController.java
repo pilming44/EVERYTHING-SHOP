@@ -122,21 +122,26 @@ public class ProductController {
     @PostMapping("/{productNum}/order")
     public String saveProductOrder(@Validated @ModelAttribute ProductOrderDTO productOrderDTO,
                                    BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes,
-                                   @AuthenticationPrincipal UserDetails userDetails){
+                                   @AuthenticationPrincipal CustomUserDetails userDetails){
         if(bindingResult.hasErrors()) {
             model.addAttribute("productOrderDTO",productOrderDTO);
             log.info("바인딩오류발생");
-            log.info("ProductOrderDTO : "+productOrderDTO);
             return "productOrder";
         }
-        if(productOrderDTO.getRegisterQuantity() < productOrderDTO.getOrderQuantity()){
+        if(productOrderDTO.getRemainQuantity() < productOrderDTO.getOrderQuantity()){
             log.info("재고초과");
             String message = messageSource.getMessage("product.order.overQty", null, Locale.getDefault());
             redirectAttributes.addFlashAttribute("errorMessage", message);
             return "redirect:/product/" + productOrderDTO.getProductNum() + "/order";
         }
+        if(userDetails.getHoldingPoint() < productOrderDTO.getFinalPaymentPrice()){
+            log.info("포인트 부족");
+            String message = messageSource.getMessage("product.order.lessPoint", null, Locale.getDefault());
+            redirectAttributes.addFlashAttribute("errorMessage", message);
+            return "redirect:/product/" + productOrderDTO.getProductNum() + "/order";
+        }
         log.info("등록");
-        int result = productService.saveOrderProduct(productOrderDTO,userDetails.getUsername());
+        int result = productService.saveOrderProduct(productOrderDTO,userDetails);
         log.info("result"+result);
         if(result >= 3){
             String message = messageSource.getMessage("product.order.success", null, Locale.getDefault());

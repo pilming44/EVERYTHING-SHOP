@@ -25,9 +25,12 @@ public class UserDetailsImpl implements CustomUserDetails {
     }
 
     @Override
+    public User getUser(){return user;}
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRoleCd()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_"+user.getRoleCd()));
         /*권한이 여러개일경우 예시. 반목문을 사용해도 됨(추가로직필요)*/
 //        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 //        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
@@ -46,7 +49,15 @@ public class UserDetailsImpl implements CustomUserDetails {
     }
 
     @Override
-    public String getUserGradeCd(){ return user.getGradeCd(); }
+    public String getGradeCd(){ return user.getGradeCd(); }
+
+    @Override
+    public Integer getUserNum(){return user.getUserNum(); }
+    @Override
+    public Integer getHoldingPoint(){return user.getHoldingPoint();}
+
+    @Override
+    public String getGradeNm(){ return user.getGradeNm();}
 
     @Override
     public boolean isAccountNonExpired() {
