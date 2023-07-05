@@ -17,5 +17,5 @@ public interface ProductService {
 
     ProductOrderDTO findOrderDetail(Integer productNum, CustomUserDetails userDetails);
 
-    int saveOrderProduct(ProductOrderDTO productOrderDTO, String userId);
+    int saveOrderProduct(ProductOrderDTO productOrderDTO, CustomUserDetails userDetails);
 }

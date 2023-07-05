@@ -36,6 +36,10 @@
 						  sec:authorize="isAuthenticated()" th:text="#{button.logOut}">로그아웃</button>
 			  </div>
 		</div>
+		<div sec:authorize="isAuthenticated()">
+			<strong sec:authentication="name"></strong>님 <span class="text-danger">(<span sec:authentication="principal.holdingPoint"></span>P)</span>
+			<span sec:authentication="principal.gradeNm"></span>
+		</div>
 		<form action="/home" th:action th:object="${productSearchDTO}" method="get">
 			<!-- 검색창 -->
 			<div class="row mt-3">
@@ -72,7 +76,9 @@
 					<div class="text-right">
 						<button class="btn btn-primary btn-block"
 								th:onclick="|event.preventDefault(); location.href='@{/product/register}'|"
-								sec:authorize="isAuthenticated()" th:text="#{button.product.add}">상품등록</button>
+								sec:authorize="hasRole('ROLE_02')" th:text="#{button.product.add}">상품등록</button>
+						<button class="btn btn-primary btn-block"
+								sec:authorize="hasRole('ROLE_03')" th:text="#{button.seller}">판매자신청</button>
 					</div>
 				</div>
 			</div>

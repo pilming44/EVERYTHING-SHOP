@@ -89,34 +89,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int saveOrderProduct(ProductOrderDTO productOrderDTO, String userId) {
+    public int saveOrderProduct(ProductOrderDTO productOrderDTO, CustomUserDetails userDetails) {
+        log.info("userDetails : {} ",userDetails);
         //주문 사용자
-        User user = userDAO.selectUserById(userId);
+        ModelMapper modelMapper = new ModelMapper();
+        User user = userDetails.getUser();
         productOrderDTO.setUserNum(user.getUserNum());
 
         int result = 0;
-        //주문 금액 계산
-        int orderedPrice = productOrderDTO.getOrderQuantity() * productOrderDTO.getProductPrice(); //주문수량 * 주문한 상품의 가격
 
-        //사용자 등급별 할인 적용
-        int discountRate = discountPolicyDAO.selectDiscountRateByGrade(user.getGradeCd()); //할인율(%)
-        int discountPrice = (int)(orderedPrice * (discountRate / 100.0));    //할인가격
-        int finalPaymentPrice = orderedPrice - discountPrice;   //최종 결제금액
-
-        //보유포인트
-        int userHoldingPoint = user.getHoldingPoint();
-
-        //TODO 보유포인트가 결제 금액보다 적다면 주문 불가능 -> 주문시 컨트롤러단에서 해결할지?
-        if(userHoldingPoint < finalPaymentPrice) {
-            return 0;
-        }
+        int finalPaymentPrice = productOrderDTO.getFinalPaymentPrice();   //최종 결제금액
+        int userHoldingPoint = user.getHoldingPoint(); //보유포인트
 
         //주문테이블 insert
         result += productDAO.insertOrder(productOrderDTO);
 
         //주문 상품 테이블 insert
-        productOrderDTO.setDiscountPrice(discountPrice);
-        productOrderDTO.setFinalPaymentPrice(finalPaymentPrice);
         result += productDAO.insertOrderedProduct(productOrderDTO);
 
         //재고가 없다면 품절처리
@@ -152,7 +140,7 @@ public class ProductServiceImpl implements ProductService {
         ModelMapper modelMapper = new ModelMapper();
         ProductOrderDTO productOrderDTO = modelMapper.map(product, ProductOrderDTO.class);
         //User의 등급으로 현재 적용된 할인율 가져오기
-        Integer discountRate = discountPolicyDAO.selectDiscountRateByGrade(userDetails.getUserGradeCd());
+        Integer discountRate = discountPolicyDAO.selectDiscountRateByGrade(userDetails.getGradeCd());
         //현재 product 금액에서 할인율 적용하여 할인금액, 현재금액 구하기.
         Integer discountPrice  = product.getProductPrice() * discountRate / 100;
         Integer currentPrice = product.getProductPrice() - discountPrice;
