@@ -45,6 +45,14 @@
     <div class="col-md-7 mx-auto">
       <button class="w-100 btn btn-primary btn-lg"
               onclick="location.href='home.html'"
+              th:onclick="|location.href='@{/myPage/salesSummary}'|"
+              type="button" th:text="#{button.sales.summary}">판매현황</button>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-7 mx-auto">
+      <button class="w-100 btn btn-primary btn-lg"
+              onclick="location.href='home.html'"
               th:onclick="|location.href='@{/myPage/discountPolicy}'|"
               type="button" th:text="#{button.discount.policy}">등급별할인정책</button>
     </div>

@@ -168,4 +168,45 @@ public class MyPageServiceImpl implements MyPageService {
 
         return resultMap;
     }
+
+    @Override
+    public Map<String, Object> findSalesSummary(SalesSummaryDTO param) {
+        //값 유효성 검사
+        param.setCurrentPageNo(param.getCurrentPageNo() <= 0 ? 1 : param.getCurrentPageNo());
+        param.setRecordCountPerPage(param.getRecordCountPerPage() <= 0 ? defaultRecordCountPerPage : param.getRecordCountPerPage());
+        int pageSize = param.getPageSize() <= 0 ? defaultPageSize : param.getPageSize();
+
+        //날짜 유효성 검사
+        if(CommonUtil.strIsNotEmpty(param.getFromDate()) && CommonUtil.strIsNotEmpty(param.getEndDate())) {
+            LocalDate fromLocalDate = LocalDate.parse(param.getFromDate());
+            LocalDate endLocalDate = LocalDate.parse(param.getEndDate());
+            //종료날짜가 시작날짜보다 빠르다면 두 값 스왑
+            if (endLocalDate.isBefore(fromLocalDate)) {
+                String temp = param.getFromDate();
+                param.setFromDate(param.getEndDate());
+                param.setEndDate(temp);
+            }
+        }
+
+        int totalRecordCount = myPageDAO.selectSalesSummaryTotalCount(param);
+
+        //페이징 하는데 필요한 값을 계산해주는 클래스 값 세팅
+        PaginationInfo paginationInfo = new PaginationInfo();
+        paginationInfo.setCurrentPageNo(param.getCurrentPageNo());
+        paginationInfo.setRecordCountPerPage(param.getRecordCountPerPage());
+        paginationInfo.setPageSize(pageSize);
+        paginationInfo.setTotalRecordCount(totalRecordCount);
+
+        //계산된 값 입력
+        param.setFirstRecordIndex(paginationInfo.getFirstRecordIndex());
+        param.setLastRecordIndex(paginationInfo.getLastRecordIndex());
+        param.setTotalPageCount(paginationInfo.getTotalPageCount());
+        param.setTotalRecordCount(totalRecordCount);
+
+        HashMap<String, Object> resultMap = new HashMap<>();
+        resultMap.put("list", myPageDAO.selectSalesSummary(param));
+        resultMap.put("paginationInfo", paginationInfo);
+
+        return resultMap;
+    }
 }

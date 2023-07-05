@@ -162,4 +162,86 @@
          GROUP BY TPOH.USER_NUM, TPOH.POINT_CHANGE_CD, TPOH.ADD_POINT, TPOH.DEDUCT_POINT, TPOH.REGISTER_DT, TPOH.CHANGE_DT
         <include refid="maria.CommonDAO.countBottom"></include>
     </select>
+    <select id="selectSalesSummary" parameterType="SalesSummaryDTO" resultType="SalesSummaryDTO">
+        /*MyPageDAO.selectSalesSummary 판매현황 목록 조회*/
+        <include refid="maria.CommonDAO.pagingTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY TPR.REGISTER_DT) AS ROW_NUM
+             , TPR.PRODUCT_NUM 	/* 상품번호*/
+             , TPR.PRODUCT_NM 		/* 상품명*/
+             , TPR.REGISTER_QUANTITY		/* 등록수량*/
+             , TPR.REMAIN_QUANTITY 		/* 남은수량*/
+             , NVL(T01.ORDER_QUANTITY, 0) AS ORDER_QUANTITY	/* 판매수량*/
+             , TPR.PRODUCT_STATUS_CD AS PRODUCT_STATUS_CD		/* 상품상태코드*/
+             , EVERYTHINGSHOP.GET_CODE_NAME('COM1004', TPR.PRODUCT_STATUS_CD) AS PRODUCT_STATUS_NM		/* 상품상태명*/
+             , (NVL(T01.ORDER_QUANTITY, 0) / TPR.REGISTER_QUANTITY) * 100 AS SALES_RATE	/* 판매율*/
+             , NVL(T01.SUM_PRICE, 0) AS SUM_PRICE				/* 누적 판매금액*/
+          FROM T_PRODUCT TPR
+          LEFT JOIN (SELECT TORP.PRODUCT_NUM
+                          , SUM(TORP.ORDER_QUANTITY) AS ORDER_QUANTITY
+                          , SUM(TORP.FINAL_PAYMENT_PRICE) AS SUM_PRICE
+                       FROM T_ORDERED_PRODUCT TORP
+                       LEFT JOIN T_ORDER TOR
+                         ON TORP.ORDER_NUM = TOR.ORDER_NUM
+                        AND TOR.ORDER_STATUS_CD IN ('01', '03')    /* 주문완료 또는 구매확정만 조회*/
+                    <where>
+                        <if test="fromDate != null and fromDate !='' and (endDate == null or endDate == '')">
+                            AND TOR.REGISTER_DT &gt;= STR_TO_DATE(#{fromDate}, '%Y-%m-%d')  /* 시작날짜만 있고 종료날짜는 없는경우*/
+                        </if>
+                        <if test="endDate != null and endDate !='' and (fromDate == null or fromDate == '')">
+                            AND TOR.REGISTER_DT &lt;= STR_TO_DATE(CONCAT(#{endDate},' 23:59:59'), '%Y-%m-%d %H:%i:%s')  /* 종료날짜만 있고 시작날짜는 없을경우*/
+                        </if>
+                        <if test="fromDate != null and fromDate !='' and endDate != null and endDate !=''">
+                            AND TOR.REGISTER_DT BETWEEN STR_TO_DATE(#{fromDate}, '%Y-%m-%d') AND STR_TO_DATE(CONCAT(#{endDate},' 23:59:59'), '%Y-%m-%d %H:%i:%s')
+                        </if>
+                    </where>
+                      GROUP BY TORP.PRODUCT_NUM
+                    ) T01
+            ON TPR.PRODUCT_NUM = T01.PRODUCT_NUM
+        <include refid="maria.CommonDAO.pagingBottom"></include>
+    </select>
+    <select id="selectSalesSummaryTotalCount" parameterType="SalesSummaryDTO" resultType="Integer">
+        /*MyPageDAO.selectSalesSummaryTotalCount 판매현황 목록 건 수 조회*/
+        <include refid="maria.CommonDAO.countTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY TPR.REGISTER_DT) AS ROW_NUM
+             , TPR.PRODUCT_NUM 	/* 상품번호*/
+             , TPR.PRODUCT_NM 		/* 상품명*/
+             , TPR.REGISTER_QUANTITY		/* 등록수량*/
+             , TPR.REMAIN_QUANTITY 		/* 남은수량*/
+             , NVL(T01.ORDER_QUANTITY, 0) AS ORDER_QUANTITY	/* 판매수량*/
+             , TPR.PRODUCT_STATUS_CD AS PRODUCT_STATUS_CD		/* 상품상태코드*/
+             , EVERYTHINGSHOP.GET_CODE_NAME('COM1004', TPR.PRODUCT_STATUS_CD) AS PRODUCT_STATUS_NM		/* 상품상태명*/
+             , (NVL(T01.ORDER_QUANTITY, 0) / TPR.REGISTER_QUANTITY) * 100 AS SALES_RATE	/* 판매율*/
+             , NVL(T01.SUM_PRICE, 0) AS SUM_PRICE				/* 누적 판매금액*/
+        FROM T_PRODUCT TPR
+        LEFT JOIN (SELECT TORP.PRODUCT_NUM
+                        , SUM(TORP.ORDER_QUANTITY) AS ORDER_QUANTITY
+                        , SUM(TORP.FINAL_PAYMENT_PRICE) AS SUM_PRICE
+                     FROM T_ORDERED_PRODUCT TORP
+                     LEFT JOIN T_ORDER TOR
+                       ON TORP.ORDER_NUM = TOR.ORDER_NUM
+                      AND TOR.ORDER_STATUS_CD IN ('01', '03')    /* 주문완료 또는 구매확정만 조회*/
+                <where>
+                    <if test="fromDate != null and fromDate !='' and (endDate == null or endDate == '')">
+                        AND TOR.REGISTER_DT &gt;= STR_TO_DATE(#{fromDate}, '%Y-%m-%d')  /* 시작날짜만 있고 종료날짜는 없는경우*/
+                    </if>
+                    <if test="endDate != null and endDate !='' and (fromDate == null or fromDate == '')">
+                        AND TOR.REGISTER_DT &lt;= STR_TO_DATE(CONCAT(#{endDate},' 23:59:59'), '%Y-%m-%d %H:%i:%s')  /* 종료날짜만 있고 시작날짜는 없을경우*/
+                    </if>
+                    <if test="fromDate != null and fromDate !='' and endDate != null and endDate !=''">
+                        AND TOR.REGISTER_DT BETWEEN STR_TO_DATE(#{fromDate}, '%Y-%m-%d') AND STR_TO_DATE(CONCAT(#{endDate},' 23:59:59'), '%Y-%m-%d %H:%i:%s')
+                    </if>
+                </where>
+                    GROUP BY TORP.PRODUCT_NUM
+                  ) T01
+          ON TPR.PRODUCT_NUM = T01.PRODUCT_NUM
+        <include refid="maria.CommonDAO.countBottom"></include>
+    </select>
+
+    <select id="selectTotalSalesPrice" resultType="Integer">
+        SELECT SUM(TORP.FINAL_PAYMENT_PRICE) AS TOTAL_SALES_PRICE /*총 판매 금액*/
+        FROM T_ORDERED_PRODUCT TORP
+        JOIN T_ORDER TOR
+          ON TORP.ORDER_NUM = TOR.ORDER_NUM
+         AND TOR.ORDER_STATUS_CD IN ('01', '03')    /* 주문완료 또는 구매확정만 조회*/
+    </select>
 </mapper>

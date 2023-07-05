@@ -2,6 +2,7 @@ package study.toy.everythingshop.repository;
 
 import study.toy.everythingshop.dto.DiscountPolicyDTO;
 import study.toy.everythingshop.dto.PointHistoryDTO;
+import study.toy.everythingshop.dto.SalesSummaryDTO;
 import study.toy.everythingshop.dto.SellerApplyDTO;
 
 import java.util.List;
@@ -29,4 +30,10 @@ public interface MyPageDAO {
     List<PointHistoryDTO> selectPointHistory(PointHistoryDTO pointHistoryDTO);
 
     int selectPointHistoryTotalCount(PointHistoryDTO pointHistoryDTO);
+
+    List<SalesSummaryDTO> selectSalesSummary(SalesSummaryDTO salesSummaryDTO);
+
+    int selectSalesSummaryTotalCount(SalesSummaryDTO salesSummaryDTO);
+
+    int selectTotalSalesPrice();
 }
