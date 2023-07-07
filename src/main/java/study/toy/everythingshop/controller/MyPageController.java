@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -218,6 +219,32 @@ public class MyPageController {
         model.addAttribute("totalSalesPrice", myPageDAO.selectTotalSalesPrice());
         model.addAttribute("paginationInfo", result.get("paginationInfo"));
         return "salesSummary";
+    }
+
+    @GetMapping("/admin/allUserView")
+    public String allUserView(@ModelAttribute UserInfoDTO userInfoDTO, @ModelAttribute UserSearchDTO userSearchDTO, Model model) {
+
+        //전체 사용자 정보 조회
+        Map<String, Object> userMap = myPageService.selectAllUserInfo(userSearchDTO);
+        //디버깅
+        log.debug(">>>>>>>>>>>>userList : {}",userMap);
+        model.addAttribute("userList", userMap.get("userList"));
+        model.addAttribute("paginationInfo", userMap.get("paginationInfo"));
+        return "allUserView";
+    }
+
+    @GetMapping("/admin/userInfo")
+    public String userInfo(@RequestParam("userId") String userId ,@ModelAttribute UserInfoDTO userInfoDTO, Model model) {
+
+        //특정 사용자 정보 조회
+        User user = userDAO.selectUserById(userId);
+        // User 정보를 UserInfoDTO로 매핑
+        ModelMapper modelMapper = new ModelMapper();
+        userInfoDTO = modelMapper.map(user, UserInfoDTO.class);
+        log.info("userInfoDTO >>>>>>>>>>>>>>>{} ",userInfoDTO);
+
+        model.addAttribute("userInfo",userInfoDTO);
+        return "userInfo";
     }
 
     /**

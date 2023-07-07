@@ -209,4 +209,32 @@ public class MyPageServiceImpl implements MyPageService {
 
         return resultMap;
     }
+
+    @Override
+    public  Map<String, Object> selectAllUserInfo(UserSearchDTO userSearchDTO) {
+        //값 유효성 검사
+        userSearchDTO.setCurrentPageNo(userSearchDTO.getCurrentPageNo() <= 0 ? 1 : userSearchDTO.getCurrentPageNo());
+        userSearchDTO.setRecordCountPerPage(userSearchDTO.getRecordCountPerPage() <= 0 ? defaultRecordCountPerPage : userSearchDTO.getRecordCountPerPage());
+        int totalUserCount = myPageDAO.selectAllUserInfoTotalCount(userSearchDTO);
+        int pageSize = userSearchDTO.getPageSize() <= 0 ? defaultPageSize : userSearchDTO.getPageSize();
+
+
+        //페이징 하는데 필요한 값을 계산해주는 클래스 값 세팅
+        PaginationInfo paginationInfo = new PaginationInfo();
+        paginationInfo.setCurrentPageNo(userSearchDTO.getCurrentPageNo());
+        paginationInfo.setRecordCountPerPage(userSearchDTO.getRecordCountPerPage());
+        paginationInfo.setPageSize(pageSize);
+        paginationInfo.setTotalRecordCount(totalUserCount);
+
+        //계산된 값 입력
+        userSearchDTO.setFirstRecordIndex(paginationInfo.getFirstRecordIndex());
+        userSearchDTO.setLastRecordIndex(paginationInfo.getLastRecordIndex());
+        userSearchDTO.setTotalPageCount(paginationInfo.getTotalPageCount());
+        userSearchDTO.setTotalRecordCount(totalUserCount);
+
+        HashMap<String, Object> resultMap = new HashMap<>();
+        resultMap.put("userList", myPageDAO.selectAllUserInfo(userSearchDTO));
+        resultMap.put("paginationInfo", paginationInfo);
+        return resultMap;
+    }
 }
