@@ -22,6 +22,8 @@ import study.toy.everythingshop.service.CommonService;
 import study.toy.everythingshop.service.DiscountPolicyService;
 import study.toy.everythingshop.service.ProductService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 /**
@@ -43,9 +45,12 @@ public class ProductController {
     private final DiscountPolicyService discountPolicyService;
 
     @GetMapping("/{productNum}")
-    public String findProductDetail(@PathVariable Integer productNum, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String findProductDetail(@PathVariable Integer productNum, @AuthenticationPrincipal UserDetails userDetails
+                                    , HttpServletRequest request, HttpServletResponse response, Model model) {
         log.info("userDetails 객체 : {}", userDetails);
-        ProductDTO product = productService.findProductDetail(productNum, userDetails);
+        boolean firstView = productService.productViewCheck(productNum, request, response);
+
+        ProductDTO product = productService.findProductDetail(productNum, firstView, userDetails);
 
         log.info("Product 객체 : {}", product);
         model.addAttribute("product", product);
