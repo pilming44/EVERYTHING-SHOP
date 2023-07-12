@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.MessageSource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.toy.everythingshop.auth.CustomUserDetails;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.User;
@@ -24,6 +26,7 @@ import study.toy.everythingshop.service.MyPageService;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -41,6 +44,7 @@ public class MyPageController {
     private final UserDAO userDAO;
     private final MyPageService myPageService;
     private final MyPageDAO myPageDAO;
+    private final MessageSource messageSource;
 
     @GetMapping("")
     public String myPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
@@ -234,7 +238,9 @@ public class MyPageController {
     }
 
     @GetMapping("/admin/userInfo")
-    public String userInfo(@RequestParam("userId") String userId ,@ModelAttribute UserInfoDTO userInfoDTO, Model model) {
+    public String userInfo(@RequestParam("userId") String userId ,
+                           @ModelAttribute UserInfoDTO userInfoDTO, @ModelAttribute SellerApplyDTO sellerApplyDTO,
+                           Model model) {
 
         //특정 사용자 정보 조회
         User user = userDAO.selectUserById(userId);
@@ -246,6 +252,23 @@ public class MyPageController {
         model.addAttribute("userInfo",userInfoDTO);
         return "userInfo";
     }
+
+    @PostMapping("/admin/editSellerApply")
+    public String editSellerApply( @ModelAttribute UserInfoDTO userInfoDTO, RedirectAttributes redirectAttributes,
+                                   @ModelAttribute SellerApplyDTO sellerApplyDTO, Model model) {
+
+        String message = "";
+        int result = myPageService.editSellerApply(sellerApplyDTO);
+        if(result > 0){
+            message = messageSource.getMessage("user.updateSellerApply", null, Locale.getDefault());
+        }else{
+            message = messageSource.getMessage("user.failSellerApply", null, Locale.getDefault());
+        }
+        redirectAttributes.addFlashAttribute("successMessage", message);
+        return "redirect:/myPage/admin/allUserView";
+    }
+
+
 
     /**
      * 타임리프에서 리스트데이터를 받기위한 Wrapper.

@@ -64,4 +64,9 @@ public class UserDAOImpl implements UserDAO {
     public int selectTodayLoginCount(User user) {
         return sqlSession.selectOne("maria.UserDAO.selectTodayLoginCount", user);
     }
+
+    @Override
+    public int updateUserRoleCd(Integer userNum) {
+        return sqlSession.update("maria.UserDAO.updateUserRoleCd", userNum);
+    }
 }

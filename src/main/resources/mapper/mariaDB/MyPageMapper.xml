@@ -247,7 +247,9 @@
 
     <select id="selectAllUserInfo" parameterType="UserSearchDTO" resultType="UserInfoDTO" >
         /*MyPageDAO.selectAllUser 관리자 기능 유저조회*/
-        SELECT TUS.USER_NUM
+        <include refid="maria.CommonDAO.pagingTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY TUS.REGISTER_DT DESC) AS ROW_NUM
+             , TUS.USER_NUM
              , TUS.USER_ID
              , TUS.USER_NM
              , GET_CODE_NAME('COM1003',TUS.GRADE_CD) AS GRADE_NM
@@ -256,6 +258,7 @@
                        THEN TSEA.SELLER_APPLY_STATUS_CD
                    ELSE GET_CODE_NAME('COM1001',TUS.ROLE_CD)
                 END AS ROLE_NM
+             , TSEA.APPLY_NUM
              , NVL(TOR.TOTAL_PAYMENT,'0') AS TOTAL_PAYMENT
              , TO_CHAR(TUS.REGISTER_DT,'YYYY.MM.DD' ) AS REGISTER_DT
         FROM T_USER TUS
@@ -268,10 +271,17 @@
                   )TOR
           ON TUS.USER_NUM = TOR.USER_NUM
         LEFT JOIN (  SELECT USER_NUM
-                           , MAX(REGISTER_DT)
-                           , SELLER_APPLY_STATUS_CD
-                         FROM T_SELLER_APPLY
-                        GROUP BY USER_NUM
+                          , REGISTER_DT
+                          , SELLER_APPLY_STATUS_CD
+                          , APPLY_NUM
+                     FROM ( SELECT USER_NUM
+                                 , REGISTER_DT
+                                 , SELLER_APPLY_STATUS_CD
+                                 , APPLY_NUM
+                                 , ROW_NUMBER() OVER (PARTITION BY USER_NUM ORDER BY REGISTER_DT DESC) AS RN
+                              FROM T_SELLER_APPLY
+                            ) A
+                        WHERE RN = 1
                   )TSEA
           ON TUS.USER_NUM = TSEA.USER_NUM
         <where>
@@ -282,11 +292,13 @@
             AND TUS.USER_NM LIKE CONCAT('%',  #{searchText}, '%')
             </if>
         </where>
+        <include refid="maria.CommonDAO.pagingBottom"></include>
     </select>
 
     <select id="selectAllUserInfoTotalCount" parameterType="UserSearchDTO" resultType="Integer" >
         /*MyPageDAO.selectAllUserInfoTotalCount 유저 조회 TOTAL COUNT*/
-        SELECT COUNT(*)
+        <include refid="maria.CommonDAO.countTop"></include>
+        SELECT TUS.USER_ID
           FROM T_USER TUS
         <where>
             <if test="searchSelect eq 'userId' ">
@@ -296,6 +308,17 @@
                 AND TUS.USER_NM LIKE CONCAT('%',  #{searchText}, '%')
             </if>
         </where>
+        <include refid="maria.CommonDAO.countBottom"></include>
     </select>
+
+    <update id="updateSellerApply" parameterType="SellerApplyDTO" >
+        /*MyPageDAO.updateSellerApply 판매상태 승인 또는 반려*/
+        UPDATE T_SELLER_APPLY
+           SET SELLER_APPLY_STATUS_CD = #{sellerApplyStatusCd}
+        <if test="sellerApplyStatusCd eq '03' ">
+             , REJECT_REASON = #{rejectReason}
+        </if>
+         WHERE APPLY_NUM  = #{applyNum}
+    </update>
 
 </mapper>

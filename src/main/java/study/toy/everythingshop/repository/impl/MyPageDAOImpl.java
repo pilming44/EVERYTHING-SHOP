@@ -89,4 +89,11 @@ public class MyPageDAOImpl implements MyPageDAO {
     public int selectAllUserInfoTotalCount(UserSearchDTO userSearchDTO) {
         return sqlSession.selectOne("maria.MyPageDAO.selectAllUserInfoTotalCount", userSearchDTO);
     }
+
+    @Override
+    public int updateSellerApply(SellerApplyDTO sellerApplyDTO) {
+        return sqlSession.update("maria.MyPageDAO.updateSellerApply", sellerApplyDTO);
+    }
+
+
 }

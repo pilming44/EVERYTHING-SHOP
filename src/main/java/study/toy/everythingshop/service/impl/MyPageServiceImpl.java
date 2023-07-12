@@ -237,4 +237,14 @@ public class MyPageServiceImpl implements MyPageService {
         resultMap.put("paginationInfo", paginationInfo);
         return resultMap;
     }
+
+    @Override
+    public int editSellerApply(SellerApplyDTO sellerApplyDTO) {
+        int result =  myPageDAO.updateSellerApply(sellerApplyDTO);
+        //get User Info
+        if(sellerApplyDTO.getSellerApplyStatusCd().equals("02")){
+            result += userDAO.updateUserRoleCd(sellerApplyDTO.getUserNum());
+        }
+        return result;
+    }
 }

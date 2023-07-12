@@ -37,4 +37,8 @@ public interface MyPageDAO {
     List<UserInfoDTO> selectAllUserInfo(UserSearchDTO userSearchDTO);
 
     int selectAllUserInfoTotalCount(UserSearchDTO userSearchDTO);
+
+    int updateSellerApply(SellerApplyDTO sellerApplyDTO);
+
+
 }
