@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8">
   <title th:text="#{page.title.myPage}">마이페이지</title>
@@ -41,7 +41,7 @@
               type="button" th:text="#{button.myInfo}">내정보 조회</button>
     </div>
   </div>
-  <div class="row mt-3">
+  <div class="row mt-3" sec:authorize="hasRole('ROLE_01')">
     <div class="col-md-7 mx-auto">
       <button class="w-100 btn btn-primary btn-lg"
               onclick="location.href='home.html'"
@@ -81,6 +81,14 @@
               type="button" th:text="#{button.seller.apply}">판매자신청</button>
     </div>
   </div>
+
+  <div class="row mt-3" sec:authorize="hasRole('ROLE_01')">
+    <div class="col-md-7 mx-auto">
+      <button class="w-100 btn btn-primary btn-lg"
+              th:onclick="|location.href='@{/myPage/admin/allUserView}'|"
+              type="button" th:text="#{button.allUser}">유저조회</button>
+    </div>
+  </div>
   <div class="row mt-3">
     <div class="col-md-7 mx-auto">
       <button class="w-100 btn btn-secondary btn-lg"
@@ -89,6 +97,8 @@
               type="button" th:text="#{button.home}">목록으로</button>
     </div>
   </div>
+
+
 
 </div> <!-- /container -->
 </body>

@@ -27,4 +27,6 @@ public interface UserDAO {
     int insertLoginHistory(User user);
 
     int selectTodayLoginCount(User user);
+
+    int updateUserRoleCd(Integer userNum);
 }

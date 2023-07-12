@@ -244,4 +244,81 @@
           ON TORP.ORDER_NUM = TOR.ORDER_NUM
          AND TOR.ORDER_STATUS_CD IN ('01', '03')    /* 주문완료 또는 구매확정만 조회*/
     </select>
+
+    <select id="selectAllUserInfo" parameterType="UserSearchDTO" resultType="UserInfoDTO" >
+        /*MyPageDAO.selectAllUser 관리자 기능 유저조회*/
+        <include refid="maria.CommonDAO.pagingTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY TUS.REGISTER_DT DESC) AS ROW_NUM
+             , TUS.USER_NUM
+             , TUS.USER_ID
+             , TUS.USER_NM
+             , GET_CODE_NAME('COM1003',TUS.GRADE_CD) AS GRADE_NM
+             , CASE
+                   WHEN TSEA.SELLER_APPLY_STATUS_CD = '01'
+                       THEN TSEA.SELLER_APPLY_STATUS_CD
+                   ELSE GET_CODE_NAME('COM1001',TUS.ROLE_CD)
+                END AS ROLE_NM
+             , TSEA.APPLY_NUM
+             , NVL(TOR.TOTAL_PAYMENT,'0') AS TOTAL_PAYMENT
+             , TO_CHAR(TUS.REGISTER_DT,'YYYY.MM.DD' ) AS REGISTER_DT
+        FROM T_USER TUS
+        LEFT JOIN ( SELECT TOR.USER_NUM
+                         , SUM(TORP.FINAL_PAYMENT_PRICE ) AS TOTAL_PAYMENT
+                      FROM T_ORDER TOR
+                INNER JOIN T_ORDERED_PRODUCT TORP
+                        ON TOR.ORDER_NUM = TORP.ORDER_NUM
+                   GROUP BY TOR.USER_NUM
+                  )TOR
+          ON TUS.USER_NUM = TOR.USER_NUM
+        LEFT JOIN (  SELECT USER_NUM
+                          , REGISTER_DT
+                          , SELLER_APPLY_STATUS_CD
+                          , APPLY_NUM
+                     FROM ( SELECT USER_NUM
+                                 , REGISTER_DT
+                                 , SELLER_APPLY_STATUS_CD
+                                 , APPLY_NUM
+                                 , ROW_NUMBER() OVER (PARTITION BY USER_NUM ORDER BY REGISTER_DT DESC) AS RN
+                              FROM T_SELLER_APPLY
+                            ) A
+                        WHERE RN = 1
+                  )TSEA
+          ON TUS.USER_NUM = TSEA.USER_NUM
+        <where>
+            <if test="searchSelect eq 'userId' ">
+            AND TUS.USER_ID LIKE CONCAT('%',  #{searchText}, '%')
+            </if>
+            <if test="searchSelect eq 'userNm' ">
+            AND TUS.USER_NM LIKE CONCAT('%',  #{searchText}, '%')
+            </if>
+        </where>
+        <include refid="maria.CommonDAO.pagingBottom"></include>
+    </select>
+
+    <select id="selectAllUserInfoTotalCount" parameterType="UserSearchDTO" resultType="Integer" >
+        /*MyPageDAO.selectAllUserInfoTotalCount 유저 조회 TOTAL COUNT*/
+        <include refid="maria.CommonDAO.countTop"></include>
+        SELECT TUS.USER_ID
+          FROM T_USER TUS
+        <where>
+            <if test="searchSelect eq 'userId' ">
+                AND TUS.USER_ID LIKE CONCAT('%',  #{searchText}, '%')
+            </if>
+            <if test="searchSelect eq 'userNm' ">
+                AND TUS.USER_NM LIKE CONCAT('%',  #{searchText}, '%')
+            </if>
+        </where>
+        <include refid="maria.CommonDAO.countBottom"></include>
+    </select>
+
+    <update id="updateSellerApply" parameterType="SellerApplyDTO" >
+        /*MyPageDAO.updateSellerApply 판매상태 승인 또는 반려*/
+        UPDATE T_SELLER_APPLY
+           SET SELLER_APPLY_STATUS_CD = #{sellerApplyStatusCd}
+        <if test="sellerApplyStatusCd eq '03' ">
+             , REJECT_REASON = #{rejectReason}
+        </if>
+         WHERE APPLY_NUM  = #{applyNum}
+    </update>
+
 </mapper>

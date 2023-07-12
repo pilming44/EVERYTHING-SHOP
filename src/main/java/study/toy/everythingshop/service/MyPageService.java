@@ -32,4 +32,8 @@ public interface MyPageService {
     Map<String, Object> findPointHistory(PointHistoryDTO pointHistoryDTO);
 
     Map<String, Object> findSalesSummary(SalesSummaryDTO param);
+
+    Map<String, Object>  selectAllUserInfo(UserSearchDTO userSearchDTO);
+
+    int editSellerApply(SellerApplyDTO sellerApplyDTO);
 }

@@ -1,9 +1,6 @@
 package study.toy.everythingshop.repository;
 
-import study.toy.everythingshop.dto.DiscountPolicyDTO;
-import study.toy.everythingshop.dto.PointHistoryDTO;
-import study.toy.everythingshop.dto.SalesSummaryDTO;
-import study.toy.everythingshop.dto.SellerApplyDTO;
+import study.toy.everythingshop.dto.*;
 
 import java.util.List;
 
@@ -36,4 +33,12 @@ public interface MyPageDAO {
     int selectSalesSummaryTotalCount(SalesSummaryDTO salesSummaryDTO);
 
     int selectTotalSalesPrice();
+
+    List<UserInfoDTO> selectAllUserInfo(UserSearchDTO userSearchDTO);
+
+    int selectAllUserInfoTotalCount(UserSearchDTO userSearchDTO);
+
+    int updateSellerApply(SellerApplyDTO sellerApplyDTO);
+
+
 }
