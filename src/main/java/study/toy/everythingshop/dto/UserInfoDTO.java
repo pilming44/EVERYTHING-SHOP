@@ -22,6 +22,7 @@ public class UserInfoDTO extends SuperClass {
     private Integer usedPoint;      //사용포인트
     private Integer totalPayment;    //누적금액
     private String roleNm;          //권한
+    private String roleCd;         //권한코드
     private Integer applyNum;       //판매자 신청 넘버
 
     private String registerDt;

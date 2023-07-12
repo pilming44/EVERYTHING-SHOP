@@ -139,10 +139,12 @@
 					</thead>
 					<tbody>
 						<tr th:each="userInfo : ${userList}">
-							<td class="text-center" th:text="${userInfo.userId}">ID</td>
 							<td class="text-center">
-								<a th:href="@{/myPage/admin/userInfo(userId=${userInfo.userId})}"><span th:text="${userInfo.userNm}">이름</span></a>
+								<a th:href="@{/myPage/admin/userInfo(userId=${userInfo.userId})}">
+									<span th:text="${userInfo.userId}">ID</span>
+								</a>
 							</td>
+							<td class="text-center" th:text="${userInfo.userNm}">이름</td>
 							<td class="text-center" th:text="${userInfo.gradeNm}">등급</td>
 							<th:block th:if="${userInfo.roleNm eq '01'}">
 								<td class="text-center">

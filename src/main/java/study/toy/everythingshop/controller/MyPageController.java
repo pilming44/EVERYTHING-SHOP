@@ -21,6 +21,7 @@ import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.MyPageDAO;
 import study.toy.everythingshop.repository.UserDAO;
+import study.toy.everythingshop.service.CommonService;
 import study.toy.everythingshop.service.MyPageService;
 
 import javax.validation.Valid;
@@ -45,6 +46,7 @@ public class MyPageController {
     private final MyPageService myPageService;
     private final MyPageDAO myPageDAO;
     private final MessageSource messageSource;
+    private final CommonService commonService;
 
     @GetMapping("")
     public String myPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
@@ -239,17 +241,18 @@ public class MyPageController {
 
     @GetMapping("/admin/userInfo")
     public String userInfo(@RequestParam("userId") String userId ,
-                           @ModelAttribute UserInfoDTO userInfoDTO, @ModelAttribute SellerApplyDTO sellerApplyDTO,
+                           @ModelAttribute SellerApplyDTO sellerApplyDTO,
                            Model model) {
 
         //특정 사용자 정보 조회
         User user = userDAO.selectUserById(userId);
         // User 정보를 UserInfoDTO로 매핑
         ModelMapper modelMapper = new ModelMapper();
-        userInfoDTO = modelMapper.map(user, UserInfoDTO.class);
-        log.info("userInfoDTO >>>>>>>>>>>>>>>{} ",userInfoDTO);
-
+        UserInfoDTO userInfoDTO = modelMapper.map(user, UserInfoDTO.class);
         model.addAttribute("userInfo",userInfoDTO);
+        // 권한 commoncode List 가져오기
+        List<CommonCodeDTO> roleCdList = commonService.selectCommonCodeList("COM1001");
+        model.addAttribute("roleCdList",roleCdList);
         return "userInfo";
     }
 
@@ -266,6 +269,21 @@ public class MyPageController {
         }
         redirectAttributes.addFlashAttribute("successMessage", message);
         return "redirect:/myPage/admin/allUserView";
+    }
+
+    @PostMapping("/admin/editUserInfo")
+    public String editUserInfo( @ModelAttribute UserInfoDTO userInfoDTO, RedirectAttributes redirectAttributes ,Model model) {
+        String message = "";
+        ModelMapper modelMapper = new ModelMapper();
+        User user = modelMapper.map(userInfoDTO, User.class);
+        int result = userDAO.updateUserInfo(user);
+        if(result > 0){
+            message = messageSource.getMessage("user.updateSellerApply", null, Locale.getDefault());
+        }else{
+            message = messageSource.getMessage("user.failSellerApply", null, Locale.getDefault());
+        }
+        redirectAttributes.addFlashAttribute("successMessage", message);
+        return "redirect:/myPage/admin/userInfo?userId="+user.getUserId();
     }
 
 
