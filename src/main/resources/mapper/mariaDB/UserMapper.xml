@@ -144,4 +144,11 @@
            AND DATE(REGISTER_DT) = CURDATE();
     </select>
 
+    <update id="updateUserRoleCd" parameterType="Integer" >
+        /* UserDAO.updateUserRoleCd 판매자 승인 유저권한 변경*/
+        UPDATE T_USER
+           SET ROLE_CD = '02'
+         WHERE USER_NUM = #{userNum}
+    </update>
+
 </mapper>
