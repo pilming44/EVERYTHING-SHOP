@@ -18,6 +18,9 @@ import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.ProductService;
 import study.toy.everythingshop.util.PaginationInfo;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,7 +70,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO findProductDetail(Integer productNum, UserDetails userDetails) {
+    public ProductDTO findProductDetail(Integer productNum, boolean firstView, UserDetails userDetails) {
+        //쿠키 기반 최초 조회라면 조회수 증가
+        if(firstView) {
+            productDAO.updateProductViewCount(productNum);
+        }
+
+        //상품조회
         ProductDTO product = productDAO.selectByProductNum(productNum);
 
         if(userDetails != null) {
@@ -150,5 +159,39 @@ public class ProductServiceImpl implements ProductService {
         Integer remainQuantity = productOrderDTO.getRegisterQuantity() - productDAO.selectOrderedQty(productNum);
         productOrderDTO.setRemainQuantity(remainQuantity);
         return productOrderDTO;
+    }
+
+    @Override
+    public boolean productViewCheck(Integer productNum, HttpServletRequest request, HttpServletResponse response) {
+        Cookie oldCookie = null;
+        final Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (final Cookie cookie : cookies) {
+                //이미 postView쿠키가 있다면 oldCookie전환
+                if (cookie.getName().equals("productView")) {
+                    oldCookie = cookie;
+                }
+            }
+        }
+
+        //productView쿠키가 존재하면 해당 상품이 맞는지 확인후 해당 상품이 아니라면 쿠키 MaxAge업데이트 , GMT(그리니치 평균시)를 기준으로 함
+        if (oldCookie != null) {
+            if (!oldCookie.getValue().contains("[" + productNum + "]")) {
+                oldCookie.setValue(oldCookie.getValue() + "_[" + productNum + "]");
+                oldCookie.setPath("/product/"); // product 요청시에만 쿠키 전송
+                oldCookie.setMaxAge(60 * 30); //30분간 유지 마지막 조회시점을 기준으로 MaxAge묶임
+                response.addCookie(oldCookie);
+                return true;
+            }
+        } else {
+            //최초 조회라면 쿠키 발급
+            final Cookie newCookie = new Cookie("productView","[" + productNum + "]");
+            newCookie.setPath("/product/"); //product 요청시에만 쿠키 전송
+            newCookie.setMaxAge(60 * 30); //30분간 유지
+            response.addCookie(newCookie);
+            return true;
+        }
+
+        return false;
     }
 }

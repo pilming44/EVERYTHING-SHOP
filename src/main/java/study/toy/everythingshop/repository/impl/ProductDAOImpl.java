@@ -82,4 +82,9 @@ public class ProductDAOImpl implements ProductDAO {
     public int updateProductSoldOut(ProductOrderDTO productOrderDTO) {
         return sqlSession.update("maria.ProductDAO.updateProductSoldOut", productOrderDTO);
     }
+
+    @Override
+    public int updateProductViewCount(Integer productNum) {
+        return sqlSession.update("maria.ProductDAO.updateProductViewCount", productNum);
+    }
 }

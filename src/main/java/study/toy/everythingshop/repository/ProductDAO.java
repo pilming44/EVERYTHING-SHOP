@@ -34,4 +34,6 @@ public interface ProductDAO {
     int updateProductSoldOut(ProductOrderDTO productOrderDTO);
 
     Integer selectOrderedQty(Integer productNum);
+
+    int updateProductViewCount(Integer productNum);
 }

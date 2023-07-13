@@ -5,29 +5,40 @@
     <select id="selectProductList" parameterType="ProductSearchDTO" resultType="ProductDTO">
         /* ProductDAO.selectProductList 전체 PRODUCT LIST 조회*/
         <include refid="maria.CommonDAO.pagingTop"></include>
-        SELECT ROW_NUMBER() OVER (ORDER BY T01.REGISTER_DT) AS ROW_NUM
-             , T01.PRODUCT_NUM          /* 상품번호*/
-             , T01.USER_NUM             /* 등록사용자번호*/
-             , T01.PRODUCT_NM           /* 상품명*/
-             , T01.REGISTER_QUANTITY    /* 수량*/
-             , T01.PRODUCT_PRICE        /* 가격*/
-             , T01.PRODUCT_STATUS_CD    /* 판매상태*/
-             , T01.POST_YN              /* 게시여부*/
-             , T01.REGISTER_DT          /* 등록일자*/
-             , T01.CHANGE_DT            /* 수정일자*/
-          FROM T_PRODUCT T01
+        SELECT ROW_NUMBER() OVER (ORDER BY TPR.REGISTER_DT) AS ROW_NUM
+             , TPR.PRODUCT_NUM
+             , TPR.PRODUCT_NM           /* 상품명*/
+             , TPR.REMAIN_QUANTITY		/* 잔여수량*/
+             , NVL(T01.SALES_QUANTITY, 0) AS SALES_QUANTITY		/* 판매수량*/
+             , TPR.PRODUCT_PRICE        /* 가격*/
+             , GET_CODE_NAME('COM1004', TPR.PRODUCT_STATUS_CD) AS PRODUCT_STATUS_NM
+             , TPR.POST_YN              /* 게시여부*/
+             , NVL(TPRV.VIEWS, 0) AS VIEWS		/* 조회수*/
+          FROM T_PRODUCT TPR
+          LEFT JOIN (SELECT TORP.PRODUCT_NUM
+                          , SUM(ORDER_QUANTITY) AS SALES_QUANTITY
+                       FROM T_ORDERED_PRODUCT TORP
+                       LEFT JOIN T_ORDER TOR
+                         ON TORP.ORDER_NUM = TOR.ORDER_NUM
+                        AND TOR.ORDER_STATUS_CD != '02'
+                      GROUP BY TORP.PRODUCT_NUM
+                    ) T01
+            ON TPR.PRODUCT_NUM = T01.PRODUCT_NUM
+          LEFT JOIN T_PRODUCT_VIEWS TPRV
+            ON TPR.PRODUCT_NUM = TPRV.PRODUCT_NUM
         <where>
+           AND TPR.POST_YN = 'Y'
             <if test="productNm != null and productNm != ''">
-                and T01.PRODUCT_NM LIKE CONCAT('%',#{productNm},'%')
+                and TPR.PRODUCT_NM LIKE CONCAT('%',#{productNm},'%')
             </if>
             <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice == null">
-                and T01.PRODUCT_PRICE &gt;= #{fromPrice}  /* 시작가격만 있고 끝 가격은 없을경우*/
+                and TPR.PRODUCT_PRICE &gt;= #{fromPrice}  /* 시작가격만 있고 끝 가격은 없을경우*/
             </if>
             <if test="toPrice != null and toPrice &gt;= 0 and fromPrice == null">
-                and T01.PRODUCT_PRICE &lt;= #{toPrice}  /* 끝 가격만 있고 시작가격은 없을경우*/
+                and TPR.PRODUCT_PRICE &lt;= #{toPrice}  /* 끝 가격만 있고 시작가격은 없을경우*/
             </if>
             <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice != null and toPrice &gt;= 0">
-                and T01.PRODUCT_PRICE BETWEEN #{fromPrice} AND #{toPrice}
+                and TPR.PRODUCT_PRICE BETWEEN #{fromPrice} AND #{toPrice}
             </if>
         </where>
         <include refid="maria.CommonDAO.pagingBottom"></include>
@@ -35,31 +46,41 @@
 
     <select id="selectProductListTotalCount" resultType="Integer">
         <include refid="maria.CommonDAO.countTop"></include>
-        SELECT ROW_NUMBER() OVER (ORDER BY T01.REGISTER_DT) AS ROW_NUM
-             , T01.PRODUCT_NUM          /* 상품번호*/
-             , T01.USER_NUM             /* 등록사용자번호*/
-             , T01.PRODUCT_NM           /* 상품명*/
-             , T01.REGISTER_QUANTITY    /* 수량*/
-             , T01.PRODUCT_PRICE        /* 가격*/
-             , T01.PRODUCT_STATUS_CD    /* 판매상태*/
-             , T01.POST_YN              /* 게시여부*/
-             , T01.REGISTER_DT          /* 등록일자*/
-             , T01.CHANGE_DT            /* 수정일자*/
-          FROM T_PRODUCT T01
-          <where>
-              <if test="productNm != null and productNm != ''">
-                  and T01.PRODUCT_NM LIKE CONCAT('%',#{productNm},'%')
-              </if>
-              <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice == null">
-                  and T01.PRODUCT_PRICE &gt;= #{fromPrice}  /* 시작가격만 있고 끝 가격은 없을경우*/
-              </if>
-              <if test="toPrice != null and toPrice &gt;= 0 and fromPrice == null">
-                  and T01.PRODUCT_PRICE &lt;= #{toPrice}  /* 끝 가격만 있고 시작가격은 없을경우*/
-              </if>
-              <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice != null and toPrice &gt;= 0">
-                  and T01.PRODUCT_PRICE BETWEEN #{fromPrice} AND #{toPrice}
-              </if>
-          </where>
+        SELECT ROW_NUMBER() OVER (ORDER BY TPR.REGISTER_DT) AS ROW_NUM
+             , TPR.PRODUCT_NM           /* 상품명*/
+             , TPR.REMAIN_QUANTITY		/* 수량*/
+             , NVL(T01.ORDERED_QUANTITY, 0) AS ORDERED_QUANTITY		/* 판매수량*/
+             , TPR.PRODUCT_PRICE        /* 가격*/
+             , GET_CODE_NAME('COM1004', TPR.PRODUCT_STATUS_CD) AS PRODUCT_STATUS_NM
+             , TPR.POST_YN              /* 게시여부*/
+             , NVL(TPRV.VIEWS, 0) AS VIEWS		/* 조회수*/
+          FROM T_PRODUCT TPR
+          LEFT JOIN (SELECT TORP.PRODUCT_NUM
+                          , SUM(ORDER_QUANTITY) AS ORDERED_QUANTITY
+                       FROM T_ORDERED_PRODUCT TORP
+                       LEFT JOIN T_ORDER TOR
+                         ON TORP.ORDER_NUM = TOR.ORDER_NUM
+                        AND TOR.ORDER_STATUS_CD != '02'
+                      GROUP BY TORP.PRODUCT_NUM
+                    ) T01
+            ON TPR.PRODUCT_NUM = T01.PRODUCT_NUM
+          LEFT JOIN T_PRODUCT_VIEWS TPRV
+            ON TPR.PRODUCT_NUM = TPRV.PRODUCT_NUM
+        <where>
+           AND TPR.POST_YN = 'Y'
+            <if test="productNm != null and productNm != ''">
+                and TPR.PRODUCT_NM LIKE CONCAT('%',#{productNm},'%')
+            </if>
+            <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice == null">
+                and TPR.PRODUCT_PRICE &gt;= #{fromPrice}  /* 시작가격만 있고 끝 가격은 없을경우*/
+            </if>
+            <if test="toPrice != null and toPrice &gt;= 0 and fromPrice == null">
+                and TPR.PRODUCT_PRICE &lt;= #{toPrice}  /* 끝 가격만 있고 시작가격은 없을경우*/
+            </if>
+            <if test="fromPrice != null and fromPrice &gt;= 0 and toPrice != null and toPrice &gt;= 0">
+                and TPR.PRODUCT_PRICE BETWEEN #{fromPrice} AND #{toPrice}
+            </if>
+        </where>
         <include refid="maria.CommonDAO.countBottom"></include>
     </select>
 
@@ -214,6 +235,14 @@
         UPDATE T_PRODUCT
            SET PRODUCT_STATUS_CD = '03'
              , CHANGE_DT = now()
+         WHERE PRODUCT_NUM = #{productNum}
+    </update>
+
+    <update id="updateProductViewCount" parameterType="Integer">
+        /* ProductDAO.updateProductViewCount 상품조회수 증가*/
+        UPDATE T_PRODUCT_VIEWS
+           SET VIEWS = VIEWS + 1
+             , CHANGE_DT = SYSDATE()
          WHERE PRODUCT_NUM = #{productNum}
     </update>
 </mapper>
