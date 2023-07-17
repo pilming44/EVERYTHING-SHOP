@@ -1,4 +1,4 @@
-package study.toy.everythingshop;
+package study.toy.everythingshop.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
