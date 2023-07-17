@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import study.toy.everythingshop.ProductStatus;
 import study.toy.everythingshop.auth.CustomUserDetails;
 import study.toy.everythingshop.dto.ProductDTO;
 import study.toy.everythingshop.dto.ProductEditDTO;
@@ -122,7 +123,7 @@ public class ProductController {
 
         //주문가능한 상태가 아니라면 상세페이지로 리다이렉트
         ProductDTO productDTO = productDAO.selectByProductNum(productNum);
-        if(!productDTO.getProductStatusCd().equals("02")) {
+        if(!productDTO.getProductStatusCd().equals(ProductStatus.ON_SALE.getCode())) {
             return "redirect:/product/"+productNum;
         }
 
