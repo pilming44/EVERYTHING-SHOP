@@ -69,10 +69,16 @@
     </div>
   </div>
   <div  class="row mt-3">
-    <div class="col-md-7 mx-auto d-flex justify-content-between">
-        <button class="btn btn-primary btn-lg flex-grow-1 mr-2" onclick="location.href='/'"
+    <div th:switch="${product.productStatusCd}" class="col-md-7 mx-auto d-flex justify-content-between">
+        <button th:case="'01'" class="btn btn-primary btn-lg flex-grow-1 mr-2"
+                type="button" th:text="#{button.product.preparing}"disabled=”disabled”>판매 준비중</button>
+        <button th:case="'02'" class="btn btn-primary btn-lg flex-grow-1 mr-2" onclick="location.href='/'"
                 th:onclick="|location.href='@{/product/{productNum}/order(productNum=${product.productNum})}'|"
                 type="button" th:text="#{button.product.order}">상품 주문</button>
+        <button th:case="'03'" class="btn btn-primary btn-lg flex-grow-1 mr-2"
+                type="button" th:text="#{button.product.sold.out}"disabled=”disabled”>품절</button>
+        <button th:case="'04'" class="btn btn-primary btn-lg flex-grow-1 mr-2"
+                type="button" th:text="#{button.product.sales.end}"disabled=”disabled”>판매 종료</button>
         <button class="btn btn-primary btn-lg flex-grow-1"
                 onclick="location.href='/'"
                 th:onclick="|location.href='@{/product/{productNum}/edit(productNum=${product.productNum})}'|"
