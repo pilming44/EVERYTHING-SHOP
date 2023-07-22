@@ -21,8 +21,8 @@
             $("#finalPaymentPrice").val(orderQty * price);
         }
         function overQty(){
-            let orderQty = $("#orderQuantity").val();
-            let remainQty = $("#remainQuantity").val();
+            let orderQty = parseInt($("#orderQuantity").val(), 10); // 10진수로 변환
+            let remainQty = parseInt($("#remainQuantity").val(), 10); // 10진수로 변환
             if(orderQty > remainQty){
                 $("#orderQuantity").val(remainQty);
             }else if(orderQty <= 0){
@@ -82,7 +82,7 @@
             <label for="orderQuantity" class="col-sm-2 col-form-label font-weight-bold col-form-label-lg" th:text="#{label.product.orderQuantity}">주문 수량(개) : </label>
             <div class="col-md-5">
                 <input type="number"  th:errorclass="border-danger" th:field="*{orderQuantity}" id="orderQuantity" class="form-control form-control-lg" value="1" min="1"
-                onChange="finalPrice()">
+                       th:max="*{remainQuantity}"  onChange="finalPrice()">
                 <small  th:id="errorMsgQty" th:if="${#fields.hasErrors('orderQuantity')}" class="text-danger"> <span th:errors="*{orderQuantity}" ></span></small>
             </div>
         </div>
