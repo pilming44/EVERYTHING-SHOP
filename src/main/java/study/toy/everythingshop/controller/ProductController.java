@@ -16,6 +16,7 @@ import study.toy.everythingshop.dto.ProductDTO;
 import study.toy.everythingshop.dto.ProductEditDTO;
 import study.toy.everythingshop.dto.ProductOrderDTO;
 import study.toy.everythingshop.dto.ProductRegisterDTO;
+import study.toy.everythingshop.enums.ProductStatus;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.service.CommonService;
@@ -119,6 +120,13 @@ public class ProductController {
     @GetMapping("/{productNum}/order")
     public String findProductOrderForm(@PathVariable Integer productNum, Model model,@AuthenticationPrincipal CustomUserDetails userDetails ){
         log.info("customUserDetails : {}",userDetails);
+
+        //주문가능한 상태가 아니라면 상세페이지로 리다이렉트
+        ProductDTO productDTO = productDAO.selectByProductNum(productNum);
+        if(!productDTO.getProductStatusCd().equals(ProductStatus.ON_SALE.getCode())) {
+            return "redirect:/product/"+productNum;
+        }
+
         ProductOrderDTO productOrderDTO = productService.findOrderDetail(productNum,userDetails);
         model.addAttribute("productOrderDTO", productOrderDTO);
         return "productOrder";
