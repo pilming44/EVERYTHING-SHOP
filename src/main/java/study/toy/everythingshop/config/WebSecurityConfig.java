@@ -19,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
@@ -32,8 +33,9 @@ public class WebSecurityConfig {
                 .formLogin()
                 .loginPage("/users/signIn")
                 .loginProcessingUrl("/loginProc")
-                .failureHandler(customAuthenticationFailureHandler)
-                .defaultSuccessUrl("/")
+                .failureHandler(customAuthenticationFailureHandler)     //로그인실패 핸들러
+//                .defaultSuccessUrl("/")   //successHandler구현으로 주석처리 successHandler내부에서 리다이렉트 처리함
+                .successHandler(customAuthenticationSuccessHandler)     // 로그인 성공 핸들러
                 .usernameParameter("userId")
                 .passwordParameter("userPw")
                 .and().build();

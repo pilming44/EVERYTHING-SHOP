@@ -51,11 +51,11 @@
     </select>
     
     <select id="selectApplyCount" parameterType="Integer" resultType="Integer">
-        /*MyPageDAO.selectApplyCount 신청완료상태인 지원 건수*/
+        /*MyPageDAO.selectApplyCount 신청완료 또는 승인상태인 지원 건수*/
         SELECT COUNT(*)
           FROM T_SELLER_APPLY TSEA
          WHERE USER_NUM = #{userNum}
-           AND SELLER_APPLY_STATUS_CD = '01'
+           AND (SELLER_APPLY_STATUS_CD = '01' or SELLER_APPLY_STATUS_CD = '02')
     </select>
 
     <select id="selectDiscountPolicy" resultType="DiscountPolicyDTO">

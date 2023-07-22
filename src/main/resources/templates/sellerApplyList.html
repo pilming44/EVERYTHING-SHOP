@@ -4,9 +4,52 @@
 	<meta charset="utf-8">
 	<title th:text="#{page.title.sellerApplyList}">판매자 신청</title>
 	<!-- 부트스트랩 CSS 파일 불러오기 -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			modal();
+		})
+
+		function modal(){
+			const modal = document.getElementById('modal')
+			if (modal) {
+				modal.addEventListener('show.bs.modal', event => {
+					// const button = event.relatedTarget
+					// const recipient = button.getAttribute('data-bs-whatever')
+					// const modalTitle = modal.querySelector('.modal-title')
+					// const modalBodyInput = modal.querySelector('.modal-body input')
+					// const applyNum = button.getAttribute('applyNum')
+					//
+					// modalBodyInput.value = recipient
+					// modal.querySelector("#recipient-num").value = applyNum;
+				})
+			}
+		}
+	</script>
 </head>
 <body>
+	<!--모달창-->
+	<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="modalLabel">반려 사유</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<label for="message-text" class="col-form-label">사유:</label>
+						<textarea class="form-control" id="message-text" name="rejectReason" readonly></textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="container">
 		<!-- 판매자신청내역 제목 -->
 		<div class="row mt-3">
@@ -16,7 +59,7 @@
 			<div class="col-md-2">
 				<div th:if="${applyCount < 1}">
 					<form th:action="@{/myPage/sellerApply}" method="post">
-						<button type="submit" class="btn btn-primary btn-block" th:text="#{button.seller.apply}">판매자 신청</button>
+						<button type="submit" class="btn btn-primary btn-block" th:text="#{button.seller}">판매자 신청</button>
 					</form>
 				</div>
 			</div>
@@ -32,9 +75,36 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="apply : ${applyList}">
+						<tr th:each="apply, applyStat : ${applyList}">
 							<td class="text-center" th:text="${apply.registerDt}">날짜</td>
-							<td class="text-center" th:text="${apply.sellerApplyStatusNm}">결과</td>
+							<td class="text-center" >
+								<span th:if="${apply.sellerApplyStatusCd == T(study.toy.everythingshop.enums.SellerApplyStatus).REJECTION.getCode()}"
+									  style="color: blue; text-decoration: underline; cursor: pointer;"
+									  data-bs-toggle="modal" th:data-bs-target="'#modal_' + ${applyStat.index}" th:text="${apply.sellerApplyStatusNm}">결과</span>
+								<span th:unless="${apply.sellerApplyStatusCd == T(study.toy.everythingshop.enums.SellerApplyStatus).REJECTION.getCode()}"
+									  th:text="${apply.sellerApplyStatusNm}">결과</span>
+							</td>
+							<div th:if="${apply.sellerApplyStatusCd == T(study.toy.everythingshop.enums.SellerApplyStatus).REJECTION.getCode()}"
+								 class="modal fade" th:id="'modal_' + ${applyStat.index}" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h1 class="modal-title fs-5" th:id="'modalLabel_'+ ${applyStat.index}">반려 사유</h1>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<div class="mb-3">
+												<label for="message-text" class="col-form-label">사유:</label>
+												<textarea class="form-control" th:id="'message-text_'+ ${applyStat.index}"
+														  name="rejectReason" th:text="${apply.rejectReason}" readonly></textarea>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+										</div>
+									</div>
+								</div>
+							</div>
 						</tr>
 					</tbody>
 				</table>

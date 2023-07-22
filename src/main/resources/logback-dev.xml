@@ -12,7 +12,7 @@
     </appender>
 
     <!-- Loggers -->
-    <logger name="study.toy.everythingshop" level="DEBUG" additivity="false">
+    <logger name="study.toy.everythingshop" level="INFO" additivity="false">
         <appender-ref ref="FILE"/>
     </logger>
     <!-- Root Logger -->
