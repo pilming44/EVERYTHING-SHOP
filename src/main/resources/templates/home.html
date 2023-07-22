@@ -39,6 +39,11 @@
 		<div sec:authorize="isAuthenticated()">
 			<strong sec:authentication="name"></strong>님 <span class="text-danger">(<span sec:authentication="principal.holdingPoint"></span>P)</span>
 			<span sec:authentication="principal.gradeNm"></span>
+			<img th:if="${#authentication.principal.gradeNm == '블랙홀'}" src="/blackHole.png" height="48" width="48"/>
+			<img th:if="${#authentication.principal.gradeNm == '은하'}" src="/galaxy.png" height="48" width="48"/>
+			<img th:if="${#authentication.principal.gradeNm == '태양'}" src="/sun.png" height="48" width="48"/>
+			<img th:if="${#authentication.principal.gradeNm == '지구'}" src="/earth.png" height="48" width="48"/>
+			<img th:if="${#authentication.principal.gradeNm == '달'}" src="/moon.png" height="48" width="48"/>
 		</div>
 		<form action="/home" th:action th:object="${productSearchDTO}" method="get">
 			<!-- 검색창 -->
@@ -115,15 +120,21 @@
 							<th class="text-center" style="width: 5%" th:text="#{label.product.productNum}">No.</th>
 							<th class="text-center" style="width: 25%" th:text="#{label.product.productName}">상품명</th>
 							<th class="text-center" style="width: 10%" th:text="#{label.product.price}">가격(원)</th>
-							<th class="text-center" style="width: 10%" th:text="#{label.product.quantity}">남은 수량(개)</th>
+							<th class="text-center" style="width: 10%" th:text="#{label.product.remainQuantity}">남은 수량(개)</th>
+							<th class="text-center" style="width: 10%" th:text="#{label.product.salesQuantity}">판매 수량(개)</th>
+							<th class="text-center" style="width: 10%" th:text="#{label.product.productStts}">판매 상태</th>
+							<th class="text-center" style="width: 10%" th:text="#{label.product.views}">조회수</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="product : ${products}">
-							<td class="text-center" th:text="${product.productNum}">상품번호</td>
+							<td class="text-center" th:text="${product.rowNum}">번호</td>
 							<td><a href="/" th:href="@{|/product/${product.productNum}|}" th:text="${product.productNm}">상품명</a></td>
 							<td class="text-center" th:text="${product.productPrice}">상품가격</td>
-							<td class="text-center" th:text="${product.registerQuantity}">수량</td>
+							<td class="text-center" th:text="${product.remainQuantity}">잔여수량</td>
+							<td class="text-center" th:text="${product.salesQuantity}">판매수량</td>
+							<td class="text-center" th:text="${product.productStatusNm}">판매상태</td>
+							<td class="text-center" th:text="${product.views}">조회수</td>
 						</tr>
 					</tbody>
 				</table>
