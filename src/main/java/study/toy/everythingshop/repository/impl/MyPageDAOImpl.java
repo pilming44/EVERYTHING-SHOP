@@ -116,5 +116,10 @@ public class MyPageDAOImpl implements MyPageDAO {
         return sqlSession.update("maria.MyPageDAO.updateUserGrade", user);
     }
 
+    @Override
+    public OrderStatusDTO selectOrderDetail(OrderStatusDTO orderStatusDTO) {
+        return sqlSession.selectOne("maria.MyPageDAO.selectOrderDetail", orderStatusDTO);
+    }
+
 
 }

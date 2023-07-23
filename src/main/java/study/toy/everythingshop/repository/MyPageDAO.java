@@ -48,4 +48,6 @@ public interface MyPageDAO {
     DiscountPolicyDTO selectCorrectGrade(Integer totalPayment);
 
     int updateUserGrade(User user);
+
+    OrderStatusDTO selectOrderDetail(OrderStatusDTO orderStatusDTO);
 }

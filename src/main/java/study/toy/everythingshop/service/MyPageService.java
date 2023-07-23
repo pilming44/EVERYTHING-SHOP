@@ -1,6 +1,5 @@
 package study.toy.everythingshop.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.User;
 
@@ -16,7 +15,7 @@ public interface MyPageService {
 
     void editUserInfo(User user);
 
-    List<ProductOrderDTO> findMyOrderList(ProductSearchDTO productSearchDTO);
+    Map<String, Object> findMyOrderList(ProductSearchDTO productSearchDTO);
 
     UserInfoDTO findMyPageInfo(String userId);
 

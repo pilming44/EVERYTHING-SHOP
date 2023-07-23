@@ -124,16 +124,17 @@ public class MyPageController {
             productSearchDTO = new ProductSearchDTO();
             log.info("바인딩오류발생");
         }
-        List<ProductOrderDTO> myOrderList = myPageService.findMyOrderList(productSearchDTO);
+        Map<String, Object> myOrderList = myPageService.findMyOrderList(productSearchDTO);
         if (myOrderList.isEmpty()) {
             model.addAttribute("message", "주문 내역이 없습니다.");
         } else {
-            model.addAttribute("products", myOrderList);
+            model.addAttribute("products", myOrderList.get("list"));
             model.addAttribute("productSearchDTO", productSearchDTO);
         }
         if(!bindingResult.hasErrors()) {
             model.addAttribute("productSearchDTO", productSearchDTO);
         }
+        model.addAttribute("paginationInfo", myOrderList.get("paginationInfo"));
         return "myOrderList";
     }
 

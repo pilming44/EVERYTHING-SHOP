@@ -356,4 +356,12 @@
          WHERE USER_NUM = #{userNum}
     </update>
 
+    <select id="selectOrderDetail" parameterType="OrderStatusDTO" resultType="OrderStatusDTO">
+        SELECT TORP.FINAL_PAYMENT_PRICE
+          FROM T_ORDER TOR
+          LEFT JOIN T_ORDERED_PRODUCT TORP
+            ON TOR.ORDER_NUM = TORP.ORDER_NUM
+         WHERE TOR.ORDER_NUM = #{orderNum}
+    </select>
+
 </mapper>

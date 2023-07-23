@@ -186,7 +186,9 @@
     </update>
 
     <select id="selectMyOrderList" parameterType="ProductSearchDTO" resultType="ProductOrderDTO">
-        SELECT TOR.USER_NUM  /*사용자번호*/
+        <include refid="maria.CommonDAO.pagingTop"></include>
+        SELECT ROW_NUMBER() OVER (ORDER BY TOR.REGISTER_DT) AS ROW_NUM
+             , TOR.USER_NUM  /*사용자번호*/
              , TOR.ORDER_NUM   /*오더번호*/
              , TPR.PRODUCT_NUM  /*상품번호*/
              , TPR.PRODUCT_NM   /*상품이름*/
@@ -208,6 +210,25 @@
           </if>
         </where>
          ORDER BY TOR.REGISTER_DT DESC
+        <include refid="maria.CommonDAO.pagingBottom"></include>
+    </select>
+
+    <select id="selectMyOrderListTotalCount" parameterType="ProductSearchDTO" resultType="Integer">
+        <include refid="maria.CommonDAO.countTop"></include>
+        SELECT TOR.ORDER_NUM   /*오더번호*/
+        FROM T_ORDER TOR
+        LEFT JOIN T_ORDERED_PRODUCT TOP
+        ON TOR.ORDER_NUM = TOP.ORDER_NUM
+        LEFT JOIN T_PRODUCT TPR
+        ON TOP.PRODUCT_NUM = TPR.PRODUCT_NUM
+        <where>
+            TOR.USER_NUM = #{userNum}
+            AND TPR.PRODUCT_NM IS NOT NULL
+            <if test="productNm != '' and productNm != null">
+                AND TPR.PRODUCT_NM LIKE CONCAT('%',  #{productNm}, '%')
+            </if>
+        </where>
+        <include refid="maria.CommonDAO.countBottom"></include>
     </select>
 
     <select id="selectOrderedQty" parameterType="Integer" resultType="Integer">

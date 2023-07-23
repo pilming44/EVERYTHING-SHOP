@@ -3,9 +3,9 @@ package study.toy.everythingshop.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import study.toy.everythingshop.dto.*;
+import study.toy.everythingshop.entity.mariaDB.PointHistory;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.MyPageDAO;
@@ -54,8 +54,31 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public List<ProductOrderDTO> findMyOrderList(ProductSearchDTO productSearchDTO) {
-       return productDAO.selectMyOrderList(productSearchDTO);
+    public Map<String, Object> findMyOrderList(ProductSearchDTO productSearchDTO) {
+
+        productSearchDTO.setCurrentPageNo(productSearchDTO.getCurrentPageNo() <= 0 ? 1 : productSearchDTO.getCurrentPageNo());
+        productSearchDTO.setRecordCountPerPage(productSearchDTO.getRecordCountPerPage() <= 0 ? defaultRecordCountPerPage : productSearchDTO.getRecordCountPerPage());
+        int pageSize = productSearchDTO.getPageSize() <= 0 ? defaultPageSize : productSearchDTO.getPageSize();
+
+        int totalRecordCount = productDAO.selectMyOrderListTotalCount(productSearchDTO);
+
+        //페이징 하는데 필요한 값을 계산해주는 클래스 값 세팅
+        PaginationInfo paginationInfo = new PaginationInfo();
+        paginationInfo.setCurrentPageNo(productSearchDTO.getCurrentPageNo());
+        paginationInfo.setRecordCountPerPage(productSearchDTO.getRecordCountPerPage());
+        paginationInfo.setPageSize(pageSize);
+        paginationInfo.setTotalRecordCount(totalRecordCount);
+
+        //계산된 값 입력
+        productSearchDTO.setFirstRecordIndex(paginationInfo.getFirstRecordIndex());
+        productSearchDTO.setLastRecordIndex(paginationInfo.getLastRecordIndex());
+        productSearchDTO.setTotalPageCount(paginationInfo.getTotalPageCount());
+        productSearchDTO.setTotalRecordCount(totalRecordCount);
+
+        HashMap<String, Object> resultMap = new HashMap<>();
+        resultMap.put("list", productDAO.selectMyOrderList(productSearchDTO));
+        resultMap.put("paginationInfo", paginationInfo);
+        return resultMap;
     }
 
     @Override
@@ -254,10 +277,12 @@ public class MyPageServiceImpl implements MyPageService {
         orderStatusDTO.setUserNum(user.getUserNum());
         int result =  myPageDAO.updateOrderStatus(orderStatusDTO);
         int update = 0;
+
         //구매확정 후, 누적금액 check 하여, 등급update
         if(orderStatusDTO.getOrderStatusCd().equals("03")){
             //1.누적금액 check
             Integer totalPayment = myPageDAO.selectMyTotalPayment(orderStatusDTO);
+            orderStatusDTO.setTotalPayment(totalPayment);
             // 2. 등급 확인 (등급 정책을 사용하여 새로운 등급 확인)
             String currentGrade = user.getGradeCd();
             DiscountPolicyDTO newGrade = myPageDAO.selectCorrectGrade(totalPayment); // 누적금액에 맞는 등급인지 확인.
@@ -267,6 +292,22 @@ public class MyPageServiceImpl implements MyPageService {
                 // 4. 등급 업데이트
                 update = myPageDAO.updateUserGrade(user);
             }
+            //주문취소시
+        }else if(orderStatusDTO.getOrderStatusCd().equals("02")){
+            //주문디테일 구하기
+            OrderStatusDTO orderStatusDTO1 = myPageDAO.selectOrderDetail(orderStatusDTO);
+            //포인트 복구
+            user.setHoldingPoint(user.getHoldingPoint() + orderStatusDTO1.getFinalPaymentPrice());
+            result += userDAO.updateHoldingPoint(user);
+
+            //포인트 이력테이블에 내역 insert
+            PointHistory pointHistory = PointHistory.builder()
+                    .userNum(user.getUserNum())
+                    .pointChangeCd("04")
+                    .addPoint(orderStatusDTO1.getFinalPaymentPrice())
+                    .build();
+            result += userDAO.insertPointHistory(pointHistory);
+
         }
         HashMap<String, Object> resultMap = new HashMap<>();
         resultMap.put("result", result);
