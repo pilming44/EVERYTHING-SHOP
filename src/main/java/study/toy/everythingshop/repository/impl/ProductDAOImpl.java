@@ -60,12 +60,12 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public int updateQuantityStts(ProductMEntity productMEntity) {
-        return sqlSession.update("h2.ProductDAO.updateQuantityStts", productMEntity);
+        return sqlSession.update("maria.ProductDAO.updateQuantityStts", productMEntity);
     }
 
     @Override
     public List<ProductOrderDTO> selectMyOrderList(ProductSearchDTO productSearchDTO) {
-        return sqlSession.selectList("h2.ProductDAO.selectMyOrderList", productSearchDTO);
+        return sqlSession.selectList("maria.ProductDAO.selectMyOrderList", productSearchDTO);
     }
 
     @Override

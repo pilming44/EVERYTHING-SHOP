@@ -321,4 +321,39 @@
          WHERE APPLY_NUM  = #{applyNum}
     </update>
 
+    <update id="updateOrderStatus" parameterType="OrderStatusDTO" >
+        /*MyPageDAO.updateOrderStatus 주문상태 구매확정 또는 주문취소*/
+        UPDATE T_ORDER
+          SET ORDER_STATUS_CD = #{orderStatusCd}
+        WHERE ORDER_NUM  = #{orderNum}
+    </update>
+
+    <select id="selectMyTotalPayment" parameterType="OrderStatusDTO" resultType="Integer">
+        SELECT SUM(TORP.FINAL_PAYMENT_PRICE) AS TOTAL_PAYMENT
+          FROM T_ORDER TOR
+          LEFT JOIN T_ORDERED_PRODUCT TORP
+            ON TOR.ORDER_NUM  = TORP.ORDER_NUM
+         WHERE TOR.ORDER_STATUS_CD = '03'
+           AND TOR.USER_NUM = #{userNum}
+         GROUP BY TOR.ORDER_STATUS_CD
+    </select>
+
+    <select id="selectCorrectGrade" parameterType="Integer" resultType="DiscountPolicyDTO">
+        SELECT TDIP.GRADE_CD
+             , GET_CODE_NAME('COM1003', TDIP.GRADE_CD) AS GRADE_NM
+             , GRADE_STANDARD
+             , TDIP.DISCOUNT_RATE
+          FROM T_DISCOUNT_POLICY TDIP
+         WHERE SYSDATE() BETWEEN TDIP.START_DATE AND TDIP.END_DATE
+           AND GRADE_STANDARD <![CDATA[<=]]> #{totalPayment}-- 나의 누적금액 대비 등급달성 누적금액 비교
+         ORDER BY TDIP.GRADE_CD ASC
+         LIMIT 1
+    </select>
+
+    <update id="updateUserGrade" parameterType="User" >
+        UPDATE T_USER
+           SET GRADE_CD = #{gradeCd}
+         WHERE USER_NUM = #{userNum}
+    </update>
+
 </mapper>

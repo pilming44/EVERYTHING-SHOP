@@ -3,6 +3,7 @@ package study.toy.everythingshop.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.User;
@@ -247,4 +248,31 @@ public class MyPageServiceImpl implements MyPageService {
         }
         return result;
     }
+
+    @Override
+    public Map<String, Object> updateOrderStatus(OrderStatusDTO orderStatusDTO, User user) {
+        orderStatusDTO.setUserNum(user.getUserNum());
+        int result =  myPageDAO.updateOrderStatus(orderStatusDTO);
+        int update = 0;
+        //구매확정 후, 누적금액 check 하여, 등급update
+        if(orderStatusDTO.getOrderStatusCd().equals("03")){
+            //1.누적금액 check
+            Integer totalPayment = myPageDAO.selectMyTotalPayment(orderStatusDTO);
+            // 2. 등급 확인 (등급 정책을 사용하여 새로운 등급 확인)
+            String currentGrade = user.getGradeCd();
+            DiscountPolicyDTO newGrade = myPageDAO.selectCorrectGrade(totalPayment); // 누적금액에 맞는 등급인지 확인.
+            // 3. 새로운 등급 확인
+            if (!currentGrade.equals(newGrade.getGradeCd())) {
+                user.setGradeCd(newGrade.getGradeCd());
+                // 4. 등급 업데이트
+                update = myPageDAO.updateUserGrade(user);
+            }
+        }
+        HashMap<String, Object> resultMap = new HashMap<>();
+        resultMap.put("result", result);
+        resultMap.put("update", update);
+        return resultMap;
+    }
+
+
 }

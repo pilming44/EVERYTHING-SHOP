@@ -18,6 +18,7 @@ public class ProductOrderDTO {
     private Integer productNum;         //상품번호
     private Integer orderNum;           //주문번호
     private String productNm;           //상품명
+    private Integer orderPrice;         //할인 후 개당주문가격
     private Integer productPrice;       //상품가격
     private Integer registerQuantity;   //등록수량
     private Integer salesQuantity; //판매수량
@@ -25,6 +26,9 @@ public class ProductOrderDTO {
     @NotNull(message = "{NotNull.product.orderQuantity}")
     @Range(min = 1, max = 999999999)
     private Integer orderQuantity;      //주문수량(개)
+
+    private String orderStatus;         //주문상태
+    private String orderStatusCd;      //주문상태코드
 
     private Integer discountPrice;      //할인금액(계정등급에따른 할인)
     private Integer finalPaymentPrice;  //최종결제금액(총금액 - 할인금액)

@@ -1,6 +1,7 @@
 package study.toy.everythingshop.repository;
 
 import study.toy.everythingshop.dto.*;
+import study.toy.everythingshop.entity.mariaDB.User;
 
 import java.util.List;
 
@@ -40,5 +41,11 @@ public interface MyPageDAO {
 
     int updateSellerApply(SellerApplyDTO sellerApplyDTO);
 
+    int updateOrderStatus(OrderStatusDTO orderStatusDTO);
 
+    Integer selectMyTotalPayment(OrderStatusDTO orderStatusDTO);
+
+    DiscountPolicyDTO selectCorrectGrade(Integer totalPayment);
+
+    int updateUserGrade(User user);
 }

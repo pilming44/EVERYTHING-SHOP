@@ -186,27 +186,28 @@
     </update>
 
     <select id="selectMyOrderList" parameterType="ProductSearchDTO" resultType="ProductOrderDTO">
-        SELECT T01.USER_NUM
-             , T01.ORDER_NUM
-             , T03.PRODUCT_NAME
-             , T03.PRODUCT_NUM
-             , T03.PRICE
-             , T02.QUANTITY AS ORDER_QUANTITY
-             , (T02.QUANTITY * T03.PRICE) TOTAL_PRICE
-             , TO_CHAR(T01.REGISTER_DT,'YYYY-MM-DD') REGITSTER_DT
-             , T01.ORDER_STTS
-          FROM ORDER_M T01
-          LEFT JOIN ORDER_PRODUCT T02
-            ON T01.ORDER_NUM = T02.ORDER_NUM
-          LEFT JOIN PRODUCT_M T03
-            ON T02.PRODUCT_NUM = T03.PRODUCT_NUM
+        SELECT TOR.USER_NUM  /*사용자번호*/
+             , TOR.ORDER_NUM   /*오더번호*/
+             , TPR.PRODUCT_NUM  /*상품번호*/
+             , TPR.PRODUCT_NM   /*상품이름*/
+             , (TOP.PRODUCT_PRICE  - TOP.DISCOUNT_PRICE) AS ORDER_PRICE   /*할인 후 개당가격*/
+             , TOP.ORDER_QUANTITY   /* 주문수량 */
+             , TOP.FINAL_PAYMENT_PRICE  /*총 주문 가격*/
+             , TOR.ORDER_STATUS_CD   /* 주문 상태코드*/
+             , GET_CODE_NAME('COM1005',TOR.ORDER_STATUS_CD) AS ORDER_STATUS
+          FROM T_ORDER TOR
+          LEFT JOIN T_ORDERED_PRODUCT TOP
+            ON TOR.ORDER_NUM = TOP.ORDER_NUM
+          LEFT JOIN T_PRODUCT TPR
+            ON TOP.PRODUCT_NUM = TPR.PRODUCT_NUM
         <where>
-               T01.USER_NUM = #{userNum}
-           AND T03.PRODUCT_NAME IS NOT NULL
-        <if test="productName != '' and productName != null">
-           AND T03.PRODUCT_NAME LIKE '%' || #{productName} || '%'
-        </if>
+               TOR.USER_NUM = #{userNum}
+           AND TPR.PRODUCT_NM IS NOT NULL
+          <if test="productNm != '' and productNm != null">
+           AND TPR.PRODUCT_NM LIKE CONCAT('%',  #{productNm}, '%')
+          </if>
         </where>
+         ORDER BY TOR.REGISTER_DT DESC
     </select>
 
     <select id="selectOrderedQty" parameterType="Integer" resultType="Integer">

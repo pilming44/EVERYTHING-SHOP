@@ -1,5 +1,6 @@
 package study.toy.everythingshop.service;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.User;
 
@@ -36,4 +37,6 @@ public interface MyPageService {
     Map<String, Object>  selectAllUserInfo(UserSearchDTO userSearchDTO);
 
     int editSellerApply(SellerApplyDTO sellerApplyDTO);
+
+    Map<String, Object> updateOrderStatus(OrderStatusDTO orderStatusDTO, User user);
 }

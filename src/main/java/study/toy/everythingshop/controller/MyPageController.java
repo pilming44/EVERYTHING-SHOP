@@ -137,6 +137,30 @@ public class MyPageController {
         return "myOrderList";
     }
 
+    @PostMapping("/editOrderStts")
+    public String editOrderStts(@AuthenticationPrincipal CustomUserDetails userDetails, Model model,
+                                RedirectAttributes redirectAttributes ,
+                                @Validated  @ModelAttribute OrderStatusDTO orderStatusDTO) {
+
+        User user = userDetails.getUser();
+        Map<String, Object> updateOrderStatus = myPageService.updateOrderStatus(orderStatusDTO,user);
+        int result = (Integer) updateOrderStatus.get("result");
+        int update = (Integer) updateOrderStatus.get("update");
+        String message = "";
+        if(result > 0){
+            message = messageSource.getMessage("user.successUpdate", null, Locale.getDefault());
+            redirectAttributes.addFlashAttribute("successMessage", message);
+        }else if(update > 0){
+            message = messageSource.getMessage("user.updateGradCd", null, Locale.getDefault());
+            redirectAttributes.addFlashAttribute("updateMessage", message);
+        }else{
+            message = messageSource.getMessage("user.failUpdated", null, Locale.getDefault());
+            redirectAttributes.addFlashAttribute("failMessage", message);
+        }
+
+        return "redirect:/myPage/myOrderList";
+    }
+
     @GetMapping("/sellerApplyList")
     public String sellerApplyListView(SellerApplyDTO sellerApplyDTO, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         //사용자 정보 조회
@@ -263,9 +287,9 @@ public class MyPageController {
         String message = "";
         int result = myPageService.editSellerApply(sellerApplyDTO);
         if(result > 0){
-            message = messageSource.getMessage("user.updateSellerApply", null, Locale.getDefault());
+            message = messageSource.getMessage("user.successUpdate", null, Locale.getDefault());
         }else{
-            message = messageSource.getMessage("user.failSellerApply", null, Locale.getDefault());
+            message = messageSource.getMessage("user.failUpdated", null, Locale.getDefault());
         }
         redirectAttributes.addFlashAttribute("successMessage", message);
         return "redirect:/myPage/admin/allUserView";
@@ -278,9 +302,9 @@ public class MyPageController {
         User user = modelMapper.map(userInfoDTO, User.class);
         int result = userDAO.updateUserInfo(user);
         if(result > 0){
-            message = messageSource.getMessage("user.updateSellerApply", null, Locale.getDefault());
+            message = messageSource.getMessage("user.successUpdate", null, Locale.getDefault());
         }else{
-            message = messageSource.getMessage("user.failSellerApply", null, Locale.getDefault());
+            message = messageSource.getMessage("user.failUpdated", null, Locale.getDefault());
         }
         redirectAttributes.addFlashAttribute("successMessage", message);
         return "redirect:/myPage/admin/userInfo?userId="+user.getUserId();

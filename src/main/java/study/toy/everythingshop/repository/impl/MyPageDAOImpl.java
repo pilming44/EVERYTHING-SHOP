@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import study.toy.everythingshop.dto.*;
+import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.MyPageDAO;
 
@@ -93,6 +94,26 @@ public class MyPageDAOImpl implements MyPageDAO {
     @Override
     public int updateSellerApply(SellerApplyDTO sellerApplyDTO) {
         return sqlSession.update("maria.MyPageDAO.updateSellerApply", sellerApplyDTO);
+    }
+
+    @Override
+    public int updateOrderStatus(OrderStatusDTO orderStatusDTO) {
+        return sqlSession.update("maria.MyPageDAO.updateOrderStatus", orderStatusDTO);
+    }
+
+    @Override
+    public Integer selectMyTotalPayment(OrderStatusDTO orderStatusDTO) {
+        return sqlSession.selectOne("maria.MyPageDAO.selectMyTotalPayment", orderStatusDTO);
+    }
+
+    @Override
+    public DiscountPolicyDTO selectCorrectGrade(Integer totalPayment) {
+        return sqlSession.selectOne("maria.MyPageDAO.selectCorrectGrade", totalPayment);
+    }
+
+    @Override
+    public int updateUserGrade(User user) {
+        return sqlSession.update("maria.MyPageDAO.updateUserGrade", user);
     }
 
 
