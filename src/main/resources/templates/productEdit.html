@@ -31,7 +31,7 @@
   <div class="row justify-content-center mt-3">
     <label for="productPrice" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.price}">가격</label>
     <div class="col-md-5">
-      <input type="text" id="productPrice" th:errorclass="field-error" th:field="*{productPrice}" class="form-control form-control-lg" value="10000">
+      <input type="number" id="productPrice" th:errorclass="field-error" th:field="*{productPrice}" class="form-control form-control-lg" value="10000">
       <div th:if="${#fields.hasErrors('productPrice')}">
           <span th:errors="*{productPrice}" class="field-error">가격 binding 오류</span>
       </div>
@@ -40,7 +40,7 @@
   <div class="row justify-content-center mt-3">
     <label for="registerQuantity" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.registerQuantity}">등록수량</label>
     <div class="col-md-5">
-      <input type="text" id="registerQuantity" th:errorclass="field-error" th:field="*{registerQuantity}" class="form-control form-control-lg" value="상품A">
+      <input type="number" id="registerQuantity" th:errorclass="field-error" th:field="*{registerQuantity}" class="form-control form-control-lg" value="상품A">
       <div th:if="${#fields.hasErrors('registerQuantity')}">
         <span th:errors="*{registerQuantity}" class="field-error">등록수량 binding 오류</span>
       </div>

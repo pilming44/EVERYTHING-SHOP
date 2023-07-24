@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,15 +46,36 @@ public class UserController {
             model.addAttribute("joinDTO", joinDTO);
             return "/join";
         }
+
+        // Spring Security를 사용하여 현재 사용자의 역할을 확인합니다.
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_01"));
+
+        String url = "/users/signIn";
+        String message = "";
+
+        if(isAdmin){
+            url = "/myPage/admin/allUserView";
+        }
+
         int result = userService.saveMember(joinDTO);
         if(result > 0){
-            String message = messageSource.getMessage("id.joinSuccess", null, Locale.getDefault());
+            if(isAdmin){
+                message = messageSource.getMessage("user.insertUser", null, Locale.getDefault());
+            }else{
+                message = messageSource.getMessage("id.joinSuccess", null, Locale.getDefault());
+            }
             redirectAttributes.addFlashAttribute("successMessage", message);
-            return "redirect:/users/signIn";
+            return "redirect:"+url;
         }else{
-            String message = messageSource.getMessage("id.joinFail", null, Locale.getDefault());
+            if(isAdmin){
+                message = messageSource.getMessage("user.failInsertUser", null, Locale.getDefault());
+            }else{
+                message = messageSource.getMessage("id.joinFail", null, Locale.getDefault());
+            }
             redirectAttributes.addFlashAttribute("failMessage", message);
-            return "redirect:/users/join";
+            return "redirect:"+url;
         }
 
     }
