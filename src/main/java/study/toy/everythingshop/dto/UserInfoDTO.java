@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 
 @AllArgsConstructor
-public class UserInfoDTO extends SuperClass {
+public class UserInfoDTO  {
 
     private Integer userNum;        //사용자번호
     private String userNm;          //사용자이름

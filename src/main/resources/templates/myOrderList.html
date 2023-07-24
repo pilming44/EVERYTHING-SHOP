@@ -100,17 +100,20 @@
 		<nav class="mt-3" aria-label="page navigation">
 			<ul class="pagination justify-content-center">
 				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == 1} ? disabled">
-					<a class="page-link" th:href="@{/myPage/allUserView(currentPageNo=${paginationInfo.currentPageNo - 1})}"
+					<a class="page-link" th:href="@{/myPage/myOrderList(currentPageNo=${paginationInfo.currentPageNo - 1}
+																		, productNm=${productSearchDTO.productNm})}"
 					   th:text="#{button.previous}">
 						이전
 					</a>
 				</li>
 				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == pageNo} ? active"  th:each="pageNo : ${#numbers.sequence(paginationInfo.firstPageNoOnPageList, paginationInfo.lastPageNoOnPageList)}">
-					<a class="page-link" th:href="@{/myPage/allUserView(currentPageNo=${pageNo})}"
+					<a class="page-link" th:href="@{/myPage/myOrderList(currentPageNo=${pageNo}
+																		, productNm=${productSearchDTO.productNm})}"
 					   th:text="${pageNo}"></a>
 				</li>
 				<li class="page-item" th:classappend="${paginationInfo.currentPageNo == paginationInfo.totalPageCount} ? disabled">
-					<a class="page-link" th:href="@{/myPage/allUserView(currentPageNo=${paginationInfo.currentPageNo + 1})}"
+					<a class="page-link" th:href="@{/myPage/myOrderList(currentPageNo=${paginationInfo.currentPageNo + 1}
+																		, productNm=${productSearchDTO.productNm})}"
 					   th:text="#{button.next}">
 						다음
 					</a>

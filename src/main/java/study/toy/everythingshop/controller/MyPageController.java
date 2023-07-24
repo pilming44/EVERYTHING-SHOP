@@ -253,12 +253,10 @@ public class MyPageController {
     }
 
     @GetMapping("/admin/allUserView")
-    public String allUserView(@ModelAttribute UserInfoDTO userInfoDTO, @ModelAttribute UserSearchDTO userSearchDTO, Model model) {
-
+    public String allUserView(@Validated  @ModelAttribute UserSearchDTO userSearchDTO, BindingResult bindingResult, Model model) {
+        log.info("시작시 userSearchDTO : {}", userSearchDTO);
         //전체 사용자 정보 조회
         Map<String, Object> userMap = myPageService.selectAllUserInfo(userSearchDTO);
-        //디버깅
-        log.debug(">>>>>>>>>>>>userList : {}",userMap);
         model.addAttribute("userList", userMap.get("userList"));
         model.addAttribute("paginationInfo", userMap.get("paginationInfo"));
         return "allUserView";

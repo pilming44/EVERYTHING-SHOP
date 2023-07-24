@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title th:text="#{page.title.join}">회원가입</title>
     <!-- 부트스트랩 CSS 파일 불러오기 -->
@@ -167,10 +167,12 @@
             <div class="col-md-7 mx-auto" style="margin-top: 50px;">
                 <div class="row">
                     <div class="col">
-                        <button type="button" id="signInBtn" class="btn btn-primary btn-lg btn-block" th:href="@{/users/signIn}" onclick="location.href = this.getAttribute('href');"  th:text="#{button.singIn}">로그인</button>
+                        <button type="button" id="signInBtn" class="btn btn-primary btn-lg btn-block" sec:authorize="isAnonymous()" th:href="@{/users/signIn}" onclick="location.href = this.getAttribute('href');"  th:text="#{button.singIn}">로그인</button>
+                        <button type="button" class="btn btn-secondary btn-lg btn-block" onclick="location.href='/myPage/admin/allUserView'" sec:authorize="hasRole('ROLE_01')" >이전으로</button>
                     </div>
                     <div class="col">
-                        <button id="joinBtn" class="btn btn-primary btn-lg btn-block" type="submit" th:text="#{button.join}">회원가입</button>
+                        <button id="joinBtn" class="btn btn-primary btn-lg btn-block" type="submit" th:text="#{button.join}" sec:authorize="isAnonymous()">회원가입</button>
+                        <button class="btn btn-primary btn-lg btn-block" type="submit" th:text="#{button.addUser}" sec:authorize="hasRole('ROLE_01')">추가</button>
                     </div>
                 </div>
             </div>
@@ -178,7 +180,7 @@
 
         <div class="row mt-3">
             <div class="col-md-7 mx-auto">
-                <button class="btn btn-secondary btn-lg btn-block" onclick="location.href='/home'" type="button">홈으로</button>
+                <button class="btn btn-secondary btn-lg btn-block" onclick="location.href='/home'" sec:authorize="isAnonymous()" type="button">홈으로</button>
             </div>
         </div>
     </form>
