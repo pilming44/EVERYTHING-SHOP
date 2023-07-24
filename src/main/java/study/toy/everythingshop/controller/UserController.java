@@ -96,4 +96,6 @@ public class UserController {
         userDAO.insertUser(joinDTO);
         return "redirect:/";
     }
+
+
 }

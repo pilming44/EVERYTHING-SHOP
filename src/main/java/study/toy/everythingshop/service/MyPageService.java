@@ -15,7 +15,7 @@ public interface MyPageService {
 
     void editUserInfo(User user);
 
-    List<ProductOrderDTO> findMyOrderList(ProductSearchDTO productSearchDTO);
+    Map<String, Object> findMyOrderList(ProductSearchDTO productSearchDTO);
 
     UserInfoDTO findMyPageInfo(String userId);
 
@@ -36,4 +36,6 @@ public interface MyPageService {
     Map<String, Object>  selectAllUserInfo(UserSearchDTO userSearchDTO);
 
     int editSellerApply(SellerApplyDTO sellerApplyDTO);
+
+    Map<String, Object> updateOrderStatus(OrderStatusDTO orderStatusDTO, User user);
 }

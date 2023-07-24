@@ -29,6 +29,8 @@ public interface ProductDAO {
 
     List<ProductOrderDTO> selectMyOrderList(ProductSearchDTO productSearchDTO);
 
+    int selectMyOrderListTotalCount(ProductSearchDTO productSearchDTO);
+
     int selectRemainingQuantity(ProductOrderDTO productOrderDTO);
 
     int updateProductSoldOut(ProductOrderDTO productOrderDTO);
@@ -36,4 +38,6 @@ public interface ProductDAO {
     Integer selectOrderedQty(Integer productNum);
 
     int updateProductViewCount(Integer productNum);
+
+
 }

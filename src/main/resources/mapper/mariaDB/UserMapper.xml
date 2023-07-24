@@ -71,6 +71,9 @@
         UPDATE T_USER
            SET USER_NM = #{userNm}
              , CHANGE_DT = SYSDATE()
+           <if test="roleCd != null and roleCd != ''">
+             , ROLE_CD = #{roleCd}
+           </if>
          WHERE USER_ID = #{userId}
     </update>
 
