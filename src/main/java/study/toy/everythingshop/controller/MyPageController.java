@@ -188,7 +188,7 @@ public class MyPageController {
         return "redirect:/myPage/sellerApplyList";
     }
 
-    @GetMapping("/discountPolicy")
+    @GetMapping("/admin/discountPolicy")
     public String discountPolicyView(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         //TODO 사용자 정보 검증
         User user = userDAO.selectUserById(userDetails.getUsername());
@@ -201,7 +201,7 @@ public class MyPageController {
         return "discountPolicy";
     }
 
-    @PostMapping("/discountPolicy")
+    @PostMapping("/admin/discountPolicy")
     public String editDiscountPolicy(@Validated @ModelAttribute DiscountPolicyWrapper discountPolicyWrapper, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails) {
         if(bindingResult.hasErrors()) {
             log.info("바인딩오류발생");
@@ -216,7 +216,7 @@ public class MyPageController {
 
         myPageService.editDiscountPolicy(discountPolicyWrapper.getDiscountPolicy());
 
-        return "redirect:/myPage/discountPolicy";
+        return "redirect:/myPage/admin/discountPolicy";
     }
 
     @GetMapping("/pointHistory")
