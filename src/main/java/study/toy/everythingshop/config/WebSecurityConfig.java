@@ -24,6 +24,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/myPage/admin/**").hasRole("01")// 특정 URL은 ADMIN 역할만 허용
                 .antMatchers("/myPage/**").authenticated()
                 .antMatchers("/product/**/order").authenticated()
                 .antMatchers("/product/**/register").authenticated()
@@ -38,6 +39,10 @@ public class WebSecurityConfig {
                 .successHandler(customAuthenticationSuccessHandler)     // 로그인 성공 핸들러
                 .usernameParameter("userId")
                 .passwordParameter("userPw")
+                .and()
+                //예외처리
+                .exceptionHandling()
+                    .accessDeniedPage("/error") // 권한 접근 거부 시 커스텀 에러 페이지로 리다이렉트
                 .and().build();
     }
     @Bean

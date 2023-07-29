@@ -71,19 +71,15 @@ public class UserControllerTest {
     @Test
     @DisplayName("회원가입 테스트 - 실패 (중복 ID)")
     public void testJoin_failure_duplicateId() throws Exception {
-        JoinDTO joinDTO = new JoinDTO();
-        joinDTO.setUserId("testuser");
-        joinDTO.setUserPw("testpassword");
-        joinDTO.setUserNm("testName");
 
         doThrow(new ResponseStatusException(HttpStatus.CONFLICT)).when(userService).findDupId(anyString());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/users/join")
-                .param("userId", "testuser")
-                .param("userPw", "testpassword")
-                .param("userNm", "testName"))
+                .param("userId", "admin")
+                .param("userPw", "adminadmin")
+                .param("userNm", "admin"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/users/join"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/users/signIn"))
                 .andExpect(MockMvcResultMatchers.flash().attributeExists("failMessage"));
     }
 
