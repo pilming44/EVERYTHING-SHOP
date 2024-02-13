@@ -14,4 +14,8 @@ public enum CommonCodeClassEnum {
     CommonCodeClassEnum(String codeClass) {
         this.codeClass = codeClass;
     }
+
+    public String getCodeClass() {
+        return codeClass;
+    }
 }

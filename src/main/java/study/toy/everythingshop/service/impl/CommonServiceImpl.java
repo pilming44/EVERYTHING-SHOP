@@ -18,14 +18,14 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public List<CommonCodeDTO> selectCommonCodeList(CommonCodeClassEnum codeClass) {
         //매개변수 객체
-        CommonCodeDTO commonCodeDTO = CommonCodeDTO.builder().codeClass(codeClass.name()).build();
+        CommonCodeDTO commonCodeDTO = CommonCodeDTO.builder().codeClass(codeClass.getCodeClass()).build();
 
         return commonDAO.selectCommonCodeList(commonCodeDTO);
     }
 
     @Override
     public String selectCommonCodeNm(CommonCodeClassEnum codeClass, String codeNum) {
-        CommonCodeDTO commonCodeDTO = CommonCodeDTO.builder().codeClass(codeClass.name()).codeNum(codeNum).build();
+        CommonCodeDTO commonCodeDTO = CommonCodeDTO.builder().codeClass(codeClass.getCodeClass()).codeNum(codeNum).build();
         return commonDAO.selectCommonCodeNm(commonCodeDTO).getCodeNm();
     }
 }
