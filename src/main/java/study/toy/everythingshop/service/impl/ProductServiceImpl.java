@@ -16,6 +16,7 @@ import study.toy.everythingshop.repository.DiscountPolicyDAO;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.ProductService;
+import study.toy.everythingshop.util.PaginationHelper;
 import study.toy.everythingshop.util.PaginationInfo;
 
 import javax.servlet.http.Cookie;
@@ -43,25 +44,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Map<String, Object> findProductList(ProductSearchDTO productSearchDTO) {
-        //값 유효성 검사
-        productSearchDTO.setCurrentPageNo(productSearchDTO.getCurrentPageNo() <= 0 ? 1 : productSearchDTO.getCurrentPageNo());
-        productSearchDTO.setRecordCountPerPage(productSearchDTO.getRecordCountPerPage() <= 0 ? defaultRecordCountPerPage : productSearchDTO.getRecordCountPerPage());
-        int pageSize = productSearchDTO.getPageSize() <= 0 ? defaultPageSize : productSearchDTO.getPageSize();
+        productSearchDTO.setTotalRecordCount(productDAO.selectProductListTotalCount(productSearchDTO));
 
-        int totalRecordCount = productDAO.selectProductListTotalCount(productSearchDTO);
-
-        //페이징 하는데 필요한 값을 계산해주는 클래스 값 세팅
-        PaginationInfo paginationInfo = new PaginationInfo();
-        paginationInfo.setCurrentPageNo(productSearchDTO.getCurrentPageNo());
-        paginationInfo.setRecordCountPerPage(productSearchDTO.getRecordCountPerPage());
-        paginationInfo.setPageSize(pageSize);
-        paginationInfo.setTotalRecordCount(totalRecordCount);
-
-        //계산된 값 입력
-        productSearchDTO.setFirstRecordIndex(paginationInfo.getFirstRecordIndex());
-        productSearchDTO.setLastRecordIndex(paginationInfo.getLastRecordIndex());
-        productSearchDTO.setTotalPageCount(paginationInfo.getTotalPageCount());
-        productSearchDTO.setTotalRecordCount(totalRecordCount);
+        PaginationInfo paginationInfo = PaginationHelper.configurePagination(productSearchDTO);
 
         HashMap<String, Object> resultMap = new HashMap<>();
         resultMap.put("list", productDAO.selectProductList(productSearchDTO));
