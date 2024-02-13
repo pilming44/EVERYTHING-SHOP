@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.toy.everythingshop.auth.CustomUserDetails;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.User;
+import study.toy.everythingshop.enums.CommonCodeClassEnum;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.MyPageDAO;
 import study.toy.everythingshop.repository.UserDAO;
@@ -274,7 +275,7 @@ public class MyPageController {
         UserInfoDTO userInfoDTO = modelMapper.map(user, UserInfoDTO.class);
         model.addAttribute("userInfo",userInfoDTO);
         // 권한 commoncode List 가져오기
-        List<CommonCodeDTO> roleCdList = commonService.selectCommonCodeList("COM1001");
+        List<CommonCodeDTO> roleCdList = commonService.selectCommonCodeList(CommonCodeClassEnum.ROLE);
         model.addAttribute("roleCdList",roleCdList);
         return "userInfo";
     }

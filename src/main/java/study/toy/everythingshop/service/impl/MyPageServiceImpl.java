@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
 import study.toy.everythingshop.entity.mariaDB.User;
+import study.toy.everythingshop.enums.CommonCodeClassEnum;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.MyPageDAO;
 import study.toy.everythingshop.repository.ProductDAO;
@@ -14,6 +15,7 @@ import study.toy.everythingshop.repository.UserDAO;
 import study.toy.everythingshop.service.CommonService;
 import study.toy.everythingshop.service.MyPageService;
 import study.toy.everythingshop.util.CommonUtil;
+import study.toy.everythingshop.util.PaginationHelper;
 import study.toy.everythingshop.util.PaginationInfo;
 
 import java.time.LocalDate;
@@ -55,25 +57,9 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public Map<String, Object> findMyOrderList(ProductSearchDTO productSearchDTO) {
+        productSearchDTO.setTotalRecordCount(productDAO.selectMyOrderListTotalCount(productSearchDTO));
 
-        productSearchDTO.setCurrentPageNo(productSearchDTO.getCurrentPageNo() <= 0 ? 1 : productSearchDTO.getCurrentPageNo());
-        productSearchDTO.setRecordCountPerPage(productSearchDTO.getRecordCountPerPage() <= 0 ? defaultRecordCountPerPage : productSearchDTO.getRecordCountPerPage());
-        int pageSize = productSearchDTO.getPageSize() <= 0 ? defaultPageSize : productSearchDTO.getPageSize();
-
-        int totalRecordCount = productDAO.selectMyOrderListTotalCount(productSearchDTO);
-
-        //페이징 하는데 필요한 값을 계산해주는 클래스 값 세팅
-        PaginationInfo paginationInfo = new PaginationInfo();
-        paginationInfo.setCurrentPageNo(productSearchDTO.getCurrentPageNo());
-        paginationInfo.setRecordCountPerPage(productSearchDTO.getRecordCountPerPage());
-        paginationInfo.setPageSize(pageSize);
-        paginationInfo.setTotalRecordCount(totalRecordCount);
-
-        //계산된 값 입력
-        productSearchDTO.setFirstRecordIndex(paginationInfo.getFirstRecordIndex());
-        productSearchDTO.setLastRecordIndex(paginationInfo.getLastRecordIndex());
-        productSearchDTO.setTotalPageCount(paginationInfo.getTotalPageCount());
-        productSearchDTO.setTotalRecordCount(totalRecordCount);
+        PaginationInfo paginationInfo = PaginationHelper.configurePagination(productSearchDTO);
 
         HashMap<String, Object> resultMap = new HashMap<>();
         resultMap.put("list", productDAO.selectMyOrderList(productSearchDTO));
@@ -89,7 +75,7 @@ public class MyPageServiceImpl implements MyPageService {
         int usedPoint = userDAO.selectUsedPoint(userId);
         //DTO에 세팅
         UserInfoDTO myPageDTO = UserInfoDTO.builder()
-                .gradeNm(commonService.selectCommonCodeNm("COM1003", user.getGradeCd()))
+                .gradeNm(commonService.selectCommonCodeNm(CommonCodeClassEnum.GRADE, user.getGradeCd()))
                 .holdingPoint(user.getHoldingPoint())
                 .usedPoint(usedPoint)
                 .build();
@@ -104,25 +90,9 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public Map<String, Object> findSellerApplyList(SellerApplyDTO sellerApplyDTO) {
-        //값 유효성 검사
-        sellerApplyDTO.setCurrentPageNo(sellerApplyDTO.getCurrentPageNo() <= 0 ? 1 : sellerApplyDTO.getCurrentPageNo());
-        sellerApplyDTO.setRecordCountPerPage(sellerApplyDTO.getRecordCountPerPage() <= 0 ? defaultRecordCountPerPage : sellerApplyDTO.getRecordCountPerPage());
-        int pageSize = sellerApplyDTO.getPageSize() <= 0 ? defaultPageSize : sellerApplyDTO.getPageSize();
+        sellerApplyDTO.setTotalRecordCount(myPageDAO.selectSellerApplyTotalCount(sellerApplyDTO.getUserNum()));
 
-        int totalRecordCount = myPageDAO.selectSellerApplyTotalCount(sellerApplyDTO.getUserNum());
-
-        //페이징 하는데 필요한 값을 계산해주는 클래스 값 세팅
-        PaginationInfo paginationInfo = new PaginationInfo();
-        paginationInfo.setCurrentPageNo(sellerApplyDTO.getCurrentPageNo());
-        paginationInfo.setRecordCountPerPage(sellerApplyDTO.getRecordCountPerPage());
-        paginationInfo.setPageSize(pageSize);
-        paginationInfo.setTotalRecordCount(totalRecordCount);
-
-        //계산된 값 입력
-        sellerApplyDTO.setFirstRecordIndex(paginationInfo.getFirstRecordIndex());
-        sellerApplyDTO.setLastRecordIndex(paginationInfo.getLastRecordIndex());
-        sellerApplyDTO.setTotalPageCount(paginationInfo.getTotalPageCount());
-        sellerApplyDTO.setTotalRecordCount(totalRecordCount);
+        PaginationInfo paginationInfo = PaginationHelper.configurePagination(sellerApplyDTO);
 
         HashMap<String, Object> resultMap = new HashMap<>();
         resultMap.put("list", myPageDAO.selectSellerApply(sellerApplyDTO));
@@ -154,11 +124,6 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public Map<String, Object> findPointHistory(PointHistoryDTO pointHistoryDTO) {
-        //값 유효성 검사
-        pointHistoryDTO.setCurrentPageNo(pointHistoryDTO.getCurrentPageNo() <= 0 ? 1 : pointHistoryDTO.getCurrentPageNo());
-        pointHistoryDTO.setRecordCountPerPage(pointHistoryDTO.getRecordCountPerPage() <= 0 ? defaultRecordCountPerPage : pointHistoryDTO.getRecordCountPerPage());
-        int pageSize = pointHistoryDTO.getPageSize() <= 0 ? defaultPageSize : pointHistoryDTO.getPageSize();
-
         //날짜 유효성 검사
         if(CommonUtil.strIsNotEmpty(pointHistoryDTO.getFromDate()) && CommonUtil.strIsNotEmpty(pointHistoryDTO.getEndDate())) {
             LocalDate fromLocalDate = LocalDate.parse(pointHistoryDTO.getFromDate());
@@ -170,21 +135,9 @@ public class MyPageServiceImpl implements MyPageService {
                 pointHistoryDTO.setEndDate(temp);
             }
         }
+        pointHistoryDTO.setTotalRecordCount(myPageDAO.selectPointHistoryTotalCount(pointHistoryDTO));
 
-        int totalRecordCount = myPageDAO.selectPointHistoryTotalCount(pointHistoryDTO);
-
-        //페이징 하는데 필요한 값을 계산해주는 클래스 값 세팅
-        PaginationInfo paginationInfo = new PaginationInfo();
-        paginationInfo.setCurrentPageNo(pointHistoryDTO.getCurrentPageNo());
-        paginationInfo.setRecordCountPerPage(pointHistoryDTO.getRecordCountPerPage());
-        paginationInfo.setPageSize(pageSize);
-        paginationInfo.setTotalRecordCount(totalRecordCount);
-
-        //계산된 값 입력
-        pointHistoryDTO.setFirstRecordIndex(paginationInfo.getFirstRecordIndex());
-        pointHistoryDTO.setLastRecordIndex(paginationInfo.getLastRecordIndex());
-        pointHistoryDTO.setTotalPageCount(paginationInfo.getTotalPageCount());
-        pointHistoryDTO.setTotalRecordCount(totalRecordCount);
+        PaginationInfo paginationInfo = PaginationHelper.configurePagination(pointHistoryDTO);
 
         HashMap<String, Object> resultMap = new HashMap<>();
         resultMap.put("list", myPageDAO.selectPointHistory(pointHistoryDTO));
@@ -195,11 +148,6 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public Map<String, Object> findSalesSummary(SalesSummaryDTO param) {
-        //값 유효성 검사
-        param.setCurrentPageNo(param.getCurrentPageNo() <= 0 ? 1 : param.getCurrentPageNo());
-        param.setRecordCountPerPage(param.getRecordCountPerPage() <= 0 ? defaultRecordCountPerPage : param.getRecordCountPerPage());
-        int pageSize = param.getPageSize() <= 0 ? defaultPageSize : param.getPageSize();
-
         //날짜 유효성 검사
         if(CommonUtil.strIsNotEmpty(param.getFromDate()) && CommonUtil.strIsNotEmpty(param.getEndDate())) {
             LocalDate fromLocalDate = LocalDate.parse(param.getFromDate());
@@ -211,21 +159,9 @@ public class MyPageServiceImpl implements MyPageService {
                 param.setEndDate(temp);
             }
         }
+        param.setTotalRecordCount(myPageDAO.selectSalesSummaryTotalCount(param));
 
-        int totalRecordCount = myPageDAO.selectSalesSummaryTotalCount(param);
-
-        //페이징 하는데 필요한 값을 계산해주는 클래스 값 세팅
-        PaginationInfo paginationInfo = new PaginationInfo();
-        paginationInfo.setCurrentPageNo(param.getCurrentPageNo());
-        paginationInfo.setRecordCountPerPage(param.getRecordCountPerPage());
-        paginationInfo.setPageSize(pageSize);
-        paginationInfo.setTotalRecordCount(totalRecordCount);
-
-        //계산된 값 입력
-        param.setFirstRecordIndex(paginationInfo.getFirstRecordIndex());
-        param.setLastRecordIndex(paginationInfo.getLastRecordIndex());
-        param.setTotalPageCount(paginationInfo.getTotalPageCount());
-        param.setTotalRecordCount(totalRecordCount);
+        PaginationInfo paginationInfo = PaginationHelper.configurePagination(param);
 
         HashMap<String, Object> resultMap = new HashMap<>();
         resultMap.put("list", myPageDAO.selectSalesSummary(param));
@@ -236,25 +172,9 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public  Map<String, Object> selectAllUserInfo(UserSearchDTO userSearchDTO) {
-        //값 유효성 검사
-        userSearchDTO.setCurrentPageNo(userSearchDTO.getCurrentPageNo() <= 0 ? 1 : userSearchDTO.getCurrentPageNo());
-        userSearchDTO.setRecordCountPerPage(userSearchDTO.getRecordCountPerPage() <= 0 ? defaultRecordCountPerPage : userSearchDTO.getRecordCountPerPage());
-        int totalUserCount = myPageDAO.selectAllUserInfoTotalCount(userSearchDTO);
-        int pageSize = userSearchDTO.getPageSize() <= 0 ? defaultPageSize : userSearchDTO.getPageSize();
+        userSearchDTO.setTotalRecordCount(myPageDAO.selectAllUserInfoTotalCount(userSearchDTO));
 
-
-        //페이징 하는데 필요한 값을 계산해주는 클래스 값 세팅
-        PaginationInfo paginationInfo = new PaginationInfo();
-        paginationInfo.setCurrentPageNo(userSearchDTO.getCurrentPageNo());
-        paginationInfo.setRecordCountPerPage(userSearchDTO.getRecordCountPerPage());
-        paginationInfo.setPageSize(pageSize);
-        paginationInfo.setTotalRecordCount(totalUserCount);
-
-        //계산된 값 입력
-        userSearchDTO.setFirstRecordIndex(paginationInfo.getFirstRecordIndex());
-        userSearchDTO.setLastRecordIndex(paginationInfo.getLastRecordIndex());
-        userSearchDTO.setTotalPageCount(paginationInfo.getTotalPageCount());
-        userSearchDTO.setTotalRecordCount(totalUserCount);
+        PaginationInfo paginationInfo = PaginationHelper.configurePagination(userSearchDTO);
 
         HashMap<String, Object> resultMap = new HashMap<>();
         resultMap.put("userList", myPageDAO.selectAllUserInfo(userSearchDTO));
