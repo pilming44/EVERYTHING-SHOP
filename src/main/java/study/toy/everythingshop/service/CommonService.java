@@ -1,6 +1,7 @@
 package study.toy.everythingshop.service;
 
 import study.toy.everythingshop.dto.CommonCodeDTO;
+import study.toy.everythingshop.enums.CommonCodeClassEnum;
 
 import java.util.List;
 
@@ -11,15 +12,7 @@ public interface CommonService {
      * @param codeClass
      * @return
      */
-    List<CommonCodeDTO> selectCommonCodeList(String codeClass);
-
-    /**
-     * 공통코드 목록 조회 (정렬순서 있음)
-     * @param codeClass
-     * @param order
-     * @return
-     */
-    List<CommonCodeDTO> selectCommonCodeList(String codeClass, String order);
+    List<CommonCodeDTO> selectCommonCodeList(CommonCodeClassEnum codeClass);
 
     /**
      * 공통코드명 조회
@@ -27,5 +20,5 @@ public interface CommonService {
      * @param codeNum
      * @return
      */
-    String selectCommonCodeNm(String codeClass, String codeNum);
+    String selectCommonCodeNm(CommonCodeClassEnum codeClass, String codeNum);
 }

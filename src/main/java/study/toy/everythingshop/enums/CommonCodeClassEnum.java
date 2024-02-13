@@ -1,6 +1,6 @@
 package study.toy.everythingshop.enums;
 
-public enum CommonCode {
+public enum CommonCodeClassEnum {
     ROLE("COM1001"),
     ACCOUNT_STATUS("COM1002"),
     GRADE("COM1003"),
@@ -11,7 +11,7 @@ public enum CommonCode {
 
     private String codeClass;
 
-    CommonCode(String codeClass) {
+    CommonCodeClassEnum(String codeClass) {
         this.codeClass = codeClass;
     }
 }

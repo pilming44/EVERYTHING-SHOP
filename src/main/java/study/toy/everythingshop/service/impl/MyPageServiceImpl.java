@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
 import study.toy.everythingshop.entity.mariaDB.User;
+import study.toy.everythingshop.enums.CommonCodeClassEnum;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.MyPageDAO;
 import study.toy.everythingshop.repository.ProductDAO;
@@ -89,7 +90,7 @@ public class MyPageServiceImpl implements MyPageService {
         int usedPoint = userDAO.selectUsedPoint(userId);
         //DTO에 세팅
         UserInfoDTO myPageDTO = UserInfoDTO.builder()
-                .gradeNm(commonService.selectCommonCodeNm("COM1003", user.getGradeCd()))
+                .gradeNm(commonService.selectCommonCodeNm(CommonCodeClassEnum.GRADE, user.getGradeCd()))
                 .holdingPoint(user.getHoldingPoint())
                 .usedPoint(usedPoint)
                 .build();
