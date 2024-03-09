@@ -11,6 +11,8 @@ import java.util.Map;
 public interface ProductService {
     Map<String, Object> findProductList(ProductSearchDTO productSearchDTO);
 
+    ProductDTO oldFindProductDetail(Integer productNum, boolean firstView, UserDetails userDetails);
+
     ProductDTO findProductDetail(Integer productNum, boolean firstView, UserDetails userDetails);
 
     int saveNewProduct(ProductRegisterDTO productRegisterDTO, UserDetails userDetails);

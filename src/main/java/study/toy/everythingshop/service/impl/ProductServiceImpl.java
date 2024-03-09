@@ -10,11 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.auth.CustomUserDetails;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
+import study.toy.everythingshop.entity.mariaDB.ProductN;
 import study.toy.everythingshop.entity.mariaDB.User;
+import study.toy.everythingshop.enums.CommonCodeClassEnum;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.DiscountPolicyDAO;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.repository.UserDAO;
+import study.toy.everythingshop.service.CommonService;
 import study.toy.everythingshop.service.ProductService;
 import study.toy.everythingshop.util.PaginationHelper;
 import study.toy.everythingshop.util.PaginationInfo;
@@ -35,6 +38,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductDAO productDAO;
     private final UserDAO userDAO;
     private final DiscountPolicyDAO discountPolicyDAO;
+    private final CommonService commonService;
 
     @Value("${default.recordCountPerPage}")
     private int defaultRecordCountPerPage;
@@ -55,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO findProductDetail(Integer productNum, boolean firstView, UserDetails userDetails) {
+    public ProductDTO oldFindProductDetail(Integer productNum, boolean firstView, UserDetails userDetails) {
         //쿠키 기반 최초 조회라면 조회수 증가
         if(firstView) {
             productDAO.updateProductViewCount(productNum);
@@ -75,6 +79,48 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return product;
+    }
+
+    @Override
+    public ProductDTO findProductDetail(Integer productNum, boolean firstView, UserDetails userDetails) {
+        //상품조회
+        ProductN product = productDAO.selectProductsWithViews(productNum);
+
+        //조회수 증가
+        increaseViews(product, firstView);
+
+        // 코드에 해당하는 명칭 조회
+        String productStatusNm = commonService.selectCommonCodeNm(CommonCodeClassEnum.SELL_STATUS ,product.getProductStatusCd());
+
+        //할인가격
+        int discountPrice = calculateDiscountPrice(product, userDetails);
+
+        return ProductDTO.builder()
+                .productNm(product.getProductNm())
+                .productPrice(product.getProductPrice())
+                .discountPrice(discountPrice)
+                .remainQuantity(product.getRemainQuantity())
+                .salesQuantity(product.getSalesQuantity())
+                .views(product.getViews())
+                .productStatusCd(product.getProductStatusCd())
+                .productStatusNm(productStatusNm)
+                .build();
+    }
+
+    private void increaseViews(ProductN product, boolean firstView) {
+        if(firstView) {
+            product.increaseView();//조회수 증가
+            productDAO.updateProductViews(product);//조회수 업데이트
+        }
+    }
+
+    private int calculateDiscountPrice(ProductN product, UserDetails userDetails) {
+        if(userDetails != null) {
+            User user = userDAO.selectUserById(userDetails.getUsername());
+            int discountRate = userDAO.selectUserDiscountRate(user.getUserNum());
+            return product.getDiscountPrice(discountRate);
+        }
+        return 0;
     }
 
     @Override

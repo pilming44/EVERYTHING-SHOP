@@ -47,7 +47,7 @@
   <div class="row justify-content-center mt-3">
     <label for="salesQuantity" class="col-sm-2 col-form-label col-form-label-lg font-weight-bold" th:text="#{label.product.salesQuantity}">판매 수량</label>
     <div class="col-md-5">
-      <input type="text" id="salesQuantity" th:value="${product.registerQuantity - product.remainQuantity}" class="form-control form-control-lg" value="10" readonly>
+      <input type="text" id="salesQuantity" th:value="${product.salesQuantity}" class="form-control form-control-lg" value="10" readonly>
     </div>
   </div>
   <div class="row justify-content-center mt-3">
