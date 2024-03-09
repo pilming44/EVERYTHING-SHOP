@@ -18,10 +18,10 @@
         <result property="postYn" column="POST_YN" />
         <result property="registerDt" column="REGISTER_DT" />
         <result property="changeDt" column="CHANGE_DT" />
-        <association property="userN" resultMap="UserResultMap" />
+        <association property="user" resultMap="UserResultMap" />
         <association property="productViews" resultMap="ProductViewsResultMap" />
     </resultMap>
-    <resultMap id="UserResultMap" type="UserN">
+    <resultMap id="UserResultMap" type="User">
         <id property="userNum" column="USER_NUM" />
         <result property="userId" column="USER_ID" />
         <result property="userPw" column="USER_PW" />

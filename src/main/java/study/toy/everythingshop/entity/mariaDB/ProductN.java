@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class ProductN {
     private Integer productNum;         //상품번호
-    private UserN userN;                //사용자번호(판매자)
+    private User user;                //사용자번호(판매자)
     private String productNm;           //상품명
     private Integer registerQuantity;   //등록수량
     private Integer remainQuantity;     //잔여수량

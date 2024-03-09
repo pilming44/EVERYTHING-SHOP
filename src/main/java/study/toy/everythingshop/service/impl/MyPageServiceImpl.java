@@ -193,7 +193,7 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public Map<String, Object> updateOrderStatus(OrderStatusDTO orderStatusDTO, User user) {
+    public Map<String, Object> oldUpdateOrderStatus(OrderStatusDTO orderStatusDTO, User user) {
         orderStatusDTO.setUserNum(user.getUserNum());
         int result =  myPageDAO.updateOrderStatus(orderStatusDTO);
         int update = 0;
@@ -235,5 +235,46 @@ public class MyPageServiceImpl implements MyPageService {
         return resultMap;
     }
 
+    @Override
+    public Map<String, Object> updateOrderStatus(OrderStatusDTO orderStatusDTO, User user) {
+        orderStatusDTO.setUserNum(user.getUserNum());
+        int result =  myPageDAO.updateOrderStatus(orderStatusDTO);
+        int update = 0;
 
+        //구매확정 후, 누적금액 check 하여, 등급update
+        if(orderStatusDTO.getOrderStatusCd().equals("03")){
+            //1.누적금액 check
+            Integer totalPayment = myPageDAO.selectMyTotalPayment(orderStatusDTO);
+            orderStatusDTO.setTotalPayment(totalPayment);
+            // 2. 등급 확인 (등급 정책을 사용하여 새로운 등급 확인)
+            String currentGrade = user.getGradeCd();
+            DiscountPolicyDTO newGrade = myPageDAO.selectCorrectGrade(totalPayment); // 누적금액에 맞는 등급인지 확인.
+            // 3. 새로운 등급 확인
+            if (!currentGrade.equals(newGrade.getGradeCd())) {
+                user.setGradeCd(newGrade.getGradeCd());
+                // 4. 등급 업데이트
+                update = myPageDAO.updateUserGrade(user);
+            }
+            //주문취소시
+        }else if(orderStatusDTO.getOrderStatusCd().equals("02")){
+            //주문디테일 구하기
+            OrderStatusDTO orderStatusDTO1 = myPageDAO.selectOrderDetail(orderStatusDTO);
+            //포인트 복구
+            user.setHoldingPoint(user.getHoldingPoint() + orderStatusDTO1.getFinalPaymentPrice());
+            result += userDAO.updateHoldingPoint(user);
+
+            //포인트 이력테이블에 내역 insert
+            PointHistory pointHistory = PointHistory.builder()
+                    .userNum(user.getUserNum())
+                    .pointChangeCd("04")
+                    .addPoint(orderStatusDTO1.getFinalPaymentPrice())
+                    .build();
+            result += userDAO.insertPointHistory(pointHistory);
+
+        }
+        HashMap<String, Object> resultMap = new HashMap<>();
+        resultMap.put("result", result);
+        resultMap.put("update", update);
+        return resultMap;
+    }
 }
