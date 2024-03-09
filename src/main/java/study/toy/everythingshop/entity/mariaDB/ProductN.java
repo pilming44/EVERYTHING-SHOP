@@ -1,12 +1,8 @@
 package study.toy.everythingshop.entity.mariaDB;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProductN {
     private Integer productNum;         //상품번호
     private UserN userN;                //사용자번호(판매자)
