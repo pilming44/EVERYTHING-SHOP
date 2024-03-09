@@ -23,6 +23,7 @@ import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.service.CommonService;
 import study.toy.everythingshop.service.DiscountPolicyService;
 import study.toy.everythingshop.service.ProductService;
+import study.toy.everythingshop.util.CommonUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,7 +51,7 @@ public class ProductController {
     public String findProductDetail(@PathVariable Integer productNum, @AuthenticationPrincipal UserDetails userDetails
                                     , HttpServletRequest request, HttpServletResponse response, Model model) {
         log.info("userDetails 객체 : {}", userDetails);
-        boolean firstView = productService.productViewCheck(productNum, request, response);
+        boolean firstView = CommonUtil.isFirstProductView(productNum, request, response);
 
         ProductDTO product = productService.findProductDetail(productNum, firstView, userDetails);
 

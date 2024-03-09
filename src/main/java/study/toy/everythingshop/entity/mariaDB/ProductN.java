@@ -15,13 +15,13 @@ public class ProductN {
     private String registerDt;          //등록일자
     private String changeDt;            //수정일자
 
-    private ProductViewsN productViewsN;
+    private ProductViewsN productViews;
 
     public Integer getViews() {
-        return productViewsN.getViews();
+        return productViews.getViews();
     }
     public void increaseView() {
-        this.productViewsN.increaseView();
+        this.productViews.increaseView();
     }
 
     public Integer getDiscountPrice(int discountRate) {

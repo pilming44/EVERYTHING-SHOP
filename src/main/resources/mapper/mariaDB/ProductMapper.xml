@@ -19,7 +19,7 @@
         <result property="registerDt" column="REGISTER_DT" />
         <result property="changeDt" column="CHANGE_DT" />
         <association property="userN" resultMap="UserResultMap" />
-        <association property="productViewsN" resultMap="ProductViewsResultMap" />
+        <association property="productViews" resultMap="ProductViewsResultMap" />
     </resultMap>
     <resultMap id="UserResultMap" type="UserN">
         <id property="userNum" column="USER_NUM" />
@@ -156,8 +156,8 @@
 
     <update id="updateProductViews" parameterType="ProductN">
         UPDATE T_PRODUCT_VIEWS
-           SET views = #{productViews.views}
-         WHERE productNum = #{productNum}
+           SET VIEWS = #{productViews.views}
+         WHERE PRODUCT_NUM = #{productNum}
     </update>
 
     <insert id="insertProduct" parameterType="ProductRegisterDTO" useGeneratedKeys="true" keyProperty="productNum">
