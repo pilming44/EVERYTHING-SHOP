@@ -93,6 +93,7 @@ public class ProductServiceImpl implements ProductService {
         int discountPrice = calculateDiscountPrice(product, userDetails);
 
         return ProductDTO.builder()
+                .productNum(product.getProductNum())
                 .productNm(product.getProductNm())
                 .productPrice(product.getProductPrice())
                 .discountPrice(discountPrice)
