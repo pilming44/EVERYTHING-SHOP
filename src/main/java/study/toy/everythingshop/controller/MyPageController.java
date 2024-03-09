@@ -143,20 +143,20 @@ public class MyPageController {
     public String editOrderStts(@AuthenticationPrincipal CustomUserDetails userDetails, Model model,
                                 RedirectAttributes redirectAttributes ,
                                 @Validated  @ModelAttribute OrderStatusDTO orderStatusDTO) {
+        try {
+            User user = userDetails.getUser();
+            myPageService.updateOrderStatus(orderStatusDTO,user);
 
-        User user = userDetails.getUser();
-        Map<String, Object> updateOrderStatus = myPageService.updateOrderStatus(orderStatusDTO,user);
-        int result = (Integer) updateOrderStatus.get("result");
-        int update = (Integer) updateOrderStatus.get("update");
-        String message = "";
-        if(result > 0){
-            message = messageSource.getMessage("user.successUpdate", null, Locale.getDefault());
-            redirectAttributes.addFlashAttribute("successMessage", message);
-        }else if(update > 0){
-            message = messageSource.getMessage("user.updateGradCd", null, Locale.getDefault());
-            redirectAttributes.addFlashAttribute("updateMessage", message);
-        }else{
-            message = messageSource.getMessage("user.failUpdated", null, Locale.getDefault());
+            String message = "";
+            if (myPageService.isUpdateGrade(user)) {
+                message = messageSource.getMessage("user.updateGradCd", null, Locale.getDefault());
+                redirectAttributes.addFlashAttribute("updateMessage", message);
+            } else {
+                message = messageSource.getMessage("user.successUpdate", null, Locale.getDefault());
+                redirectAttributes.addFlashAttribute("successMessage", message);
+            }
+        } catch (Exception e) {
+            String message = messageSource.getMessage("user.failUpdated", null, Locale.getDefault());
             redirectAttributes.addFlashAttribute("failMessage", message);
         }
 

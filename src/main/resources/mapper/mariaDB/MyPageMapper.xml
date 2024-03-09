@@ -338,6 +338,15 @@
          GROUP BY TOR.ORDER_STATUS_CD
     </select>
 
+    <select id="selectTotalPayment" parameterType="Integer" resultType="Integer">
+        SELECT SUM(TORP.FINAL_PAYMENT_PRICE) AS TOTAL_PAYMENT
+          FROM T_ORDER TOR
+          LEFT JOIN T_ORDERED_PRODUCT TORP
+            ON TOR.ORDER_NUM  = TORP.ORDER_NUM
+         WHERE TOR.ORDER_STATUS_CD = '03'
+           AND TOR.USER_NUM = #{userNum}
+         GROUP BY TOR.ORDER_STATUS_CD
+    </select>
     <select id="selectCorrectGrade" parameterType="Integer" resultType="DiscountPolicyDTO">
         SELECT TDIP.GRADE_CD
              , GET_CODE_NAME('COM1003', TDIP.GRADE_CD) AS GRADE_NM
@@ -348,6 +357,15 @@
            AND GRADE_STANDARD <![CDATA[<=]]> #{totalPayment}-- 나의 누적금액 대비 등급달성 누적금액 비교
          ORDER BY TDIP.GRADE_CD ASC
          LIMIT 1
+    </select>
+
+    <select id="selectCorrectGradeCd" parameterType="Integer" resultType="String">
+        SELECT TDIP.GRADE_CD
+        FROM T_DISCOUNT_POLICY TDIP
+        WHERE SYSDATE() BETWEEN TDIP.START_DATE AND TDIP.END_DATE
+          AND GRADE_STANDARD <![CDATA[<=]]> #{totalPayment}-- 나의 누적금액 대비 등급달성 누적금액 비교
+        ORDER BY TDIP.GRADE_CD ASC
+        LIMIT 1
     </select>
 
     <update id="updateUserGrade" parameterType="User" >
