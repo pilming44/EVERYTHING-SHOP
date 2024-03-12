@@ -24,4 +24,9 @@ public class User {
     private String gradeNm;         //등급이름
     private String registerDt;      //등록일자
     private String changeDt;        //수정일자
+
+    //포인트 사용 (차감)
+    public void usePoints(Integer usedPoint){
+        this.holdingPoint = holdingPoint - usedPoint;
+    }
 }

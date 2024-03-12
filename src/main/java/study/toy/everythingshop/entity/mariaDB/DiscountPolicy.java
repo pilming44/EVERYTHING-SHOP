@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import study.toy.everythingshop.dto.DiscountPolicyDTO;
 
 @Data
 @Builder //상속받는 클래스가 없으므로 SuperBuilder가 아닌 builder사용
@@ -16,4 +17,15 @@ public class DiscountPolicy {
     private String endDate;         //적용종료일자
     private String registerDt;      //등록일자
     private String changeDt;        //수정일자
+    private Integer gradeStandard;   //등급기준
+
+    public boolean needToRenewPolicy(DiscountPolicy newPolicy){
+        boolean result = false;
+        if(this.gradeCd.equals(newPolicy.getGradeCd())){
+            if(!this.discountRate.equals(newPolicy.getDiscountRate()) || !this.gradeStandard.equals(newPolicy.getGradeStandard())){
+                result = true;
+            }
+        }
+        return result;
+    }
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import study.toy.everythingshop.dto.*;
+import study.toy.everythingshop.entity.mariaDB.DiscountPolicy;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.MyPageDAO;
@@ -47,13 +48,13 @@ public class MyPageDAOImpl implements MyPageDAO {
     }
 
     @Override
-    public int updateDiscountPolicyEndDate(DiscountPolicyDTO discountPolicyDTO) {
-        return sqlSession.update("maria.MyPageDAO.updateDiscountPolicyEndDate", discountPolicyDTO);
+    public int updateDiscountPolicyEndDate(DiscountPolicy discountPolicy) {
+        return sqlSession.update("maria.MyPageDAO.updateDiscountPolicyEndDate", discountPolicy);
     }
 
     @Override
-    public int insertDiscountPolicy(DiscountPolicyDTO discountPolicyDTO) {
-        return sqlSession.insert("maria.MyPageDAO.insertDiscountPolicy", discountPolicyDTO);
+    public int insertDiscountPolicy(DiscountPolicy discountPolicy) {
+        return sqlSession.insert("maria.MyPageDAO.insertDiscountPolicy", discountPolicy);
     }
 
     @Override

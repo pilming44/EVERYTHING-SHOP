@@ -5,6 +5,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.h2.ProductMEntity;
+import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.ProductDAO;
 
@@ -91,5 +92,10 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public int updateProductViewCount(Integer productNum) {
         return sqlSession.update("maria.ProductDAO.updateProductViewCount", productNum);
+    }
+
+    @Override
+    public int updateRemainQtyNStts(Product product) {
+        return sqlSession.update("maria.ProductDAO.updateRemainQtyNStts", product);
     }
 }

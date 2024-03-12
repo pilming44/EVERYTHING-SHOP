@@ -1,6 +1,7 @@
 package study.toy.everythingshop.repository;
 
 import study.toy.everythingshop.dto.*;
+import study.toy.everythingshop.entity.mariaDB.DiscountPolicy;
 import study.toy.everythingshop.entity.mariaDB.User;
 
 import java.util.List;
@@ -21,9 +22,9 @@ public interface MyPageDAO {
 
     List<DiscountPolicyDTO> selectDiscountPolicy();
 
-    int updateDiscountPolicyEndDate(DiscountPolicyDTO discountPolicyDTO);
+    int updateDiscountPolicyEndDate(DiscountPolicy discountPolicy);
 
-    int insertDiscountPolicy(DiscountPolicyDTO discountPolicyDTO);
+    int insertDiscountPolicy(DiscountPolicy discountPolicy);
 
     List<PointHistoryDTO> selectPointHistory(PointHistoryDTO pointHistoryDTO);
 

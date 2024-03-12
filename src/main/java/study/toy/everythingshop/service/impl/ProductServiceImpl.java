@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.auth.CustomUserDetails;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
+import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.DiscountPolicyDAO;
@@ -35,6 +36,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductDAO productDAO;
     private final UserDAO userDAO;
     private final DiscountPolicyDAO discountPolicyDAO;
+
+    Product product = new Product();
 
     @Value("${default.recordCountPerPage}")
     private int defaultRecordCountPerPage;
@@ -87,13 +90,11 @@ public class ProductServiceImpl implements ProductService {
         log.info("userDetails : {} ",userDetails);
         //주문 사용자
         ModelMapper modelMapper = new ModelMapper();
+        Product product = modelMapper.map(productOrderDTO , Product.class);
         User user = userDetails.getUser();
         productOrderDTO.setUserNum(user.getUserNum());
 
         int result = 0;
-
-        int finalPaymentPrice = productOrderDTO.getFinalPaymentPrice();   //최종 결제금액
-        int userHoldingPoint = user.getHoldingPoint(); //보유포인트
 
         //주문테이블 insert
         result += productDAO.insertOrder(productOrderDTO);
@@ -101,20 +102,17 @@ public class ProductServiceImpl implements ProductService {
         //주문 상품 테이블 insert
         result += productDAO.insertOrderedProduct(productOrderDTO);
 
-        //재고가 없다면 품절처리
-        if(productDAO.selectRemainingQuantity(productOrderDTO) == 0) {
-            result += productDAO.updateProductSoldOut(productOrderDTO);
-        }
+        //상품 재고 update + 재고가 없다면 품절처리
+        product.getOrdered(productOrderDTO.getOrderQuantity());
+        result += productDAO.updateRemainQtyNStts(product);
+
         //사용자 보유 포인트 차감
-        user.setHoldingPoint(userHoldingPoint - finalPaymentPrice);
+        user.usePoints(productOrderDTO.getFinalPaymentPrice());
         result += userDAO.updateHoldingPoint(user);
 
         //포인트 이력테이블에 내역 insert
-        PointHistory pointHistory = PointHistory.builder()
-                .userNum(user.getUserNum())
-                .pointChangeCd("03")
-                .deductPoint(finalPaymentPrice)
-                .build();
+        PointHistory pointHistory = new PointHistory(user.getUserNum());
+        pointHistory.reducePoint(productOrderDTO.getFinalPaymentPrice());
         result += userDAO.insertPointHistory(pointHistory);
 
         return result;
