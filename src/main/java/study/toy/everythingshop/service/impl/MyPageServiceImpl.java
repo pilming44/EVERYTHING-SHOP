@@ -2,9 +2,11 @@ package study.toy.everythingshop.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import study.toy.everythingshop.dto.*;
+import study.toy.everythingshop.entity.mariaDB.DiscountPolicy;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.enums.CommonCodeClassEnum;
@@ -106,19 +108,27 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public void editDiscountPolicy(List<DiscountPolicyDTO> discountPolicyDTO) {
-        //기존 할일정책 조회
-        List<DiscountPolicyDTO> oldDiscountPolicy = myPageDAO.selectDiscountPolicy();
+    public void editDiscountPolicy(List<DiscountPolicyDTO> discountPolicyList){
+        //기존 할인정책 조회
+        List<DiscountPolicyDTO> oldDiscountPolicyList = myPageDAO.selectDiscountPolicy();
 
-        for(DiscountPolicyDTO newPolicy : discountPolicyDTO) {
-            for(DiscountPolicyDTO oldPolicy : oldDiscountPolicy) {
-                if(newPolicy.getGradeCd().equals(oldPolicy.getGradeCd())
-                        && (!newPolicy.getGradeStandard().equals(oldPolicy.getGradeStandard()) || !newPolicy.getDiscountRate().equals(oldPolicy.getDiscountRate()))) {
-                    //기존 정책과 다른부분이 있다면 해당 정책 갱신
-                    myPageDAO.updateDiscountPolicyEndDate(oldPolicy); //기존 정책 종료일자 설정
-                    myPageDAO.insertDiscountPolicy(newPolicy);  //새로운 정책정보 등록
-                }
+        for(DiscountPolicyDTO newPolicyDTO : discountPolicyList) {
+            for(DiscountPolicyDTO oldPolicyDTO : oldDiscountPolicyList) {
+                checkNUpdatePolicy(newPolicyDTO,oldPolicyDTO);
             }
+        }
+    }
+
+    private void checkNUpdatePolicy(DiscountPolicyDTO newPolicyDTO, DiscountPolicyDTO oldPolicyDTO){
+       //DTO to Entity
+        ModelMapper modelMapper = new ModelMapper();
+        DiscountPolicy newPolicy = modelMapper.map(newPolicyDTO, DiscountPolicy.class);
+        DiscountPolicy oldPolicy = modelMapper.map(oldPolicyDTO, DiscountPolicy.class);
+
+        //기존정책과 다른부분이 있다면 해당정책 갱신
+        if(oldPolicy.needToRenewPolicy(newPolicy)) {
+            myPageDAO.updateDiscountPolicyEndDate(oldPolicy); //기존 정책 종료일자 설정
+            myPageDAO.insertDiscountPolicy(newPolicy);  //새로운 정책정보 등록
         }
     }
 

@@ -69,15 +69,16 @@
          ORDER BY TDIP.GRADE_CD DESC
     </select>
 
-    <update id="updateDiscountPolicyEndDate" parameterType="DiscountPolicyDTO">
+    <update id="updateDiscountPolicyEndDate" parameterType="DiscountPolicy">
         /*MyPageDAO.updateDiscountPolicyEndDate 기존 할인정책 종료일자 설정*/
         UPDATE T_DISCOUNT_POLICY
            SET END_DATE = SYSDATE()- INTERVAL 1 SECOND /*update와 insert가 같은 트랜젝션으로 처리되니 종료일자를 1초 이전으로 설정*/
              , CHANGE_DT = SYSDATE()
-         WHERE GRADE_CD = #{gradeCd}
+         WHERE GRADE_CD =  #{gradeCd}
            AND SYSDATE() BETWEEN START_DATE AND END_DATE
     </update>
-    <insert id="insertDiscountPolicy" parameterType="DiscountPolicyDTO">
+
+    <insert id="insertDiscountPolicy" parameterType="DiscountPolicy">
         /*MyPageDAO.insertDiscountPolicy 새로운 할인정책 설정*/
         INSERT INTO T_DISCOUNT_POLICY
         (
@@ -91,9 +92,9 @@
         )
         VALUES
         (
-            #{gradeCd}
-          , #{gradeStandard}
-          , #{discountRate}
+            #{item.gradeCd}
+          , #{item.gradeStandard}
+          , #{item.discountRate}
           , SYSDATE()
           , '9999-12-31 23:59:59'
           , SYSDATE()

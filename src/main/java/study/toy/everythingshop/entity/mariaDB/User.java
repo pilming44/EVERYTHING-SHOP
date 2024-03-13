@@ -25,6 +25,10 @@ public class User {
     private String registerDt;      //등록일자
     private String changeDt;        //수정일자
 
+    //포인트 사용 (차감)
+    public void usePoints(Integer usedPoint){
+        this.holdingPoint = holdingPoint - usedPoint;
+    }
     public boolean isUpdateGrade(String newGradeCd) {
         if (!this.gradeCd.equals(newGradeCd)) {
             this.gradeCd = newGradeCd;

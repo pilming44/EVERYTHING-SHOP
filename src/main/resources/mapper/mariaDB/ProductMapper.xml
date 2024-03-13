@@ -323,4 +323,13 @@
              , CHANGE_DT = SYSDATE()
          WHERE PRODUCT_NUM = #{productNum}
     </update>
+
+    <update id="updateRemainQtyNStts" parameterType="Product">
+        /*updateRemainQtyNStts*/
+        UPDATE PRODUCT_M
+        SET REMAIN_QUANTITY = #{remainQuantity}
+          , PRODUCT_STATUS_CD = #{productStatusCd}
+        WHERE PRODUCT_NUM = #{productNum}
+    </update>
+
 </mapper>
