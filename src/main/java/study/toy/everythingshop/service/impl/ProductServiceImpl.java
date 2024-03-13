@@ -10,18 +10,18 @@ import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.auth.CustomUserDetails;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
+import study.toy.everythingshop.entity.mariaDB.ProductN;
 import study.toy.everythingshop.entity.mariaDB.User;
+import study.toy.everythingshop.enums.CommonCodeClassEnum;
 import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.DiscountPolicyDAO;
 import study.toy.everythingshop.repository.ProductDAO;
 import study.toy.everythingshop.repository.UserDAO;
+import study.toy.everythingshop.service.CommonService;
 import study.toy.everythingshop.service.ProductService;
 import study.toy.everythingshop.util.PaginationHelper;
 import study.toy.everythingshop.util.PaginationInfo;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +35,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductDAO productDAO;
     private final UserDAO userDAO;
     private final DiscountPolicyDAO discountPolicyDAO;
+    private final CommonService commonService;
 
     @Value("${default.recordCountPerPage}")
     private int defaultRecordCountPerPage;
@@ -55,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO findProductDetail(Integer productNum, boolean firstView, UserDetails userDetails) {
+    public ProductDTO oldFindProductDetail(Integer productNum, boolean firstView, UserDetails userDetails) {
         //쿠키 기반 최초 조회라면 조회수 증가
         if(firstView) {
             productDAO.updateProductViewCount(productNum);
@@ -75,6 +76,49 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return product;
+    }
+
+    @Override
+    public ProductDTO findProductDetail(Integer productNum, boolean firstView, UserDetails userDetails) {
+        //상품조회
+        ProductN product = productDAO.selectProductsWithViews(productNum);
+
+        //조회수 증가
+        increaseViews(product, firstView);
+
+        // 코드에 해당하는 명칭 조회
+        String productStatusNm = commonService.selectCommonCodeNm(CommonCodeClassEnum.SELL_STATUS ,product.getProductStatusCd());
+
+        //할인가격
+        int discountPrice = calculateDiscountPrice(product, userDetails);
+
+        return ProductDTO.builder()
+                .productNum(product.getProductNum())
+                .productNm(product.getProductNm())
+                .productPrice(product.getProductPrice())
+                .discountPrice(discountPrice)
+                .remainQuantity(product.getRemainQuantity())
+                .salesQuantity(product.getSalesQuantity())
+                .views(product.getViews())
+                .productStatusCd(product.getProductStatusCd())
+                .productStatusNm(productStatusNm)
+                .build();
+    }
+
+    private void increaseViews(ProductN product, boolean firstView) {
+        if(firstView) {
+            product.increaseView();//조회수 증가
+            productDAO.updateProductViews(product);//조회수 업데이트
+        }
+    }
+
+    private int calculateDiscountPrice(ProductN product, UserDetails userDetails) {
+        if(userDetails != null) {
+            User user = userDAO.selectUserById(userDetails.getUsername());
+            int discountRate = userDAO.selectUserDiscountRate(user.getUserNum());
+            return product.getDiscountPrice(discountRate);
+        }
+        return 0;
     }
 
     @Override
@@ -144,39 +188,5 @@ public class ProductServiceImpl implements ProductService {
         Integer remainQuantity = productOrderDTO.getRegisterQuantity() - productDAO.selectOrderedQty(productNum);
         productOrderDTO.setRemainQuantity(remainQuantity);
         return productOrderDTO;
-    }
-
-    @Override
-    public boolean productViewCheck(Integer productNum, HttpServletRequest request, HttpServletResponse response) {
-        Cookie oldCookie = null;
-        final Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (final Cookie cookie : cookies) {
-                //이미 postView쿠키가 있다면 oldCookie전환
-                if (cookie.getName().equals("productView")) {
-                    oldCookie = cookie;
-                }
-            }
-        }
-
-        //productView쿠키가 존재하면 해당 상품이 맞는지 확인후 해당 상품이 아니라면 쿠키 MaxAge업데이트 , GMT(그리니치 평균시)를 기준으로 함
-        if (oldCookie != null) {
-            if (!oldCookie.getValue().contains("[" + productNum + "]")) {
-                oldCookie.setValue(oldCookie.getValue() + "_[" + productNum + "]");
-                oldCookie.setPath("/product/"); // product 요청시에만 쿠키 전송
-                oldCookie.setMaxAge(60 * 30); //30분간 유지 마지막 조회시점을 기준으로 MaxAge묶임
-                response.addCookie(oldCookie);
-                return true;
-            }
-        } else {
-            //최초 조회라면 쿠키 발급
-            final Cookie newCookie = new Cookie("productView","[" + productNum + "]");
-            newCookie.setPath("/product/"); //product 요청시에만 쿠키 전송
-            newCookie.setMaxAge(60 * 30); //30분간 유지
-            response.addCookie(newCookie);
-            return true;
-        }
-
-        return false;
     }
 }

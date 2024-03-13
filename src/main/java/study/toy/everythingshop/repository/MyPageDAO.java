@@ -45,7 +45,11 @@ public interface MyPageDAO {
 
     Integer selectMyTotalPayment(OrderStatusDTO orderStatusDTO);
 
+    Integer selectTotalPayment(Integer userNum);
+
     DiscountPolicyDTO selectCorrectGrade(Integer totalPayment);
+
+    String selectCorrectGradeCd(Integer totalPayment);
 
     int updateUserGrade(User user);
 

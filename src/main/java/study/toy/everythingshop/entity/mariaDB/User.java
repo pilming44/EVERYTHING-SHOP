@@ -24,4 +24,16 @@ public class User {
     private String gradeNm;         //등급이름
     private String registerDt;      //등록일자
     private String changeDt;        //수정일자
+
+    public boolean isUpdateGrade(String newGradeCd) {
+        if (!this.gradeCd.equals(newGradeCd)) {
+            this.gradeCd = newGradeCd;
+            return true;
+        }
+        return false;
+    }
+
+    public void refund(Integer refundPrice) {
+        this.holdingPoint += refundPrice;
+    }
 }
