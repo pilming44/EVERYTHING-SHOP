@@ -29,4 +29,15 @@ public class User {
     public void usePoints(Integer usedPoint){
         this.holdingPoint = holdingPoint - usedPoint;
     }
+    public boolean isUpdateGrade(String newGradeCd) {
+        if (!this.gradeCd.equals(newGradeCd)) {
+            this.gradeCd = newGradeCd;
+            return true;
+        }
+        return false;
+    }
+
+    public void refund(Integer refundPrice) {
+        this.holdingPoint += refundPrice;
+    }
 }

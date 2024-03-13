@@ -3,6 +3,7 @@ package study.toy.everythingshop.repository;
 import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.h2.ProductMEntity;
 import study.toy.everythingshop.entity.mariaDB.Product;
+import study.toy.everythingshop.entity.mariaDB.ProductN;
 
 import java.util.List;
 
@@ -17,6 +18,10 @@ public interface ProductDAO {
     int selectProductListTotalCount(ProductSearchDTO productSearchDTO);
 
     ProductDTO selectByProductNum(Integer productNum);
+
+    ProductN selectProductsWithViews(Integer productNum);
+
+    int updateProductViews(ProductN product);
 
     int insertProduct(ProductRegisterDTO productRegisterDTO);
 

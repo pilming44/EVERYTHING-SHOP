@@ -2,6 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="maria.ProductDAO">
+    <resultMap id="ProductViewsResultMap" type="ProductViewsN">
+        <id property="productNum" column="PRODUCT_NUM" />
+        <result property="views" column="VIEWS" />
+        <result property="registerDt" column="REGISTER_DT" />
+        <result property="changeDt" column="CHANGE_DT" />
+    </resultMap>
+    <resultMap id="ProductResultMap" type="ProductN">
+        <id property="productNum" column="PRODUCT_NUM" />
+        <result property="productNm" column="PRODUCT_NM" />
+        <result property="registerQuantity" column="REGISTER_QUANTITY" />
+        <result property="remainQuantity" column="REMAIN_QUANTITY" />
+        <result property="productPrice" column="PRODUCT_PRICE" />
+        <result property="productStatusCd" column="PRODUCT_STATUS_CD" />
+        <result property="postYn" column="POST_YN" />
+        <result property="registerDt" column="REGISTER_DT" />
+        <result property="changeDt" column="CHANGE_DT" />
+        <association property="user" resultMap="UserResultMap" />
+        <association property="productViews" resultMap="ProductViewsResultMap" />
+    </resultMap>
+    <resultMap id="UserResultMap" type="User">
+        <id property="userNum" column="USER_NUM" />
+        <result property="userId" column="USER_ID" />
+        <result property="userPw" column="USER_PW" />
+        <result property="userNm" column="USER_NM" />
+        <result property="roleCd" column="ROLE_CD" />
+        <result property="holdingPoint" column="HOLDING_POINT" />
+        <result property="accountStatusCd" column="ACCOUNT_STATUS_CD" />
+        <result property="gradeCd" column="GRADE_CD" />
+        <result property="registerDt" column="REGISTER_DT" />
+        <result property="changeDt" column="CHANGE_DT" />
+    </resultMap>
+
     <select id="selectProductList" parameterType="ProductSearchDTO" resultType="ProductDTO">
         /* ProductDAO.selectProductList 전체 PRODUCT LIST 조회*/
         <include refid="maria.CommonDAO.pagingTop"></include>
@@ -103,6 +135,30 @@
             ON TPR.PRODUCT_NUM = TPRV.PRODUCT_NUM
         WHERE TPR.PRODUCT_NUM = #{productNum}
     </select>
+
+    <select id="selectProductsWithViews" parameterType="Integer" resultMap="ProductResultMap">
+        SELECT TPR.PRODUCT_NUM          /* 상품번호*/
+             , TPR.USER_NUM             /* 등록사용자번호*/
+             , TPR.PRODUCT_NM           /* 상품명*/
+             , TPR.REGISTER_QUANTITY    /* 등록수량*/
+             , TPR.REMAIN_QUANTITY      /* 잔여수량*/
+             , TPR.PRODUCT_PRICE        /* 상품가격*/
+             , TPR.PRODUCT_STATUS_CD    /* 판매상태코드[COM1004]*/
+             , TPR.POST_YN              /* 게시여부*/
+             , TPRV.VIEWS 				/* 조회수*/
+             , TPR.REGISTER_DT          /* 등록일자*/
+             , TPR.CHANGE_DT            /* 수정일자*/
+        FROM T_PRODUCT TPR
+        JOIN T_PRODUCT_VIEWS TPRV
+          ON TPR.PRODUCT_NUM = TPRV.PRODUCT_NUM
+       WHERE TPR.PRODUCT_NUM = #{productNum}
+    </select>
+
+    <update id="updateProductViews" parameterType="ProductN">
+        UPDATE T_PRODUCT_VIEWS
+           SET VIEWS = #{productViews.views}
+         WHERE PRODUCT_NUM = #{productNum}
+    </update>
 
     <insert id="insertProduct" parameterType="ProductRegisterDTO" useGeneratedKeys="true" keyProperty="productNum">
         INSERT INTO T_PRODUCT

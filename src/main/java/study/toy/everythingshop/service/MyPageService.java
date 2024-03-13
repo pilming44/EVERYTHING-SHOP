@@ -37,5 +37,9 @@ public interface MyPageService {
 
     int editSellerApply(SellerApplyDTO sellerApplyDTO);
 
-    Map<String, Object> updateOrderStatus(OrderStatusDTO orderStatusDTO, User user);
+    Map<String, Object> oldUpdateOrderStatus(OrderStatusDTO orderStatusDTO, User user);
+
+    void updateOrderStatus(OrderStatusDTO orderStatusDTO, User user);
+
+    boolean isUpdateGrade(User user);
 }

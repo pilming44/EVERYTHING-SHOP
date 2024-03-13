@@ -203,7 +203,7 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public Map<String, Object> updateOrderStatus(OrderStatusDTO orderStatusDTO, User user) {
+    public Map<String, Object> oldUpdateOrderStatus(OrderStatusDTO orderStatusDTO, User user) {
         orderStatusDTO.setUserNum(user.getUserNum());
         int result =  myPageDAO.updateOrderStatus(orderStatusDTO);
         int update = 0;
@@ -245,5 +245,40 @@ public class MyPageServiceImpl implements MyPageService {
         return resultMap;
     }
 
+    @Override
+    public void updateOrderStatus(OrderStatusDTO orderStatusDTO, User user) {
+        myPageDAO.updateOrderStatus(orderStatusDTO);
+        if(orderStatusDTO.getOrderStatusCd().equals("02")){
+            //주문취소시
+            withdrawOrder(orderStatusDTO, user);
+        }
+    }
 
+    @Override
+    public boolean isUpdateGrade(User user) {
+        Integer totalPayment = myPageDAO.selectTotalPayment(user.getUserNum());
+        String newGrade = myPageDAO.selectCorrectGradeCd(totalPayment);
+        if (user.isUpdateGrade(newGrade)) {
+            myPageDAO.updateUserGrade(user);
+            return true;
+        }
+        return false;
+    }
+
+    private void withdrawOrder(OrderStatusDTO orderStatusDTO, User user) {
+        //주문디테일 구하기
+        OrderStatusDTO orderStatusDTO1 = myPageDAO.selectOrderDetail(orderStatusDTO);
+        //포인트 환불
+        user.refund(orderStatusDTO1.getFinalPaymentPrice());
+
+        userDAO.updateHoldingPoint(user);
+
+        //포인트 이력테이블에 내역 insert
+        PointHistory pointHistory = PointHistory.builder()
+                .userNum(user.getUserNum())
+                .pointChangeCd("04")
+                .addPoint(orderStatusDTO1.getFinalPaymentPrice())
+                .build();
+        userDAO.insertPointHistory(pointHistory);
+    }
 }

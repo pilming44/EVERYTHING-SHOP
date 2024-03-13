@@ -108,8 +108,18 @@ public class MyPageDAOImpl implements MyPageDAO {
     }
 
     @Override
+    public Integer selectTotalPayment(Integer userNum) {
+        return sqlSession.selectOne("maria.MyPageDAO.selectTotalPayment", userNum);
+    }
+
+    @Override
     public DiscountPolicyDTO selectCorrectGrade(Integer totalPayment) {
         return sqlSession.selectOne("maria.MyPageDAO.selectCorrectGrade", totalPayment);
+    }
+
+    @Override
+    public String selectCorrectGradeCd(Integer totalPayment) {
+        return sqlSession.selectOne("maria.MyPageDAO.selectCorrectGradeCd", totalPayment);
     }
 
     @Override
