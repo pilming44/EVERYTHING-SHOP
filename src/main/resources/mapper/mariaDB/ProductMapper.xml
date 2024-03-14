@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="maria.ProductDAO">
-    <resultMap id="ProductViewsResultMap" type="ProductViewsN">
+    <resultMap id="ProductViewsResultMap" type="ProductViews">
         <id property="productNum" column="PRODUCT_NUM" />
         <result property="views" column="VIEWS" />
         <result property="registerDt" column="REGISTER_DT" />
         <result property="changeDt" column="CHANGE_DT" />
     </resultMap>
-    <resultMap id="ProductResultMap" type="ProductN">
+    <resultMap id="ProductResultMap" type="Product">
         <id property="productNum" column="PRODUCT_NUM" />
         <result property="productNm" column="PRODUCT_NM" />
         <result property="registerQuantity" column="REGISTER_QUANTITY" />
@@ -154,7 +154,7 @@
        WHERE TPR.PRODUCT_NUM = #{productNum}
     </select>
 
-    <update id="updateProductViews" parameterType="ProductN">
+    <update id="updateProductViews" parameterType="Product">
         UPDATE T_PRODUCT_VIEWS
            SET VIEWS = #{productViews.views}
          WHERE PRODUCT_NUM = #{productNum}
