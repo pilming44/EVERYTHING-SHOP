@@ -19,6 +19,7 @@ import study.toy.everythingshop.service.MyPageService;
 import study.toy.everythingshop.util.CommonUtil;
 import study.toy.everythingshop.util.PaginationHelper;
 import study.toy.everythingshop.util.PaginationInfo;
+import study.toy.everythingshop.util.DateInfo;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -134,17 +135,11 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public Map<String, Object> findPointHistory(PointHistoryDTO pointHistoryDTO) {
-        //날짜 유효성 검사
-        if(CommonUtil.strIsNotEmpty(pointHistoryDTO.getFromDate()) && CommonUtil.strIsNotEmpty(pointHistoryDTO.getEndDate())) {
-            LocalDate fromLocalDate = LocalDate.parse(pointHistoryDTO.getFromDate());
-            LocalDate endLocalDate = LocalDate.parse(pointHistoryDTO.getEndDate());
-            //종료날짜가 시작날짜보다 빠르다면 두 값 스왑
-            if (endLocalDate.isBefore(fromLocalDate)) {
-                String temp = pointHistoryDTO.getFromDate();
-                pointHistoryDTO.setFromDate(pointHistoryDTO.getEndDate());
-                pointHistoryDTO.setEndDate(temp);
-            }
-        }
+
+        DateInfo dateValidator = new DateInfo(pointHistoryDTO);
+        pointHistoryDTO.setFromDate(dateValidator.getEarlyDate());
+        pointHistoryDTO.setEndDate(dateValidator.getLateDate());
+
         pointHistoryDTO.setTotalRecordCount(myPageDAO.selectPointHistoryTotalCount(pointHistoryDTO));
 
         PaginationInfo paginationInfo = PaginationHelper.configurePagination(pointHistoryDTO);
@@ -159,16 +154,10 @@ public class MyPageServiceImpl implements MyPageService {
     @Override
     public Map<String, Object> findSalesSummary(SalesSummaryDTO param) {
         //날짜 유효성 검사
-        if(CommonUtil.strIsNotEmpty(param.getFromDate()) && CommonUtil.strIsNotEmpty(param.getEndDate())) {
-            LocalDate fromLocalDate = LocalDate.parse(param.getFromDate());
-            LocalDate endLocalDate = LocalDate.parse(param.getEndDate());
-            //종료날짜가 시작날짜보다 빠르다면 두 값 스왑
-            if (endLocalDate.isBefore(fromLocalDate)) {
-                String temp = param.getFromDate();
-                param.setFromDate(param.getEndDate());
-                param.setEndDate(temp);
-            }
-        }
+        DateInfo dateValidator = new DateInfo(param);
+        param.setFromDate(dateValidator.getEarlyDate());
+        param.setEndDate(dateValidator.getLateDate());
+
         param.setTotalRecordCount(myPageDAO.selectSalesSummaryTotalCount(param));
 
         PaginationInfo paginationInfo = PaginationHelper.configurePagination(param);

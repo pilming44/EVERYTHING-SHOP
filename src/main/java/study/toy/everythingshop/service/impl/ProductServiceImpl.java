@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.auth.CustomUserDetails;
 import study.toy.everythingshop.dto.*;
+import study.toy.everythingshop.entity.mariaDB.OrderedProduct;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
 import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.entity.mariaDB.ProductN;
@@ -171,20 +172,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductOrderDTO findOrderDetail(Integer productNum, CustomUserDetails userDetails){
+
+        OrderedProduct orderedProduct = new OrderedProduct();
+
         //product의 정보 가져오기
+        //TODO resultMap으로
         ProductDTO product = productDAO.selectByProductNum(productNum);
         ModelMapper modelMapper = new ModelMapper();
         ProductOrderDTO productOrderDTO = modelMapper.map(product, ProductOrderDTO.class);
         //User의 등급으로 현재 적용된 할인율 가져오기
         Integer discountRate = discountPolicyDAO.selectDiscountRateByGrade(userDetails.getGradeCd());
         //현재 product 금액에서 할인율 적용하여 할인금액, 현재금액 구하기.
-        Integer discountPrice  = product.getProductPrice() * discountRate / 100;
-        Integer currentPrice = product.getProductPrice() - discountPrice;
-        productOrderDTO.setDiscountPrice(discountPrice);
-        productOrderDTO.setCurrentPrice(currentPrice);
+        productOrderDTO.setDiscountPrice(orderedProduct.getDiscountPrice(productOrderDTO.getProductPrice(),discountRate));
+        productOrderDTO.setCurrentPrice(orderedProduct.getCurrentPrice(productOrderDTO.getProductPrice(),discountRate));
         //판매수량 구해서 남은수량 구하기
-        Integer remainQuantity = productOrderDTO.getRegisterQuantity() - productDAO.selectOrderedQty(productNum);
-        productOrderDTO.setRemainQuantity(remainQuantity);
+        productOrderDTO.setRemainQuantity(orderedProduct.checkInventoryStatus(productOrderDTO.getRegisterQuantity(),productDAO.selectOrderedQty(productNum)));
+
         return productOrderDTO;
     }
 }
