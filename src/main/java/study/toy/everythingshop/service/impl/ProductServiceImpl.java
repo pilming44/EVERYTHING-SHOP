@@ -128,7 +128,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int saveOrderProduct(ProductOrderDTO productOrderDTO, CustomUserDetails userDetails) {
+    public int oldSaveOrderProduct(ProductOrderDTO productOrderDTO, CustomUserDetails userDetails) {
         log.info("userDetails : {} ",userDetails);
         //주문 사용자
         ModelMapper modelMapper = new ModelMapper();
@@ -146,6 +146,39 @@ public class ProductServiceImpl implements ProductService {
 
         //상품 재고 update + 재고가 없다면 품절처리
         product.getOrdered(productOrderDTO.getOrderQuantity());
+        result += productDAO.updateRemainQtyNStts(product);
+
+        //사용자 보유 포인트 차감
+        user.usePoints(productOrderDTO.getFinalPaymentPrice());
+        result += userDAO.updateHoldingPoint(user);
+
+        //포인트 이력테이블에 내역 insert
+        PointHistory pointHistory = new PointHistory(user.getUserNum());
+        pointHistory.reducePoint(productOrderDTO.getFinalPaymentPrice());
+        result += userDAO.insertPointHistory(pointHistory);
+
+        return result;
+    }
+
+    @Override
+    public int saveOrderProduct(ProductOrderDTO productOrderDTO, CustomUserDetails userDetails) {
+        log.info("userDetails : {} ",userDetails);
+        //주문 사용자
+        User user = userDetails.getUser();
+        productOrderDTO.setUserNum(user.getUserNum());
+
+        int result = 0;
+
+        //주문테이블 insert
+        result += productDAO.insertOrder(productOrderDTO);
+
+        //주문 상품 테이블 insert
+        result += productDAO.insertOrderedProduct(productOrderDTO);
+
+        Product product = productDAO.selectProductsWithViews(productOrderDTO.getProductNum());
+        //상품 재고 update + 재고가 없다면 품절처리
+        product.getOrdered(productOrderDTO.getOrderQuantity());
+
         result += productDAO.updateRemainQtyNStts(product);
 
         //사용자 보유 포인트 차감

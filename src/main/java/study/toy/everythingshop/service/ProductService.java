@@ -20,4 +20,6 @@ public interface ProductService {
     ProductOrderDTO findOrderDetail(Integer productNum, CustomUserDetails userDetails);
 
     int saveOrderProduct(ProductOrderDTO productOrderDTO, CustomUserDetails userDetails);
+
+    int oldSaveOrderProduct(ProductOrderDTO productOrderDTO, CustomUserDetails userDetails);
 }

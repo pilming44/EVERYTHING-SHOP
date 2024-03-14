@@ -326,7 +326,7 @@
 
     <update id="updateRemainQtyNStts" parameterType="Product">
         /*updateRemainQtyNStts*/
-        UPDATE PRODUCT_M
+        UPDATE T_PRODUCT
         SET REMAIN_QUANTITY = #{remainQuantity}
           , PRODUCT_STATUS_CD = #{productStatusCd}
         WHERE PRODUCT_NUM = #{productNum}
