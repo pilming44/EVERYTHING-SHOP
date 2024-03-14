@@ -7,8 +7,6 @@ import study.toy.everythingshop.logTrace.Trace;
 import study.toy.everythingshop.repository.DiscountPolicyDAO;
 import study.toy.everythingshop.service.DiscountPolicyService;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j

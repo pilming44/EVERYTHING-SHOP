@@ -12,7 +12,6 @@ import study.toy.everythingshop.dto.*;
 import study.toy.everythingshop.entity.mariaDB.OrderedProduct;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
 import study.toy.everythingshop.entity.mariaDB.Product;
-import study.toy.everythingshop.entity.mariaDB.ProductN;
 import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.enums.CommonCodeClassEnum;
 import study.toy.everythingshop.logTrace.Trace;
@@ -38,8 +37,6 @@ public class ProductServiceImpl implements ProductService {
     private final UserDAO userDAO;
     private final DiscountPolicyDAO discountPolicyDAO;
     private final CommonService commonService;
-
-    Product product = new Product();
 
     @Value("${default.recordCountPerPage}")
     private int defaultRecordCountPerPage;
@@ -85,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO findProductDetail(Integer productNum, boolean firstView, UserDetails userDetails) {
         //상품조회
-        ProductN product = productDAO.selectProductsWithViews(productNum);
+        Product product = productDAO.selectProductsWithViews(productNum);
 
         //조회수 증가
         increaseViews(product, firstView);
@@ -109,14 +106,14 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
-    private void increaseViews(ProductN product, boolean firstView) {
+    private void increaseViews(Product product, boolean firstView) {
         if(firstView) {
             product.increaseView();//조회수 증가
             productDAO.updateProductViews(product);//조회수 업데이트
         }
     }
 
-    private int calculateDiscountPrice(ProductN product, UserDetails userDetails) {
+    private int calculateDiscountPrice(Product product, UserDetails userDetails) {
         if(userDetails != null) {
             User user = userDAO.selectUserById(userDetails.getUsername());
             int discountRate = userDAO.selectUserDiscountRate(user.getUserNum());
@@ -131,7 +128,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int saveOrderProduct(ProductOrderDTO productOrderDTO, CustomUserDetails userDetails) {
+    public int oldSaveOrderProduct(ProductOrderDTO productOrderDTO, CustomUserDetails userDetails) {
         log.info("userDetails : {} ",userDetails);
         //주문 사용자
         ModelMapper modelMapper = new ModelMapper();
@@ -149,6 +146,39 @@ public class ProductServiceImpl implements ProductService {
 
         //상품 재고 update + 재고가 없다면 품절처리
         product.getOrdered(productOrderDTO.getOrderQuantity());
+        result += productDAO.updateRemainQtyNStts(product);
+
+        //사용자 보유 포인트 차감
+        user.usePoints(productOrderDTO.getFinalPaymentPrice());
+        result += userDAO.updateHoldingPoint(user);
+
+        //포인트 이력테이블에 내역 insert
+        PointHistory pointHistory = new PointHistory(user.getUserNum());
+        pointHistory.reducePoint(productOrderDTO.getFinalPaymentPrice());
+        result += userDAO.insertPointHistory(pointHistory);
+
+        return result;
+    }
+
+    @Override
+    public int saveOrderProduct(ProductOrderDTO productOrderDTO, CustomUserDetails userDetails) {
+        log.info("userDetails : {} ",userDetails);
+        //주문 사용자
+        User user = userDetails.getUser();
+        productOrderDTO.setUserNum(user.getUserNum());
+
+        int result = 0;
+
+        //주문테이블 insert
+        result += productDAO.insertOrder(productOrderDTO);
+
+        //주문 상품 테이블 insert
+        result += productDAO.insertOrderedProduct(productOrderDTO);
+
+        Product product = productDAO.selectProductsWithViews(productOrderDTO.getProductNum());
+        //상품 재고 update + 재고가 없다면 품절처리
+        product.getOrdered(productOrderDTO.getOrderQuantity());
+
         result += productDAO.updateRemainQtyNStts(product);
 
         //사용자 보유 포인트 차감
