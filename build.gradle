@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.8'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'com.gorylenko.gradle-git-properties' version '2.4.1'
 }
 
 group = 'study.toy'
@@ -37,8 +38,14 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok' //테스트코드에서 롬복 인식되지않는 문제 해결
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'com.h2database:h2'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator' //엑츄에이터 추가
+	implementation 'io.micrometer:micrometer-registry-prometheus' //프로메테우스
 }
 
 test {
 	useJUnitPlatform()
+}
+
+springBoot {
+	buildInfo()
 }
