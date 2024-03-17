@@ -28,18 +28,18 @@ dependencies {
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
-	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.2' //MariaDB JDBC 드라이버 의존성
-	testImplementation 'org.springframework.security:spring-security-test' //스프링 시큐리티 테스트용 의존성
+	implementation 'org.mariadb.jdbc:mariadb-java-client' //MariaDB JDBC 드라이버 의존성
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation 'org.springframework.boot:spring-boot-devtools' //리소스 수정시 서버 재시작 없이 ctrl+shift+f9로 바로 확인 가능
-    testImplementation 'org.projectlombok:lombok:1.18.22'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testAnnotationProcessor 'org.projectlombok:lombok' //테스트코드에서 롬복 인식되지않는 문제 해결
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	runtimeOnly 'com.h2database:h2'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator' //엑츄에이터 추가
 	implementation 'io.micrometer:micrometer-registry-prometheus' //프로메테우스
+
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testAnnotationProcessor 'org.projectlombok:lombok' //테스트코드에서 롬복 인식되지않는 문제 해결
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test' //스프링 시큐리티 테스트용 의존성
 }
 
 test {
