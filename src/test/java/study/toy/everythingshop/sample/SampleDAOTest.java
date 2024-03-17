@@ -20,6 +20,6 @@ public class SampleDAOTest {
          * 다양한 검증을 진행해야됩니다.
          * 주석테스트
          */
-//        test 추가~~~~~~
+//        test 추가2222~~~~~~
     }
 }
