@@ -19,5 +19,6 @@ public class SampleDAOTest {
         /**
          * 다양한 검증을 진행해야됩니다.
          */
+//        test 추가~~~~~~
     }
 }
