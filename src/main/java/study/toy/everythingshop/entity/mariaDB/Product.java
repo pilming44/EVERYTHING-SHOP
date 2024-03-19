@@ -39,4 +39,11 @@ public class Product {
     public Integer getSalesQuantity() {
         return this.registerQuantity - this.remainQuantity;
     }
+
+    public Integer getCurrentPrice(int discountPrice){
+        return this.productPrice - discountPrice;
+    }
+    public Integer getRemainQuantity(Integer salesQuantity){
+        return this.registerQuantity - salesQuantity;
+    }
 }
