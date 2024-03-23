@@ -203,21 +203,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductOrderDTO findOrderDetail(Integer productNum, CustomUserDetails userDetails){
 
-        OrderedProduct orderedProduct = new OrderedProduct();
-
         //product의 정보 가져오기
-        //TODO resultMap으로
-        ProductDTO product = productDAO.selectByProductNum(productNum);
-        ModelMapper modelMapper = new ModelMapper();
-        ProductOrderDTO productOrderDTO = modelMapper.map(product, ProductOrderDTO.class);
+        Product product = productDAO.selectProductsWithViews(productNum);
+
         //User의 등급으로 현재 적용된 할인율 가져오기
         Integer discountRate = discountPolicyDAO.selectDiscountRateByGrade(userDetails.getGradeCd());
         //현재 product 금액에서 할인율 적용하여 할인금액, 현재금액 구하기.
-        productOrderDTO.setDiscountPrice(orderedProduct.getDiscountPrice(productOrderDTO.getProductPrice(),discountRate));
-        productOrderDTO.setCurrentPrice(orderedProduct.getCurrentPrice(productOrderDTO.getProductPrice(),discountRate));
+        Integer discountPrice = product.getDiscountPrice(discountRate);
+        Integer currentPrice = product.getCurrentPrice(discountPrice);
         //판매수량 구해서 남은수량 구하기
-        productOrderDTO.setRemainQuantity(orderedProduct.checkInventoryStatus(productOrderDTO.getRegisterQuantity(),productDAO.selectOrderedQty(productNum)));
+        Integer remainQuantity = product.getRemainQuantity(productDAO.selectOrderedQty(productNum));
 
-        return productOrderDTO;
+        return ProductOrderDTO.builder()
+                .productNm(product.getProductNm())
+                .productPrice(product.getProductPrice())
+                .discountPrice(discountPrice)
+                .remainQuantity(remainQuantity)
+                .currentPrice(currentPrice)
+                .build();
     }
 }
