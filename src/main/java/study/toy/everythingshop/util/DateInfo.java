@@ -28,28 +28,29 @@ public class DateInfo {
     }
 
     public String getEarlyDate() {
-        //종료날짜가 시작날짜보다 빠르다면 두 값 스왑
-        if(endLocalDate == null || fromLocalDate == null) return null;
+        if(endLocalDate== null && fromLocalDate == null) return null;
+        if(endLocalDate != null && fromLocalDate != null ){
+            //종료날짜가 시작날짜보다 빠르다면 두 값 스왑
+            if(endLocalDate.isBefore(fromLocalDate)) return endLocalDate.format(formatter);
+            //시작 날짜를 설정하지 않았다면 : 최초날짜 ~ 종료날짜
+        }else if(endLocalDate!= null) return null;
 
-        if (endLocalDate.isBefore(fromLocalDate)) {
-            return endLocalDate.format(formatter);
-        }
         return fromLocalDate.format(formatter);
-
     }
 
     public String getLateDate() {
-        //종료날짜가 시작날짜보다 빠르다면 두 값 스왑
-        if(endLocalDate == null || fromLocalDate == null) return null;
+        if(endLocalDate == null && fromLocalDate == null) return null;
+        if(endLocalDate != null && fromLocalDate != null ){
+            //종료날짜가 시작날짜보다 빠르다면 두 값 스왑
+            if (fromLocalDate.isAfter(endLocalDate)) return fromLocalDate.format(formatter);
+            //종료날짜를 설정하지 않았다면 : 시작날짜 ~ 가장최근날짜
+        } else if(fromLocalDate!= null) return null;
 
-        if (fromLocalDate.isAfter(endLocalDate)) {
-            return fromLocalDate.format(formatter);
-        }
         return endLocalDate.format(formatter);
     }
 
     public LocalDate convertToLocalDate(String date){
-        if(date != null) return LocalDate.parse(date);
+        if(date != null && !date.isEmpty()) return LocalDate.parse(date);
         else return null;
     }
 
