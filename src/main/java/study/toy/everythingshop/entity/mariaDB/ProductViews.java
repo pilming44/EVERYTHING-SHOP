@@ -1,8 +1,12 @@
 package study.toy.everythingshop.entity.mariaDB;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class ProductViews {
     private Integer productNum;         //상품번호
     private Integer views;              //조회수
