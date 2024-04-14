@@ -10,8 +10,7 @@ class ProductViewsTest {
     @DisplayName("조회수 증가")
     @Test
     void 조회수_증가() {
-        ProductViews productViews = new ProductViews();
-        productViews.setViews(0);
+        ProductViews productViews = new ProductViews(0);
 
         productViews.increaseView();
 

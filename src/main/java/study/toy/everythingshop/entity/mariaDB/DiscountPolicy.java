@@ -19,6 +19,12 @@ public class DiscountPolicy {
     private String changeDt;        //수정일자
     private Integer gradeStandard;   //등급기준
 
+    public DiscountPolicy(String gradeCd, Integer discountRate, Integer gradeStandard) {
+        this.gradeCd = gradeCd;
+        this.discountRate = discountRate;
+        this.gradeStandard = gradeStandard;
+    }
+
     public boolean needToRenewPolicy(DiscountPolicy newPolicy){
         boolean result = false;
         if(this.gradeCd.equals(newPolicy.getGradeCd())){
@@ -28,4 +34,5 @@ public class DiscountPolicy {
         }
         return result;
     }
+
 }
