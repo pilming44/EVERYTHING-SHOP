@@ -25,9 +25,9 @@ public class Product {
 
     public void updateByOrdered(Integer orderedQty){
         this.remainQuantity = remainQuantity - orderedQty;
-        updateStts();
+        checkSoldOut();
     }
-    public void updateStts(){
+    private void checkSoldOut(){
         if(remainQuantity == 0){
             productStatusCd = ProductStatus.SOLD_OUT.getCode();
         }
