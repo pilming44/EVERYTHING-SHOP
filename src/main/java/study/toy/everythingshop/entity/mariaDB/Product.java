@@ -1,9 +1,15 @@
 package study.toy.everythingshop.entity.mariaDB;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import study.toy.everythingshop.enums.ProductStatus;
 
 @Getter
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Product {
     private Integer productNum;         //상품번호
     private User user;                  //사용자
@@ -17,11 +23,11 @@ public class Product {
     private String changeDt;            //수정일자
     private ProductViews productViews;
 
-    public void getOrdered(Integer orderedQty){
+    public void updateByOrdered(Integer orderedQty){
         this.remainQuantity = remainQuantity - orderedQty;
-        updateStts();
+        checkSoldOut();
     }
-    public void updateStts(){
+    private void checkSoldOut(){
         if(remainQuantity == 0){
             productStatusCd = ProductStatus.SOLD_OUT.getCode();
         }

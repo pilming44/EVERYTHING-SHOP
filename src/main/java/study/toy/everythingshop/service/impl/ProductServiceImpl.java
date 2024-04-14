@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.toy.everythingshop.auth.CustomUserDetails;
 import study.toy.everythingshop.dto.*;
-import study.toy.everythingshop.entity.mariaDB.OrderedProduct;
 import study.toy.everythingshop.entity.mariaDB.PointHistory;
 import study.toy.everythingshop.entity.mariaDB.Product;
 import study.toy.everythingshop.entity.mariaDB.User;
@@ -145,7 +144,7 @@ public class ProductServiceImpl implements ProductService {
         result += productDAO.insertOrderedProduct(productOrderDTO);
 
         //상품 재고 update + 재고가 없다면 품절처리
-        product.getOrdered(productOrderDTO.getOrderQuantity());
+        product.updateByOrdered(productOrderDTO.getOrderQuantity());
         result += productDAO.updateRemainQtyNStts(product);
 
         //사용자 보유 포인트 차감
@@ -177,7 +176,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = productDAO.selectProductsWithViews(productOrderDTO.getProductNum());
         //상품 재고 update + 재고가 없다면 품절처리
-        product.getOrdered(productOrderDTO.getOrderQuantity());
+        product.updateByOrdered(productOrderDTO.getOrderQuantity());
 
         result += productDAO.updateRemainQtyNStts(product);
 
