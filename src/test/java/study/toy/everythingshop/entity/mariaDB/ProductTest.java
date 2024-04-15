@@ -1,21 +1,12 @@
-package study.toy.everythingshop.entity;
+package study.toy.everythingshop.entity.mariaDB;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-import study.toy.everythingshop.entity.mariaDB.Product;
-import study.toy.everythingshop.entity.mariaDB.ProductViews;
-import study.toy.everythingshop.entity.mariaDB.User;
 import study.toy.everythingshop.enums.ProductStatus;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@Slf4j
-@Transactional
-@SpringBootTest
 public class ProductTest {
     private Product product;
     private ProductViews productViews;
